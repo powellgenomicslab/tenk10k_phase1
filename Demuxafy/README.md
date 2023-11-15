@@ -9,4 +9,4 @@ The scripts in this folder are structured as follows:
 * [Scds script](demuxafy_scds_runner.qsub) using [scds](https://github.com/kostkalab/scds)
 * [ScDblFinder script]() uses [scDblFinder](https://github.com/plger/scDblFinder)
 * [DoubletDetection script]() uses [DoubletDetection](https://github.com/JonathanShor/DoubletDetection)
-* [Combiner script](demuxafy_combiner.qsub) using majority voting
+* [Combiner script](demuxafy_combiner.qsub) combines all results using majority voting
