@@ -5,8 +5,8 @@ We use demuxafy ([preprint](https://www.biorxiv.org/content/10.1101/2022.03.07.4
 The scripts in this folder are structured as follows:
 
 * [Demuxalot script]() using [Demuxalot](https://pypi.org/project/demuxalot/)
-* [Dropulation script]() using [Dropulation](https://github.com/broadinstitute/Drop-seq/blob/master/doc/Census-seq_Computational_Protcools.pdf)
-* [Scds script](demuxafy_scds_runner.qsub) using [SCDS]()
-* [ScDblFinder script]()
+* [Dropulation script]() using [Dropulation](https://github.com/broadinstitute/Drop-seq/blob/master/doc/Census-seq_Computational_Protcools.pdf), requires genotypes
+* [Scds script](demuxafy_scds_runner.qsub) using [scds](https://github.com/kostkalab/scds)
+* [ScDblFinder script]() uses [scDblFinder](https://github.com/plger/scDblFinder)
 * [DoubletDetection script]() uses [DoubletDetection](https://github.com/JonathanShor/DoubletDetection)
 * [Combiner script](demuxafy_combiner.qsub) using majority voting
