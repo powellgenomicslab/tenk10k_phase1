@@ -4,9 +4,9 @@ We use demuxafy ([preprint](https://www.biorxiv.org/content/10.1101/2022.03.07.4
 
 The scripts in this folder are structured as follows:
 
-* [Demuxalot]()
-* [Dropulation]()
-* [Scds]()
-* [ScDblFinder]()
-* [DoubletDetection]()
-* Combiner script
+* [Demuxalot script]()
+* [Dropulation script]()
+* [Scds script](demuxafy_scds_runner.qsub)
+* [ScDblFinder script]()
+* [DoubletDetection script]()
+* [Combiner script](demuxafy_combiner.qsub) using majority voting
