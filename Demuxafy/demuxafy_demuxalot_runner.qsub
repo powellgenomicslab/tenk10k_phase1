@@ -41,6 +41,10 @@ singularity exec --bind $BIND_PATH_DATA \
 
 
 # Summarise results (with and without refinement)
-singularity exec Demuxafy.sif bash Demuxalot_summary.sh $DEMUXLET_OUTDIR/assignments_refined.tsv.gz > $DEMUXLET_OUTDIR/demuxalot_summary.tsv
-singularity exec Demuxafy.sif bash Demuxalot_summary.sh $DEMUXLET_OUTDIR/assignments.tsv.gz > $DEMUXLET_OUTDIR/demuxalot_summary.tsv
+singularity exec --bind $BIND_PATH_DATA \
+                --bind $BIND_PATH_OUTPUT \
+                $SIF bash Demuxalot_summary.sh $DEMUXLET_OUTDIR/assignments_refined.tsv.gz > $DEMUXLET_OUTDIR/demuxalot_summary.tsv
+singularity exec --bind $BIND_PATH_DATA \
+                --bind $BIND_PATH_OUTPUT \
+                $SIF bash Demuxalot_summary.sh $DEMUXLET_OUTDIR/assignments.tsv.gz > $DEMUXLET_OUTDIR/demuxalot_summary.tsv
 
