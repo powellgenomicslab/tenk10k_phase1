@@ -9,24 +9,24 @@
 #$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/combined/logs/comb_TenK10K_scRNA.err
 #$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/combined/logs/comb_TenK10K_scRNA.log
 #$ -t 1-64
-​
+
 SIF=/share/ScratchGeneral/anncuo/software/Demuxafy.sif
 BIND_PATH_DATA=/directflow
 BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
-​
+
 i=${SGE_TASK_ID};
 
 SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs.txt)
-​
+
 echo "Combining all doublet detection results for sample: $SAMPLE"
-​
+
 OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/combined_ouput/$SAMPLE"
 DEMUXALOT_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/demuxalot_output/$SAMPLE"
 DROPULATION_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/dropulation_output/$SAMPLE"
 SCDS_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/scds_output/$SAMPLE"
 SCDBLFINDER_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/scdblfinder_output/$SAMPLE"
 DOUBLETDETECTION_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/doubletdetection_output/$SAMPLE"
-​
+
 singularity exec --bind $BIND_PATH_DATA \
                 --bind $BIND_PATH_OUTPUT \
                 $SIF Combine_Results.R \
@@ -37,4 +37,4 @@ singularity exec --bind $BIND_PATH_DATA \
                 --scDblFinder $SCDBLFINDER_OUTDIR \
                 --DoubletDetection $DOUBLETDETECTION_OUTDIR \
                 --method "MajoritySinglet" ## there are other methods that can also be used, please see the help message above for the other options
-​
+
