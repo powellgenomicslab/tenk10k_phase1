@@ -4,13 +4,13 @@ Demuxalot and Dropulation (the two demultiplexing tools used here) need genotype
 
 ## Expression files
 
-BAM files and barcodes are outputted directly via CellRanger.
+```BAM``` files and ```barcodes.tsv``` are outputted directly via CellRanger.
 
 ## Genotypes
 
 ### Individual files
 
-First, get the list of individuals from the VCF using bcftools:
+First, get the list of individuals from the ```VCF``` using ```bcftools```:
 
 ```bash
 module use /share/ClusterShare/apps/brenner/Modules/modulefiles
@@ -20,9 +20,9 @@ bcftools query -l /directflow/SCCGGroupShare/projects/SeyhanYazar/onek1k/genotyp
 
 ### Restricting VCF
 
-I may potentially need to reduce the VCF file to only exonic variants following the documentation: https://demultiplexing-doublet-detecting-docs.readthedocs.io/en/latest/DataPrep.html#filter-for-snps-overlapping-exons
+I may potentially need to reduce the ```VCF``` file to only exonic variants following the documentation: https://demultiplexing-doublet-detecting-docs.readthedocs.io/en/latest/DataPrep.html#filter-for-snps-overlapping-exons
 
-## Other
+## Gene annotation (Dropulation only)
 
-Downloaded the "Basic gene annotation" GTF from https://www.gencodegenes.org/human/ -- it is definitely the correct version (v44), potentially not quite exactly the same file used in the alignment (there are many files in there, plus I think CellRanger may modify the GTF??).
+Downloaded the "Basic gene annotation" ```GTF``` from https://www.gencodegenes.org/human/ -- it is definitely the correct version (v44), potentially not quite exactly the same file used in the alignment (there are many files in there, plus I think CellRanger may modify the GTF??).
 
