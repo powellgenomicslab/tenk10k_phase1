@@ -25,7 +25,7 @@ SCDBLFINDER_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxaf
 ​
 singularity exec --bind $BIND_PATH_DATA \
                 --bind $BIND_PATH_OUTPUT \
-                $SIF DoubletDetection.py \
-                -m $COUNTS \
+                $SIF scDblFinder.R \
+                -t $COUNTS \
                 -o $SCDBLFINDER_OUTDIR 
                 
