@@ -31,7 +31,7 @@ mkdir /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/demuxalot_ou
 ​
 singularity exec --bind $BIND_PATH_DATA \
                 --bind $BIND_PATH_OUTPUT \
-                $SIF python Demuxalot.py \
+                $SIF Demuxalot.py \
                 -b $BARCODES \
                 -a $BAM \
                 -n $INDS \
