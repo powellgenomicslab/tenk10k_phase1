@@ -32,7 +32,7 @@ singularity exec --bind $BIND_PATH_DATA \
                 $SIF Combine_Results.R \
                 -o $OUTDIR/combined_results.tsv \
                 --demuxalot $DEMUXALOT_OUTDIR \
-                --dropulation $SCDBLFINDER_OUTDIR \
+                --dropulation $DROPULATION_OUTDIR \
                 --scds $SCDS_OUTDIR \
                 --scDblFinder $SCDBLFINDER_OUTDIR \
                 --DoubletDetection $DOUBLETDETECTION_OUTDIR \
