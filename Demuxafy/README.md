@@ -7,6 +7,6 @@ The scripts in this folder are structured as follows:
 * [Demuxalot script]() using [Demuxalot](https://pypi.org/project/demuxalot/)
 * [Dropulation script]() using [Dropulation](https://github.com/broadinstitute/Drop-seq/blob/master/doc/Census-seq_Computational_Protcools.pdf), requires genotypes
 * [Scds script](demuxafy_scds_runner.qsub) using [scds](https://github.com/kostkalab/scds)
-* [ScDblFinder script]() uses [scDblFinder](https://github.com/plger/scDblFinder)
-* [DoubletDetection script]() uses [DoubletDetection](https://github.com/JonathanShor/DoubletDetection)
+* [ScDblFinder script](demuxafy_scdblfinder_runner.qsub) uses [scDblFinder](https://github.com/plger/scDblFinder)
+* [DoubletDetection script](demuxafy_doubletdetection_runner.qsub) uses [DoubletDetection](https://github.com/JonathanShor/DoubletDetection)
 * [Combiner script](demuxafy_combiner.qsub) combines all results using majority voting
