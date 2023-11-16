@@ -11,8 +11,7 @@
 #$ -t 1-64
 
 ​
-# SIF=/home/petall/software/Demuxafy.sif
-SIF=/directflow/SCCGGroupShare/projects/DrewNeavin/Demultiplex_Benchmark/workflow_testing/v2.1.0/Demuxafy.sif
+SIF=/share/ScratchGeneral/anncuo/software/Demuxafy.sif
 BIND_PATH_DATA=/directflow
 BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
 ​
