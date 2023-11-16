@@ -29,7 +29,7 @@ mkdir /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/doubletdetec
 ​
 singularity exec --bind $BIND_PATH_DATA \
                 --bind $BIND_PATH_OUTPUT \
-                $SIF python DoubletDetection.py \
+                $SIF DoubletDetection.py \
                 -m $COUNTS \
                 -b $BARCODES \
                 -o $DOUBLETDETECTION_OUTDIR 
