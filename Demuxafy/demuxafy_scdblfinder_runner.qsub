@@ -10,7 +10,7 @@
 #$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/scdblfinder/logs/scdblfinder_TenK10K_scRNA.log
 #$ -t 1-64
 
-SIF=/share/ScratchGeneral/software/Demuxafy.sif
+SIF=/share/ScratchGeneral/anncuo/software/Demuxafy.sif
 BIND_PATH_DATA=/directflow
 BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
 ​
