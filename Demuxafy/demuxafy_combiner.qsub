@@ -31,10 +31,18 @@ singularity exec --bind $BIND_PATH_DATA \
                 --bind $BIND_PATH_OUTPUT \
                 $SIF Combine_Results.R \
                 -o $OUTDIR/combined_results.tsv \
-          #      --demuxalot $DEMUXALOT_OUTDIR \
-          #      --dropulation $DROPULATION_OUTDIR \
                 --scds $SCDS_OUTDIR \
                 --scDblFinder $SCDBLFINDER_OUTDIR \
-          #      --DoubletDetection $DOUBLETDETECTION_OUTDIR \
                 --method "MajoritySinglet" ## there are other methods that can also be used, please see the help message above for the other options
+
+# singularity exec --bind $BIND_PATH_DATA \
+#                --bind $BIND_PATH_OUTPUT \
+#                $SIF Combine_Results.R \
+#                -o $OUTDIR/combined_results.tsv \
+#                --demuxalot $DEMUXALOT_OUTDIR \
+#                --dropulation $DROPULATION_OUTDIR \
+#                --scds $SCDS_OUTDIR \
+#                --scDblFinder $SCDBLFINDER_OUTDIR \
+#                --DoubletDetection $DOUBLETDETECTION_OUTDIR \
+#                --method "MajoritySinglet" ## there are other methods that can also be used, please see the help message above for the other options
 
