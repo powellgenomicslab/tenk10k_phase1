@@ -20,7 +20,7 @@ SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cell
 
 echo "Combining all doublet detection results for sample: $SAMPLE"
 
-OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/combined_ouput/$SAMPLE"
+OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/combined_ouput_scds_scdblfinder/$SAMPLE"
 DEMUXALOT_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/demuxalot_output/$SAMPLE"
 DROPULATION_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/dropulation_output/$SAMPLE"
 SCDS_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/scds_output/$SAMPLE"
@@ -31,10 +31,10 @@ singularity exec --bind $BIND_PATH_DATA \
                 --bind $BIND_PATH_OUTPUT \
                 $SIF Combine_Results.R \
                 -o $OUTDIR/combined_results.tsv \
-                --demuxalot $DEMUXALOT_OUTDIR \
-                --dropulation $DROPULATION_OUTDIR \
+          #      --demuxalot $DEMUXALOT_OUTDIR \
+          #      --dropulation $DROPULATION_OUTDIR \
                 --scds $SCDS_OUTDIR \
                 --scDblFinder $SCDBLFINDER_OUTDIR \
-                --DoubletDetection $DOUBLETDETECTION_OUTDIR \
+          #      --DoubletDetection $DOUBLETDETECTION_OUTDIR \
                 --method "MajoritySinglet" ## there are other methods that can also be used, please see the help message above for the other options
 
