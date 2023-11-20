@@ -19,6 +19,9 @@ BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
 
 SAMPLE=S0016b
 
+now=$date
+echo "$now"
+
 echo "Performing Demuxalot demultiplexing + doublet detection on sample: $SAMPLE"
 
 VCF=/directflow/SCCGGroupShare/projects/SeyhanYazar/onek1k/genotype_hg38/Merged_MAF0.05_hg38_nochr.vcf.gz
