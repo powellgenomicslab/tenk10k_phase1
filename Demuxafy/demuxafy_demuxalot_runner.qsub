@@ -19,7 +19,7 @@ BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
 
 SAMPLE=S0016b
 
-now=$date
+now=$(date)
 echo "$now"
 
 echo "Performing Demuxalot demultiplexing + doublet detection on sample: $SAMPLE"
