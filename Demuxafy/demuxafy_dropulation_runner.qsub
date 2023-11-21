@@ -12,7 +12,7 @@
 
 SIF=/share/ScratchGeneral/anncuo/software/Demuxafy.sif
 BIND_PATH_DATA=/directflow
-BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
+BIND_PATH_OUTPUT=/share/
 
 # i=${SGE_TASK_ID};
 # SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs.txt)
