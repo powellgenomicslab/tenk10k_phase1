@@ -8,6 +8,38 @@ Demuxalot and Dropulation (the two demultiplexing tools used here) need genotype
 
 ## Genotypes
 
+### Add "chr" to VCF to match BAM files
+
+First, copy to own folder and unzip:
+
+```bash
+cp /directflow/SCCGGroupShare/projects/SeyhanYazar/onek1k/genotype_hg38/Merged_MAF0.05_hg38_nochr.vcf.gz /share/ScratchGeneral/anncuo/tenk10k/data_processing/genotypes/Merged_MAF0.05_hg38_nochr.vcf.gz
+gunzip /share/ScratchGeneral/anncuo/tenk10k/data_processing/genotypes/Merged_MAF0.05_hg38_nochr.vcf.gz /share/ScratchGeneral/anncuo/tenk10k/data_processing/genotypes/Merged_MAF0.05_hg38_nochr.vcf
+```
+
+Then, add "chr":
+
+```bash
+awk '{
+        if($0 !~ /^#/)
+            print "chr"$0;
+        else if(match($0,/(##contig=<ID=)(.*)/,m))
+            print m[1]"chr"m[2];
+        else print $0
+      }' Merged_MAF0.05_hg38_nochr.vcf > Merged_MAF0.05_hg38_chr.vcf
+```
+
+Finally, zip again and index:
+
+```bash
+module use /share/ClusterShare/apps/brenner/Modules/modulefiles
+module load bcftools
+module load htsfile
+bgzip -c Merged_MAF0.05_hg38_chr.vcf > Merged_MAF0.05_hg38_chr.vcf.gz
+bcftools index vcf Merged_MAF0.05_hg38_chr.vcf.gz
+```
+
+
 ### Individual files
 
 First, get the list of individuals from the ```VCF``` using ```bcftools```:
