@@ -25,6 +25,7 @@ echo "$now"
 
 echo "Performing Dropulation demultiplexing + doublet detection on sample: $SAMPLE"
 
+TMPDIR=/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/dropulation_output/tmp/
 echo "Temp directory: $TMPDIR"
 
 VCF=/share/ScratchGeneral/anncuo/tenk10k/data_processing/genotypes/Merged_MAF0.05_hg38_chr.vcf.gz
