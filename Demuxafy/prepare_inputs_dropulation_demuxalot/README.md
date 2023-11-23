@@ -34,7 +34,7 @@ Finally, zip again and index:
 ```bash
 module use /share/ClusterShare/apps/brenner/Modules/modulefiles
 module load bcftools
-module load htsfile
+module load htslib
 bgzip -c Merged_MAF0.05_hg38_chr.vcf > Merged_MAF0.05_hg38_chr.vcf.gz
 bcftools index vcf Merged_MAF0.05_hg38_chr.vcf.gz
 ```
