@@ -35,6 +35,8 @@ DROPULATION_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxaf
 INDS=/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/donor_list.txt
 GTF=/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/gencode.v44.chr_patch_hapl_scaff.basic.annotation.gtf.gz
 
+export _JAVA_OPTIONS="-Xmx24g"
+
 #mkdir /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/dropulation_output/${SAMPLE}
 
 # Bam annotation
@@ -48,19 +50,19 @@ GTF=/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/gencode.v44.chr_pat
 
 
 # Dropulation Assignment
-singularity exec --bind $BIND_PATH_DATA \
-                --bind $BIND_PATH_OUTPUT \
-                --bind $BIND_PATH_TMP \
-                $SIF AssignCellsToSamples \
-                --CELL_BC_FILE $BARCODES \
-                --INPUT_BAM $DROPULATION_OUTDIR/possorted_genome_bam_dropulation_tag.bam \
-                --OUTPUT $DROPULATION_OUTDIR/assignments.tsv.gz \
-                --VCF $VCF \
-                --SAMPLE_FILE $INDS \
-                --CELL_BARCODE_TAG 'CB' \
-                --MOLECULAR_BARCODE_TAG 'UB' \
-                --VCF_OUTPUT $DROPULATION_OUTDIR/assignment.vcf \
-                --MAX_ERROR_RATE 0.05
+#singularity exec --bind $BIND_PATH_DATA \
+#                --bind $BIND_PATH_OUTPUT \
+#                --bind $BIND_PATH_TMP \
+#                $SIF AssignCellsToSamples \
+#                --CELL_BC_FILE $BARCODES \
+#                --INPUT_BAM $DROPULATION_OUTDIR/possorted_genome_bam_dropulation_tag.bam \
+#                --OUTPUT $DROPULATION_OUTDIR/assignments.tsv.gz \
+#                --VCF $VCF \
+#                --SAMPLE_FILE $INDS \
+#                --CELL_BARCODE_TAG 'CB' \
+#                --MOLECULAR_BARCODE_TAG 'UB' \
+#                --VCF_OUTPUT $DROPULATION_OUTDIR/assignment.vcf \
+#                --MAX_ERROR_RATE 0.05
 
 
 # Dropulation Doublet
