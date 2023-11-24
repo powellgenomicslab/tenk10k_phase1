@@ -4,7 +4,7 @@
 #$ -cwd
 #$ -V
 #$ -r yes
-#$ -l mem_requested=96G
+#$ -l mem_requested=200G
 #$ -l tmp_requested=96G
 #$ -pe smp 2
 #$ -N doublet_detection_demuxafy_TenK10K_scRNA
