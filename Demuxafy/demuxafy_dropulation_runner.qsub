@@ -8,17 +8,17 @@
 #$ -N dropulation_demuxafy_TenK10K_scRNA
 #$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/dropulation/logs/dropulation_TenK10K_scRNA.err
 #$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/dropulation/logs/dropulation_TenK10K_scRNA.log
-#$ -t 1-1
+#$ -t 1-64
 
 SIF=/share/ScratchGeneral/anncuo/software/Demuxafy.sif
 BIND_PATH_DATA=/directflow
 BIND_PATH_OUTPUT=/share/
 BIND_PATH_TMP=/scratch_local/
 
-# i=${SGE_TASK_ID};
-# SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs.txt)
+i=${SGE_TASK_ID};
+SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs.txt)
 
-SAMPLE=S0016b
+# SAMPLE=S0016b
 
 now=$(date)
 echo "$now"
@@ -37,60 +37,64 @@ GTF=/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/gencode.v44.chr_pat
 
 export _JAVA_OPTIONS="-Xmx24g"
 
-#mkdir /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/dropulation_output/${SAMPLE}
+mkdir /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/dropulation_output/${SAMPLE}
+mkdir /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/dropulation_output/${SAMPLE}/tmp
+
+TMPDIR=/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/dropulation_output/${SAMPLE}/tmp/
+echo "Temp directory: $TMPDIR"
 
 # Bam annotation
-#singularity exec --bind $BIND_PATH_DATA \
-#                --bind $BIND_PATH_OUTPUT \
-#                --bind $BIND_PATH_TMP \
-#                $SIF TagReadWithGeneFunction \
-#                --ANNOTATIONS_FILE $GTF \
-#                --INPUT $BAM \
-#                --OUTPUT $DROPULATION_OUTDIR/possorted_genome_bam_dropulation_tag.bam
+singularity exec --bind $BIND_PATH_DATA \
+                 --bind $BIND_PATH_OUTPUT \
+                 --bind $BIND_PATH_TMP \
+                 $SIF TagReadWithGeneFunction \
+                 --ANNOTATIONS_FILE $GTF \
+                 --INPUT $BAM \
+                 --OUTPUT $DROPULATION_OUTDIR/possorted_genome_bam_dropulation_tag.bam
 
 
 # Dropulation Assignment
-#singularity exec --bind $BIND_PATH_DATA \
-#                --bind $BIND_PATH_OUTPUT \
-#                --bind $BIND_PATH_TMP \
-#                $SIF AssignCellsToSamples \
-#                --CELL_BC_FILE $BARCODES \
-#                --INPUT_BAM $DROPULATION_OUTDIR/possorted_genome_bam_dropulation_tag.bam \
-#                --OUTPUT $DROPULATION_OUTDIR/assignments.tsv.gz \
-#                --VCF $VCF \
-#                --SAMPLE_FILE $INDS \
-#                --CELL_BARCODE_TAG 'CB' \
-#                --MOLECULAR_BARCODE_TAG 'UB' \
-#                --VCF_OUTPUT $DROPULATION_OUTDIR/assignment.vcf \
-#                --MAX_ERROR_RATE 0.05
+singularity exec --bind $BIND_PATH_DATA \
+                 --bind $BIND_PATH_OUTPUT \
+                 --bind $BIND_PATH_TMP \
+                 $SIF AssignCellsToSamples \
+                 --CELL_BC_FILE $BARCODES \
+                 --INPUT_BAM $DROPULATION_OUTDIR/possorted_genome_bam_dropulation_tag.bam \
+                 --OUTPUT $DROPULATION_OUTDIR/assignments.tsv.gz \
+                 --VCF $VCF \
+                 --SAMPLE_FILE $INDS \
+                 --CELL_BARCODE_TAG 'CB' \
+                 --MOLECULAR_BARCODE_TAG 'UB' \
+                 --VCF_OUTPUT $DROPULATION_OUTDIR/assignment.vcf \
+                 --MAX_ERROR_RATE 0.05
 
 
 # Dropulation Doublet
 singularity exec --bind $BIND_PATH_DATA \
-                --bind $BIND_PATH_OUTPUT \
-                --bind $BIND_PATH_TMP \
-                $SIF DetectDoublets --CELL_BC_FILE $BARCODES \
-                --INPUT_BAM $DROPULATION_OUTDIR/possorted_genome_bam_dropulation_tag.bam \
-                --OUTPUT $DROPULATION_OUTDIR/likelihoods.tsv.gz \
-                --VCF $VCF \
-                --CELL_BARCODE_TAG 'CB' \
-                --MOLECULAR_BARCODE_TAG 'UB' \
-                --SINGLE_DONOR_LIKELIHOOD_FILE $DROPULATION_OUTDIR/assignments.tsv.gz \
-                --SAMPLE_FILE $INDS \
-                --MAX_ERROR_RATE 0.05
+                 --bind $BIND_PATH_OUTPUT \
+                 --bind $BIND_PATH_TMP \
+                 $SIF DetectDoublets --CELL_BC_FILE $BARCODES \
+                 --INPUT_BAM $DROPULATION_OUTDIR/possorted_genome_bam_dropulation_tag.bam \
+                 --OUTPUT $DROPULATION_OUTDIR/likelihoods.tsv.gz \
+                 --VCF $VCF \
+                 --CELL_BARCODE_TAG 'CB' \
+                 --MOLECULAR_BARCODE_TAG 'UB' \
+                 --SINGLE_DONOR_LIKELIHOOD_FILE $DROPULATION_OUTDIR/assignments.tsv.gz \
+                 --SAMPLE_FILE $INDS \
+                 --MAX_ERROR_RATE 0.05
 
 
 # Dropulation Call
 singularity exec --bind $BIND_PATH_DATA \
-                --bind $BIND_PATH_OUTPUT \
-                --bind $BIND_PATH_TMP \
-                $SIF dropulation_call.R \
-                --assign $DROPULATION_OUTDIR/assignments.tsv.gz \
-                --doublet $DROPULATION_OUTDIR/likelihoods.tsv.gz \
-                --out $DROPULATION_OUTDIR/updated_assignments.tsv.gz
+                 --bind $BIND_PATH_OUTPUT \
+                 --bind $BIND_PATH_TMP \
+                 $SIF dropulation_call.R \
+                 --assign $DROPULATION_OUTDIR/assignments.tsv.gz \
+                 --doublet $DROPULATION_OUTDIR/likelihoods.tsv.gz \
+                 --out $DROPULATION_OUTDIR/updated_assignments.tsv.gz
 
 # Dropulation Summary
 singularity exec --bind $BIND_PATH_DATA \
-                --bind $BIND_PATH_OUTPUT \
-                --bind $BIND_PATH_TMP \
-                $SIF bash dropulation_summary.sh $DROPULATION_OUTDIR/updated_assignments.tsv.gz > $DROPULATION_OUTDIR/dropulation_summary.tsv
+                 --bind $BIND_PATH_OUTPUT \
+                 --bind $BIND_PATH_TMP \
+                 $SIF bash dropulation_summary.sh $DROPULATION_OUTDIR/updated_assignments.tsv.gz > $DROPULATION_OUTDIR/dropulation_summary.tsv
