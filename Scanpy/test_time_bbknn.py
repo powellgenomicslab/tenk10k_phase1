@@ -16,22 +16,23 @@ summary_df = pd.DataFrame(data)
 summary_filename = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/integration/bbknn_times_summary.csv"
 
 for num in numbers_to_combine:
-  datasets = []
-  for file in files[0:num]:
-      sample = file.replace(cellranger_dir, "")
-      adata=sc.read_10x_h5(file+"/outs/filtered_feature_bc_matrix.h5")
-      adata.var_names_make_unique()
-      adata.obs['sample'] = sample
-      adata.obs['barcode'] = adata.obs.index
-      adata.obs.index = sample + "_" + adata.obs['barcode']
-      datasets.append(adata)
-  adata_all = datasets[0].concatenate(*datasets[1:])
-  start_time = time.time()
-  bbknn.bbknn(adata_all, batch_key='sample')
-  rowIndex = summary_df[summary_df['nsamples']==num].index[0]
-  summary_df.at[rowIndex,'ncells'] = adata_all.shape[0]
-  summary_df.at[rowIndex,'ngenes'] = adata_all.shape[1]
-  summary_df.at[rowIndex,'bbknn_time'] = time.time() - start_time
-  summary_df.to_csv(summary_filename)
+    datasets = []
+    for file in files[0:num]:
+        sample = file.replace(cellranger_dir, "")
+        adata=sc.read_10x_h5(file+"/outs/filtered_feature_bc_matrix.h5")
+        adata.var_names_make_unique()
+        adata.obs['sample'] = sample
+        adata.obs['barcode'] = adata.obs.index
+        adata.obs.index = sample + "_" + adata.obs['barcode']
+        datasets.append(adata)
+    adata_all = datasets[0].concatenate(*datasets[1:])
+    sc.tl.pca(adata_all, svd_solver='arpack')
+    start_time = time.time()
+    bbknn.bbknn(adata_all, batch_key='sample')
+    rowIndex = summary_df[summary_df['nsamples']==num].index[0]
+    summary_df.at[rowIndex,'ncells'] = adata_all.shape[0]
+    summary_df.at[rowIndex,'ngenes'] = adata_all.shape[1]
+    summary_df.at[rowIndex,'bbknn_time'] = time.time() - start_time
+    summary_df.to_csv(summary_filename)
 
 
