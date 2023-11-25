@@ -17,7 +17,7 @@ summary_filename = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/integra
 
 for num in numbers_to_combine:
   datasets = []
-  for file in files[num]:
+  for file in files[0:num]:
       sample = file.replace(cellranger_dir, "")
       # adata = sc.read(file)
       adata=sc.read_10x_h5(file+"/outs/filtered_feature_bc_matrix.h5")
