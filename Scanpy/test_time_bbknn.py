@@ -25,14 +25,19 @@ for num in numbers_to_combine:
         adata.obs['barcode'] = adata.obs.index
         adata.obs.index = sample + "_" + adata.obs['barcode']
         datasets.append(adata)
-    adata_all = datasets[0].concatenate(*datasets[1:])
-    sc.tl.pca(adata_all, svd_solver='arpack')
-    start_time = time.time()
-    bbknn.bbknn(adata_all, batch_key='sample')
     rowIndex = summary_df[summary_df['nsamples']==num].index[0]
+    start_time = time.time()
+    adata_all = datasets[0].concatenate(*datasets[1:])
+    summary_df.at[rowIndex,'concat_time'] = time.time() - start_time
     summary_df.at[rowIndex,'ncells'] = adata_all.shape[0]
     summary_df.at[rowIndex,'ngenes'] = adata_all.shape[1]
+    start_time = time.time()
+    sc.tl.pca(adata_all, svd_solver='arpack')
+    summary_df.at[rowIndex,'pca_time'] = time.time() - start_time
+    start_time = time.time()
+    bbknn.bbknn(adata_all, batch_key='sample')
     summary_df.at[rowIndex,'bbknn_time'] = time.time() - start_time
+    summary_df.head()
     summary_df.to_csv(summary_filename)
 
 
