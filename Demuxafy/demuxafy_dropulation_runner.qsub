@@ -18,7 +18,7 @@ BIND_PATH_TMP=/scratch_local/
 #i=${SGE_TASK_ID};
 #SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs.txt)
 
-# SAMPLE=S0016b
+SAMPLE=S0016b
 
 now=$(date)
 echo "$now"
