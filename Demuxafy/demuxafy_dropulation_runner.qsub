@@ -8,7 +8,7 @@
 #$ -N dropulation_demuxafy_TenK10K_scRNA
 #$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/dropulation/logs/dropulation_TenK10K_scRNA.err
 #$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/dropulation/logs/dropulation_TenK10K_scRNA.log
-#$ -t 1-64
+#$ -t 11-20
 
 SIF=/share/ScratchGeneral/anncuo/software/Demuxafy.sif
 BIND_PATH_DATA=/directflow
