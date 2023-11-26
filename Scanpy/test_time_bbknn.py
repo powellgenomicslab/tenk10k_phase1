@@ -37,7 +37,7 @@ for num in numbers_to_combine:
     start_time = time.time()
     bbknn.bbknn(adata_all, batch_key='sample')
     summary_df.at[rowIndex,'bbknn_time'] = time.time() - start_time
-    summary_df.head()
     summary_df.to_csv(summary_filename)
 
+print(summary_df.head())
 
