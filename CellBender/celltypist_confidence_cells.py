@@ -1,3 +1,4 @@
+import glob
 import pandas as pd
 import scanpy as sc
 import celltypist
@@ -19,7 +20,7 @@ def run_celltypist(adata):
     adata_predicted = predictions.to_adata()
     return adata_predicted
 
-samples = ['S0016b','S0018b']
+samples = [s.replace(cellranger_dir, "") for s in glob.glob(cellranger_dir+"/S*")]
 
 data = {"samples": samples, "cellranger_ncells": 0, "cellranger_avg_celltypist_confidence": 0.0,
        "cellbender_09_ncells": 0, "cellbender_09_avg_celltypist_confidence": 0.0,
