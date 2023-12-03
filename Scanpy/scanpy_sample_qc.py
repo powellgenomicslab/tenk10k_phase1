@@ -2,7 +2,7 @@ import glob
 import sys
 import scanpy as sc
 
-i = str(sys.argv[1])
+i = int(sys.argv[1])
 
 # CellRanger files
 cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
