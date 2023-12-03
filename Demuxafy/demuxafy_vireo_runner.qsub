@@ -59,7 +59,7 @@ singularity exec --bind $BIND_PATH_DATA \
                 --bind $BIND_PATH_OUTPUT \
                 $SIF vireo \
                 -c $VIREO_OUTDIR \
-                -d $VIREO_OUTDIR/donor_subset.vcf
+                -d $VIREO_OUTDIR/donor_subset.vcf \
                 -o $VIREO_OUTDIR \
                 -t $FIELD \
                 -n $N
