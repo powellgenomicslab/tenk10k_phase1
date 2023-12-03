@@ -41,7 +41,7 @@ for sample in samples:
     cellbender_adata = anndata_from_h5(cellbender_file)
     cellbender_cells_09 = cellbender_adata[cellbender_adata.obs['cell_probability'] > 0.9].obs.index
     cellbender_cells_05 = cellbender_adata[cellbender_adata.obs['cell_probability'] > 0.5].obs.index
-    # subset objects to different cells
+    # subset raw CellRanger objects (uncorrected counts) to different cell sets
     adata = sc.read_10x_h5(cellranger_raw_file)
     adata_cellranger = adata[adata.obs.index.isin(cellranger_cells)]
     adata_cellbender_09 = adata[adata.obs.index.isin(cellbender_cells_09)]
