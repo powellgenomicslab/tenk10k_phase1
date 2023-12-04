@@ -33,7 +33,7 @@ VIREO_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/vire
 VCF=/share/ScratchGeneral/anncuo/tenk10k/data_processing/genotypes/Merged_MAF0.01.dose_GeneFiltered_hg38_chr_NoAdditionalchr.vcf.gz
 INDS=/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/samples_in_pools/S0018.tsv
 FIELD="PL"
-N=28 
+N_EXPECTED_DONORS=28 
 
 mkdir /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/vireo_output/${SAMPLE}
 
@@ -62,4 +62,4 @@ singularity exec --bind $BIND_PATH_DATA \
                 -d $VIREO_OUTDIR/donor_subset.vcf \
                 -o $VIREO_OUTDIR \
                 -t $FIELD \
-                -n $N
+                -N $N_EXPECTED_DONORS
