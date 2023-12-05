@@ -7,9 +7,9 @@
 #$ -l mem_requested=50G
 #$ -l tmp_requested=20G
 #$ -N vireo_demuxafy_TenK10K_scRNA
-#$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_maxipools.err
-#$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_maxipools.log
-#$ -t 1-6
+#$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_alldonors.err
+#$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_alldonors.log
+#$ -t 1-64
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
@@ -17,11 +17,12 @@ SIF=/share/ScratchGeneral/anncuo/software/Demuxafy.sif
 BIND_PATH_DATA=/directflow
 BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
 
-#PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples.txt"
-PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples_rerun.txt"
+PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples.txt"
+#PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples_rerun.txt"
 
 SAMPLE=`head -n $SGE_TASK_ID $PARAMS | tail -n 1 | awk '{print $1}'`
 N_EXPECTED_DONORS=`head -n $SGE_TASK_ID $PARAMS | tail -n 1 | awk '{print $2}'`
+N_ALL_DONORS=`head -n $SGE_TASK_ID $PARAMS | tail -n 1 | awk '{print $2}'`
 
 now=$(date)
 echo "$now"
@@ -35,7 +36,7 @@ VCF=/share/ScratchGeneral/anncuo/tenk10k/data_processing/genotypes/Merged_MAF0.0
 INDS=/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/samples_in_pools/${SAMPLE}.tsv
 FIELD="GT" 
 
-mkdir /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/vireo_output/${SAMPLE}
+mkdir /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/vireo_output_nogeno_donors/${SAMPLE}
 
 # Count number of alleles using cellSNP-lite
 singularity exec --bind $BIND_PATH_DATA \
@@ -55,6 +56,16 @@ singularity exec --bind $BIND_PATH_DATA \
                 $SIF bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf.gz -S $INDS -Ov -o $VIREO_OUTDIR/donor_subset.vcf
 
 # Demultiplex using vireo
+#singularity exec --bind $BIND_PATH_DATA \
+#                --bind $BIND_PATH_OUTPUT \
+#                $SIF vireo \
+#                -c $VIREO_OUTDIR \
+#                -d $VIREO_OUTDIR/donor_subset.vcf \
+#                -o $VIREO_OUTDIR \
+#                -t $FIELD \
+#                -N $N_EXPECTED_DONORS
+
+# Demultiplex using vireo
 singularity exec --bind $BIND_PATH_DATA \
                 --bind $BIND_PATH_OUTPUT \
                 $SIF vireo \
@@ -62,4 +73,4 @@ singularity exec --bind $BIND_PATH_DATA \
                 -d $VIREO_OUTDIR/donor_subset.vcf \
                 -o $VIREO_OUTDIR \
                 -t $FIELD \
-                -N $N_EXPECTED_DONORS
+                -N $N_ALL_DONORS
