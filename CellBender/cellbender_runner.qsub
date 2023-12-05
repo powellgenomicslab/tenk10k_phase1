@@ -23,13 +23,14 @@ SAMPLE=S0018b
 
 echo "Performing ambient background removal on sample: $SAMPLE"
 
-mkdir /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellbender_output/${SAMPLE}
-cd /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellbender_output/${SAMPLE}
+mkdir /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellbender_output/${SAMPLE}_smaller_learning_rate
+cd /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellbender_output/${SAMPLE}_smaller_learning_rate
 
 COUNTS="/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/$SAMPLE/outs/raw_feature_bc_matrix.h5"
-CELLBENDER_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/cellbender_output/${SAMPLE}/"
+CELLBENDER_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/cellbender_output/${SAMPLE}_smaller_learning_rate/"
 
 conda run -n cellbender cellbender remove-background \
       --cuda \
       --input $COUNTS \
-      --output ${CELLBENDER_OUTDIR}cellbender_output.h5 
+      --output ${CELLBENDER_OUTDIR}cellbender_output.h5 \
+      --learning-rate 1e-6
