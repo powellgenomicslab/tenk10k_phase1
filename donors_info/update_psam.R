@@ -1,8 +1,8 @@
+# script by Drew Neavin to keep track of OneK1K donors
+
 library(data.table)
 library(tidyverse)
 library(DBI)
-
-
 
 datadir <- "/directflow/SCCGGroupShare/projects/DrewNeavin/Demultiplex_Benchmark/WG1-GoogleCloud-execution/Imputation/data/"
 setwd(datadir)
