@@ -18,7 +18,11 @@ The scripts in this folder are structured as follows:
   * [DoubletDetection script](demuxafy_doubletdetection_runner.qsub) uses [DoubletDetection](https://github.com/JonathanShor/DoubletDetection)
 * [Combiner script](demuxafy_combiner.qsub) combines all results using majority voting
 
-### Preprocessing
+### Pre-processing
 
 * [make_pool_sample_lists.R](make_pool_sample_lists.R)
 * [prepare_inputs_dropulation_demuxalot.md](prepare_inputs_dropulation_demuxalot.md)
+
+### Post-processing
+
+* [demuxafy_dropulation_manual_summary.R](demuxafy_dropulation_manual_summary.R)
