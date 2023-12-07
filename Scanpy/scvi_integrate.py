@@ -79,3 +79,9 @@ sc.pp.neighbors(adata, use_rep = 'X_scVI')
 sc.tl.umap(adata)
 sc.tl.leiden(adata, resolution = 0.5)
 sc.pl.umap(adata, color = ['leiden', 'Sample'], frameon = False)
+
+adata.uns['scvi_markers'] = markers_scvi
+adata.uns['markers'] = markers
+
+adata.write_h5ad('integrated.h5ad')
+model.save('model.model')
