@@ -10,7 +10,7 @@ Note that we are running v0.3.0 upon recommendation of the lead author, Stephen 
 
 ## Scripts
 
-* runner
+* [cellbender_runner.qsub](cellbender_runner.qsub): qsub script to submit job for running cellbender across all samples
 * comparison scripts to evaluate cellbender results
-  * comparison of average cell typing confidence score using CellTypist, when comparing cells estimated by cellranger vs cellbender (**uncorrected counts**), so evaluating solely differences in cell inclusion criteria
-  * same but for **corrected counts**, evaluating both inclusion criteria of cells, and effects of ambient RNA correction
+  * [celltypist_confidence_cells_uncorrected.py](celltypist_confidence_cells_uncorrected.py): comparison of average cell typing confidence score using CellTypist, when comparing cells estimated by cellranger vs cellbender (**uncorrected counts**), so evaluating solely differences in cell inclusion criteria
+  * [celltypist_confidence_cells_corrected.py](celltypist_confidence_cells_corrected.py): same but for **corrected counts**, evaluating both inclusion criteria of cells, and effects of ambient RNA correction
