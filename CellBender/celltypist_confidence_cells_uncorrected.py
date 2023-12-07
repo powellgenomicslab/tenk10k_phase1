@@ -1,3 +1,4 @@
+import os
 import glob
 import pandas as pd
 import scanpy as sc
@@ -10,7 +11,8 @@ models.download_models(force_update = True)
 model = models.Model.load(model = 'Immune_All_Low.pkl')
 
 # Define results directories
-cellbender_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/cellbender_output/"
+#cellbender_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/cellbender_output/"
+cellbender_dir = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/cellbender_output_smaller_learning_rate/"
 cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
 
 def run_celltypist(adata):
@@ -26,12 +28,15 @@ data = {"samples": samples, "cellranger_ncells": 0, "cellranger_avg_celltypist_c
        "cellbender_09_ncells": 0, "cellbender_09_avg_celltypist_confidence": 0.0,
         "cellbender_05_ncells": 0, "cellbender_05_avg_celltypist_confidence": 0.0,}
 summary_df = pd.DataFrame(data)
-summary_filename = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/cellbender/cells_set_celltypist_confidence_summary.csv"
+summary_filename = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/cellbender/cells_set_celltypist_confidence_summary_uncorrected.csv"
 
 for sample in samples:
     print(sample)
     # define files
-    cellbender_file = cellbender_dir + sample + "/cellbender_output.h5"
+    # cellbender_file = cellbender_dir + sample + "/cellbender_output.h5"
+    cellbender_file = cellbender_dir + sample + "/" + sample + "cellbender_output.h5"
+    if os.path.exists(cellbender_file) is False:
+        continue
     cellranger_raw_file = cellranger_dir + sample + "/outs/raw_feature_bc_matrix.h5"
     cellranger_filt_file = cellranger_dir + sample + "/outs/filtered_feature_bc_matrix.h5"
     # all cells from filtered object
