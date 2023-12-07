@@ -2,7 +2,11 @@
 
 We use demuxafy ([preprint](https://www.biorxiv.org/content/10.1101/2022.03.07.483367v1), [docs](https://demultiplexing-doublet-detecting-docs.readthedocs.io/en/latest/index.html)) to determine the tools to use for doublet detection as well as demultiplexing cells back to their donor of origin.
 
+## Description of scripts
+
 The scripts in this folder are structured as follows:
+
+### Runners
 
 * Demultiplexing tools:
   * [Demuxalot script](demuxafy_demuxalot_runner.qsub) using [Demuxalot](https://pypi.org/project/demuxalot/), requires genotypes
@@ -13,3 +17,8 @@ The scripts in this folder are structured as follows:
   * [ScDblFinder script](demuxafy_scdblfinder_runner.qsub) uses [scDblFinder](https://github.com/plger/scDblFinder)
   * [DoubletDetection script](demuxafy_doubletdetection_runner.qsub) uses [DoubletDetection](https://github.com/JonathanShor/DoubletDetection)
 * [Combiner script](demuxafy_combiner.qsub) combines all results using majority voting
+
+### Preprocessing
+
+* [make_pool_sample_lists.R](make_pool_sample_lists.R)
+* [prepare_inputs_dropulation_demuxalot.md](prepare_inputs_dropulation_demuxalot.md)
