@@ -52,8 +52,14 @@ sc.pl.highly_variable_genes(adata)
 adata.raw = adata
 adata = adata[:, adata.var.highly_variable]
 
-sc.pp.regress_out(adata, ['total_counts', 'pct_counts_mt', 'pct_counts_ribo'])
+sc.pp.regress_out(adata, ['total_counts', 'pct_counts_mt'])
 sc.pp.scale(adata, max_value=10)
 
 sc.tl.pca(adata, svd_solver='arpack')
+sc.pl.pca_variance_ratio(adata, log=True, n_pcs = 50)
+
 sc.pp.neighbors(adata, n_pcs = 30)
+
+sc.tl.umap(adata)
+sc.tl.leiden(adata, resolution = 0.5)
+sc.pl.umap(adata, color=['leiden'])
