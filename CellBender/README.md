@@ -7,3 +7,10 @@ We consider default parameters except for a decreased ```learning rate``` value 
 At present we do not perform any hard filters based on the Cellbender results, but annotate our cells based on the % ambient RNA identified for future reference.
 
 Note that we are running v0.3.0 upon recommendation of the lead author, Stephen Fleming (there were some issues with v0.3.1).
+
+## Scripts
+
+* runner
+* comparison scripts to evaluate cellbender results
+  * comparison of average cell typing confidence score using CellTypist, when comparing cells estimated by cellranger vs cellbender (**uncorrected counts**), so evaluating solely differences in cell inclusion criteria
+  * same but for **corrected counts**, evaluating both inclusion criteria of cells, and effects of ambient RNA correction
