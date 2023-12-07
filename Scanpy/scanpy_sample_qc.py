@@ -41,8 +41,8 @@ adata = adata[adata.obs.n_genes_by_counts < 6000, :]
 adata = adata[adata.obs.pct_counts_mt < 15, :]
 
 # normalise
-# sc.pp.normalize_total(adata, target_sum=1e4)
-# sc.pp.log1p(adata)
+sc.pp.normalize_total(adata, target_sum=1e4) #normalize every cell to 10,000 UMI
+sc.pp.log1p(adata)
 
 # calculate and plot highly variable genes (HVGs)
 sc.pp.highly_variable_genes(adata, min_mean=0.0125, max_mean=3, min_disp=0.5)
@@ -51,3 +51,6 @@ sc.pl.highly_variable_genes(adata)
 # save all data as raw and proceed with HVGs only
 adata.raw = adata
 adata = adata[:, adata.var.highly_variable]
+
+sc.pp.regress_out(adata, ['total_counts', 'pct_counts_mt', 'pct_counts_ribo'])
+sc.pp.scale(adata, max_value=10)
