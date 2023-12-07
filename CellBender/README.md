@@ -8,7 +8,7 @@ At present we do not perform any hard filters based on the Cellbender results, b
 
 Note that we are running v0.3.0 upon recommendation of the lead author, Stephen Fleming (there were some issues with v0.3.1).
 
-## Scripts
+## Brief description of scripts included here
 
 * [cellbender_runner.qsub](cellbender_runner.qsub): qsub script to submit job for running cellbender across all samples
 * comparison scripts to evaluate cellbender results
