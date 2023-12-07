@@ -13,13 +13,13 @@ sample_path = cellranger_files[i]
 # load adata
 adata=sc.read_10x_h5(sample_path+"/outs/filtered_feature_bc_matrix.h5")
 
-print(f'Total number of cells: '{adata.shape[0]})
-print(f'Total number of genes: '{adata.shape[1]})
+print(f'Total number of cells: {adata.shape[0]}')
+print(f'Total number of genes: {adata.shape[1]}')
 
 # unique gene names
 adata.var_names_make_unique()
 
-print(f'Total number of unique genes: '{adata.shape[1]})
+print(f'Total number of unique genes: {adata.shape[1]}')
 
 # basic filtering of cells and genes (should this be done when merged?)
 sc.pp.filter_cells(adata, min_genes=200)
@@ -54,3 +54,6 @@ adata = adata[:, adata.var.highly_variable]
 
 sc.pp.regress_out(adata, ['total_counts', 'pct_counts_mt', 'pct_counts_ribo'])
 sc.pp.scale(adata, max_value=10)
+
+sc.tl.pca(adata, svd_solver='arpack')
+sc.pp.neighbors(adata, n_pcs = 30)
