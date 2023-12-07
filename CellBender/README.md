@@ -14,3 +14,4 @@ Note that we are running v0.3.0 upon recommendation of the lead author, Stephen 
 * comparison scripts to evaluate cellbender results
   * [celltypist_confidence_cells_uncorrected.py](celltypist_confidence_cells_uncorrected.py): comparison of average cell typing confidence score using CellTypist, when comparing cells estimated by cellranger vs cellbender (**uncorrected counts**), so evaluating solely differences in cell inclusion criteria
   * [celltypist_confidence_cells_corrected.py](celltypist_confidence_cells_corrected.py): same but for **corrected counts**, evaluating both inclusion criteria of cells, and effects of ambient RNA correction
+* [vireo_runner_cellbender_file.qsub](vireo_runner_cellbender_file.qsub): qsub script to submit job for running vireo considering all cells identified as such by cellbender (not yet tested)
