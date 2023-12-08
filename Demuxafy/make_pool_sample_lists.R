@@ -7,7 +7,7 @@ samples_dir = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/sam
 donor_info_folder = "/share/ScratchGeneral/anncuo/tenk10k/donor_info/"
 
 # pool info
-pool_df = fread(paste0(donor_info_folder,"TOB_TenK10K_pool_info.csv"))
+pool_df = fread(paste0(donor_info_folder,"TOB_TenK10K_pool_info_v3.csv"))
 colnames(pool_df) = gsub(" ","_",colnames(pool_df))
 
 # donors recruited
@@ -64,23 +64,24 @@ out_file = paste0(samples_dir, maxi_pool, ".tsv")
 fwrite(df5, out_file, sep="\t")
 # the copy for maxi_pool="S0030-33b"
 
-###################
+############################################################################
+############################################################################
 
 # save pool donor counts file
 output_file = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples.txt"
 
 cellranger_samples = list.files("/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/","S")
-simple_samples = cellranger_samples[!(cellranger_samples %in% cellranger_samples[grep("-",cellranger_samples)])]
+df = data.frame(V1 = cellranger_samples)
 
-# simple pools
-for (sample in simple_samples){
-    df_s = read.csv(paste0(samples_dir,sample,".tsv"),sep="\t", header = F)
+# add expected and genotyped donor counts
+for (sample in unique(df$V1)){
+    df_s = read.csv(paste0(samples_dir, sample, ".tsv"), sep="\t", header = F)
     pool = gsub("a","",gsub("b","",gsub("c","",sample)))
     df[df$V1 == sample, "V2"] = nrow(df_s)
     df[df$V1 == sample, "V3"] = length(unique(pool_df[pool_df$Tenk10k_pool == pool, "TOB_ID"]$TOB_ID))
 }
 
-# add maxi pools
+# add maxi pools (not directly linked to a single pool)
 df[df$V1 == "S0021-24a", "V3"] = df[df$V1 == "S0021a", "V3"] + df[df$V1 == "S0022a", "V3"] + df[df$V1 == "S0023a", "V3"] + df[df$V1 == "S0024a", "V3"]
 df[df$V1 == "S0021-24b", "V3"] = df[df$V1 == "S0021-24a", "V3"]
 df[df$V1 == "S0025-28a", "V3"] = df[df$V1 == "S0025a", "V3"] + df[df$V1 == "S0026a", "V3"] + df[df$V1 == "S0027a", "V3"] + df[df$V1 == "S0028a", "V3"]
