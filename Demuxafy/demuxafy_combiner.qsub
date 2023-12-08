@@ -6,8 +6,8 @@
 #$ -r yes
 #$ -l mem_requested=80G
 #$ -N combiner_demuxafy_TenK10K_scRNA
-#$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/combined/logs/comb_TenK10K_scRNA.err
-#$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/combined/logs/comb_TenK10K_scRNA.log
+#$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/combined/logs/comb_TenK10K_scRNA_vireo.err
+#$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/combined/logs/comb_TenK10K_scRNA_vireo.log
 #$ -t 1-64
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
@@ -22,12 +22,13 @@ SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cell
 
 echo "Combining all doublet detection results for sample: $SAMPLE"
 
-OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/combined_ouput_scds_scdblfinder/$SAMPLE"
+OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/combined_output_scds_scdblfinder_vireo/$SAMPLE"
 DEMUXALOT_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/demuxalot_output/$SAMPLE"
 DROPULATION_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/dropulation_output/$SAMPLE"
 SCDS_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/scds_output/$SAMPLE"
 SCDBLFINDER_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/scdblfinder_output/$SAMPLE"
 DOUBLETDETECTION_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/doubletdetection_output/$SAMPLE"
+VIREO_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/vireo_output_nogeno_donors/$SAMPLE"
 
 singularity exec --bind $BIND_PATH_DATA \
                 --bind $BIND_PATH_OUTPUT \
@@ -35,6 +36,7 @@ singularity exec --bind $BIND_PATH_DATA \
                 -o $OUTDIR/combined_results.tsv \
                 --scds $SCDS_OUTDIR \
                 --scDblFinder $SCDBLFINDER_OUTDIR \
+                --vireo $VIREO_OUTDIR \
                 --method "MajoritySinglet" ## there are other methods that can also be used, please see the help message above for the other options
 
 # singularity exec --bind $BIND_PATH_DATA \
