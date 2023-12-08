@@ -63,3 +63,31 @@ colnames(df5) <- c()
 out_file = paste0(samples_dir, maxi_pool, ".tsv")
 fwrite(df5, out_file, sep="\t")
 # the copy for maxi_pool="S0030-33b"
+
+###################
+
+# save pool donor counts file
+output_file = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples.txt"
+
+cellranger_samples = list.files("/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/","S")
+simple_samples = cellranger_samples[!(cellranger_samples %in% cellranger_samples[grep("-",cellranger_samples)])]
+
+# simple pools
+for (sample in simple_samples){
+    df_s = read.csv(paste0(samples_dir,sample,".tsv"),sep="\t", header = F)
+    pool = gsub("a","",gsub("b","",gsub("c","",sample)))
+    df[df$V1 == sample, "V2"] = nrow(df_s)
+    df[df$V1 == sample, "V3"] = length(unique(pool_df[pool_df$Tenk10k_pool == pool, "TOB_ID"]$TOB_ID))
+}
+
+# add maxi pools
+df[df$V1 == "S0021-24a", "V3"] = df[df$V1 == "S0021a", "V3"] + df[df$V1 == "S0022a", "V3"] + df[df$V1 == "S0023a", "V3"] + df[df$V1 == "S0024a", "V3"]
+df[df$V1 == "S0021-24b", "V3"] = df[df$V1 == "S0021-24a", "V3"]
+df[df$V1 == "S0025-28a", "V3"] = df[df$V1 == "S0025a", "V3"] + df[df$V1 == "S0026a", "V3"] + df[df$V1 == "S0027a", "V3"] + df[df$V1 == "S0028a", "V3"]
+df[df$V1 == "S0025-28b", "V3"] = df[df$V1 == "S0025-28a", "V3"]
+df[df$V1 == "S0030-33a", "V3"] = df[df$V1 == "S0030a", "V3"] + df[df$V1 == "S0031a", "V3"] + df[df$V1 == "S0032a", "V3"] + df[df$V1 == "S0033a", "V3"]
+df[df$V1 == "S0030-33b", "V3"] = df[df$V1 == "S0030-33a", "V3"]
+
+# save
+colnames(df) <- c()
+fwrite(df, output_file, sep="\t")
