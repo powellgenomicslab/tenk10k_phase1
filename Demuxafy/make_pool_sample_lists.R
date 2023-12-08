@@ -1,5 +1,9 @@
 library(data.table)
 
+# output directory
+samples_dir = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/samples_in_pools/"
+
+# input directory
 donor_info_folder = "/share/ScratchGeneral/anncuo/tenk10k/donor_info/"
 
 # pool info
@@ -20,6 +24,42 @@ for (pool in unique(pool_df$Tenk10k_pool)){
   onek1k_ids_in_geno = onek1k_ids[onek1k_ids %in% df_samples$OneK1K_ID]
   samples_df = data.frame(onek1k_ids_in_geno)
   colnames(samples_df) <- c() 
-  out_file = paste0("/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/samples_in_pools/",pool,".tsv")
+  out_file = paste0(samples_dir, pool, ".tsv")
   fwrite(samples_df, out_file, sep="\t")
 }
+# then copy each file over for a,b,c replicates
+
+# maxi pools
+
+maxi_pool = "S0021-24a"
+df1 = read.csv(paste0(samples_dir,"S0021.tsv"),sep="\t", header = F)
+df2 = read.csv(paste0(samples_dir,"S0022.tsv"),sep="\t", header = F)
+df1 = read.csv(paste0(samples_dir,"S0023.tsv"),sep="\t", header = F)
+df2 = read.csv(paste0(samples_dir,"S0024.tsv"),sep="\t", header = F)
+df5 = rbind(df1,df2,df3,df4)
+colnames(df5) <- c()
+out_file = paste0(samples_dir, maxi_pool, ".tsv")
+fwrite(df5, out_file, sep="\t")
+# the copy for maxi_pool="S0021-24b"
+
+maxi_pool = "S0025-28a"
+df1 = read.csv(paste0(samples_dir,"S0025.tsv"),sep="\t", header = F)
+df2 = read.csv(paste0(samples_dir,"S0026.tsv"),sep="\t", header = F)
+df1 = read.csv(paste0(samples_dir,"S0027.tsv"),sep="\t", header = F)
+df2 = read.csv(paste0(samples_dir,"S0028.tsv"),sep="\t", header = F)
+df5 = rbind(df1,df2,df3,df4)
+colnames(df5) <- c()
+out_file = paste0(samples_dir, maxi_pool, ".tsv")
+fwrite(df5, out_file, sep="\t")
+# the copy for maxi_pool="S0025-28b"
+
+maxi_pool = "S0030-33a"
+df1 = read.csv(paste0(samples_dir,"S0030.tsv"),sep="\t", header = F)
+df2 = read.csv(paste0(samples_dir,"S0031.tsv"),sep="\t", header = F)
+df1 = read.csv(paste0(samples_dir,"S0032.tsv"),sep="\t", header = F)
+df2 = read.csv(paste0(samples_dir,"S0033.tsv"),sep="\t", header = F)
+df5 = rbind(df1,df2,df3,df4)
+colnames(df5) <- c()
+out_file = paste0(samples_dir, maxi_pool, ".tsv")
+fwrite(df5, out_file, sep="\t")
+# the copy for maxi_pool="S0030-33b"
