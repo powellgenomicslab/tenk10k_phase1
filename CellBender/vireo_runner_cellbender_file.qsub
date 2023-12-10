@@ -7,9 +7,9 @@
 #$ -l mem_requested=50G
 #$ -l tmp_requested=20G
 #$ -N vireo_demuxafy_TenK10K_scRNA
-#$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_cellbender_barcodes_S0025b.err
-#$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_cellbender_barcodes_S0025b.log
-#$ -t 30
+#$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_cellbender_barcodes_S0028a.err
+#$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_cellbender_barcodes_S0028a.log
+#$ -t 38
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
