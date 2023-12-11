@@ -28,3 +28,8 @@
 ### Harmony
 
 * Harmony (original R version): https://portals.broadinstitute.org/harmony/articles/quickstart.html
+* Harmony python implementation used here:
+
+### BBKNN
+
+* BBKNN: https://github.com/Teichlab/bbknn
