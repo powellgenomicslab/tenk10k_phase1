@@ -1,5 +1,6 @@
 #!/bin/bash
 #$ -S /bin/bash
+#$ -q short.q
 #$ -cwd
 #$ -V
 #$ -r yes
