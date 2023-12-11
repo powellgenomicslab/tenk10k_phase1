@@ -1,0 +1,31 @@
+#!/bin/bash
+#$ -S /bin/bash
+#$ -cwd
+#$ -V
+#$ -r yes
+#$ -l mem_requested=100G
+#$ -l tmp_requested=50G
+#$ -l nvgpu=3
+#$ -N cellbender_TenK10K_scRNA
+#$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/scvi_output/logs/scvi_TenK10K_scRNA_64samples.err
+#$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/scvi_output/logs/scvi_TenK10K_scRNA_64samples.log
+#$ -t 1-1
+#$ -m ae
+#$ -M a.cuomo@garvan.org.au
+
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/share/ScratchGeneral/anncuo/jupyter/conda_notebooks/envs/scvi/lib/
+
+echo "----------------------------------------------------------------"
+echo " Integrating TenK10K_scRNA samples using scVI"
+echo "----------------------------------------------------------------"
+
+# figure out syntax 
+# borrow anything from cellbender below??
+python scvi_integrate.py
+
+
+#conda run -n cellbender cellbender remove-background \
+#      --cuda \
+#      --input $COUNTS \
+#      --output ${CELLBENDER_OUTDIR}cellbender_output.h5 \
+#      --learning-rate 1e-6
