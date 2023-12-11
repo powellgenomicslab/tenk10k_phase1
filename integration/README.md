@@ -2,15 +2,15 @@
 
 ## Test time usage as a function of the number of libraries integrated
 
-* [BBKNN]
-* [Harmony py]
-* [scVI]
+* [BBKNN](test_time_bbknn.py)
+* [Harmony py](test_time_harmony.py)
+* [scVI]()
 
 ## Test quality of integration
 
-* [BBKNN]
-* [Harmony py]
-* [scVI]
+* [BBKNN]()
+* [Harmony py]()
+* [scVI]()
 
 
 ## Other
@@ -24,3 +24,7 @@
 * Tool available [here](https://docs.scvi-tools.org/en/stable/index.html)
 * Installation instructions [here]() (worked for mr)
 * Conda + jupyter instructions:
+
+### Harmony
+
+* Harmony (original R version): https://portals.broadinstitute.org/harmony/articles/quickstart.html
