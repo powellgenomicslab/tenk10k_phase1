@@ -1,4 +1,6 @@
 import glob
+import matplotlib.pyplot as plt
+
 import scanpy as sc
 import scanpy.external as sce
 
@@ -39,13 +41,17 @@ sc.pp.neighbors(adata, n_pcs = 30)
 sc.tl.umap(adata)
 sc.tl.leiden(adata, resolution = 0.5)
 sc.pl.umap(adata, color=['leiden'])
+plt.savefig(scanpy_dir+"figures/merged_umap_leiden.pdf")
 
 sc.pl.umap(adata, color=['sample'])
+plt.savefig(scanpy_dir+"figures/merged_umap_sample.pdf")
 
 sc.tl.tsne(adata)
 sc.pl.tsne(adata, color=['leiden'])
+plt.savefig(scanpy_dir+"figures/merged_tsne_leiden.pdf")
 
 sc.pl.tsne(adata, color=['sample'])
+plt.savefig(scanpy_dir+"figures/merged_tsne_sample.pdf")
 
 sce.pp.harmony_integrate(adata, 'sample')
 
@@ -56,10 +62,16 @@ sc.tl.tsne(adata)
 sc.tl.leiden(adata, resolution=0.5)
 
 sc.pl.umap(adata, color=['leiden'])
+plt.savefig(scanpy_dir+"figures/merged_umap_leiden_harmony.pdf")
+
 sc.pl.tsne(adata, color=['leiden'])
+plt.savefig(scanpy_dir+"figures/merged_tsne_leiden_harmony.pdf")
 
 sc.pl.umap(adata, color=['sample'])
+plt.savefig(scanpy_dir+"figures/merged_umap_sample_harmony.pdf")
+
 sc.pl.tsne(adata, color=['sample'])
+plt.savefig(scanpy_dir+"figures/merged_tsne_sample_harmony.pdf")
 
 out_dir = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/integration/"
 out_file = out_dir+"harmony_64_samples_concatenated.h5ad"
