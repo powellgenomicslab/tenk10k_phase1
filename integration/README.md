@@ -32,4 +32,4 @@
 
 ### BBKNN
 
-* BBKNN: https://github.com/Teichlab/bbknn
+* BBKNN: https://github.com/Teichlab/bbknn ([example usage](https://nbviewer.org/github/Teichlab/bbknn/blob/master/examples/simulation.ipynb))
