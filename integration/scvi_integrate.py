@@ -39,7 +39,7 @@ adata.layers['scvi_normalized'] = model.get_normalized_expression(library_size =
 sc.pp.neighbors(adata, use_rep = 'X_scVI')
 sc.tl.umap(adata)
 sc.tl.leiden(adata, resolution = 0.5)
-sc.pl.umap(adata, color = ['leiden', 'Sample'], frameon = False)
+sc.pl.umap(adata, color = ['leiden', 'sample'], frameon = False)
 adata.uns['scvi_markers'] = markers_scvi
 adata.uns['markers'] = markers
 adata.write_h5ad('integrated.h5ad')
