@@ -22,8 +22,14 @@
 ### scvi
 
 * Tool available [here](https://docs.scvi-tools.org/en/stable/index.html)
-* Installation instructions [here]() (worked for mr)
-* Conda + jupyter instructions:
+* qrsh -l h="*epsilon*",nvgpu=4,mem_requested=80G,h_vmem=80G,tmp_requested=100G -now no
+* micromamba create -n scvi-env_gpu python=3.9
+* pip install torch torchvision torchaudio -f https://download.pytorch.org/whl/cu114/torch_stable.html
+* micromamba install jax jaxlib -c conda-forge
+* micromamba install scvi-tools -c conda-forge
+* pip install chex==0.1.8
+* pip install torch torchvision torchaudio -f https://download.pytorch.org/whl/cu114/torch_stable.html
+* micromamba activate /home/anncuo/y/envs/scvi_gpu
 
 ### Harmony
 
