@@ -4,41 +4,31 @@ import numpy as np
 import pandas as pd
 import scanpy as sc
 import scvi
+from scipy.sparse import csr_matrix
 
-# CellRanger files
-cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
-files = glob.glob(cellranger_dir+"S*")
+# Filtered object directory
+scanpy_dir = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/filtered_scanpy_objects/"
 
-# pre-processing steps
-# modify parameters based on sample-specific plots
-def pp(sample_path):
-    adata=sc.read_10x_h5(sample_path+"/outs/filtered_feature_bc_matrix.h5")
-    sc.pp.filter_genes(adata, min_cells = 10)
-#     sc.pp.highly_variable_genes(adata, n_top_genes = 2000, subset = True, flavor = 'seurat_v3')
-#     sc.pp.highly_variable_genes(adata, min_mean=0.0125, max_mean=3, min_disp=0.5)
-     
-    sample = file.replace(cellranger_dir, "")
-    adata.var_names_make_unique()
-    adata.obs['sample'] = sample
-    adata.obs['barcode'] = adata.obs.index
-    adata.obs.index = sample + "_" + adata.obs['barcode']
-        
-    sc.pp.filter_cells(adata, min_genes=200) #get rid of cells with fewer than 200 genes
-    #sc.pp.filter_genes(adata, min_cells=3) #get rid of genes that are found in fewer than 3 cells
-    adata.var['mt'] = adata.var_names.str.startswith('mt-')  # annotate the group of mitochondrial genes as 'mt'
-    sc.pp.calculate_qc_metrics(adata, qc_vars=['mt'], percent_top=None, log1p=False, inplace=True)
-    upper_lim = np.quantile(adata.obs.n_genes_by_counts.values, .98)
-    adata = adata[adata.obs.n_genes_by_counts < upper_lim]
-    adata = adata[adata.obs.pct_counts_mt < 15]
-
-    return adata
+# load adata
+scanpy_files = glob.glob(scanpy_dir+"S*")
 
 datasets = []
-for file in files:
-    datasets.append(pp(file))
+for file in scanpy_files:
+    adata = sc.read(file)
+    datasets.append(adata)
     
 adata = datasets[0].concatenate(*datasets[1:])
-sc.tl.pca(adata, svd_solver='arpack')
+
+adata.X = csr_matrix(adata.X)
+
+sc.pp.filter_genes(adata, min_cells = 100)
+
+adata.layers['counts'] = adata.X.copy()
+
+sc.pp.normalize_total(adata, target_sum = 1e4)
+sc.pp.log1p(adata)
+adata.raw = adata
+
 scvi.model.SCVI.setup_anndata(adata, layer = "counts",
                               categorical_covariate_keys=["sample"],
                               continuous_covariate_keys=['pct_counts_mt', 'total_counts'])
