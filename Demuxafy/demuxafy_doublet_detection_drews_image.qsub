@@ -17,6 +17,7 @@
 SIF=/directflow/SCCGGroupShare/projects/DrewNeavin/Demultiplex_Benchmark/Singularity_Buckets/docker/DoubletDetection.sif
 BIND_PATH_DATA=/directflow
 BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
+PY_SCRIPT=/directflow/SCCGGroupShare/projects/DrewNeavin/Demultiplex_Benchmark/Demultiplexing_Doublet_Detecting_Docs/scripts/DoubletDetection.py
 
 #i=${SGE_TASK_ID};
 #SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs.txt)
@@ -33,6 +34,6 @@ mkdir /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/doubletdetec
 
 singularity exec --bind $BIND_PATH_DATA \
                 --bind $BIND_PATH_OUTPUT \
-                $SIF DoubletDetection.py \
+                $SIF $PY_SCRIPT \
                 -m $COUNTS \
                 -o $DOUBLETDETECTION_OUTDIR 
