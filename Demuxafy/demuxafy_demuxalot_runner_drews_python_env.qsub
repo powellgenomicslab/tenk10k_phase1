@@ -18,7 +18,7 @@
 # BIND_PATH_DATA=/directflow
 # BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
 PY_ENV=/directflow/SCCGGroupShare/projects/DrewNeavin/software/anaconda3/envs/demuxalot/bin/python
-PY_SCRIPT=/share/ScratchGeneral/anncuo/tenk10k/data_processing/Demultiplexing_Doublet_Detecting_scripts/Demuxalot.py
+PY_SCRIPT=/directflow/SCCGGroupShare/projects/DrewNeavin/Demultiplex_Benchmark/scripts/demuxalot_script.py
 
 # i=${SGE_TASK_ID};
 # SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs.txt)
