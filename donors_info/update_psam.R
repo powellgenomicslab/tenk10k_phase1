@@ -335,7 +335,8 @@ genotyping_qc_1023 <- genotyping_qc_1023[STUDY_ID != "919_920"]
 recruited_donors1023 <- recruited_donors1023[STUDY_ID != "241_242"]
 genotyping_qc_1023 <- genotyping_qc_1023[STUDY_ID != "241_242"]
 
-### TOB1745 has two genotyped samples: 565_566 and 1095_566. 1095_566 is better quality so will use that one
+### TOB1745 has two genotyped samples: 565_566 and 1095_566. 1095_566 is better quality so will use that one 
+# note by Anna: I think this is TOB1421 instead (not TOB1745), and I do not see duplicates
 recruited_donors1023 <- recruited_donors1023[STUDY_ID != "565_566"]
 genotyping_qc_1023 <- genotyping_qc_1023[STUDY_ID != "565_566"]
 
