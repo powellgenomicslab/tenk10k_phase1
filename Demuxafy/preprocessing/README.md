@@ -14,6 +14,6 @@ Additionally, in order to demultiplex (assign cells to donors, _e.g._, using vir
 
 Vireo requires:
 
-* a VCF file including genotypes for all individuals (this needs to be zipped and indexed, as well as other possible manipulations, see prepare_inputs.md#vcf-manipulation)
+* a VCF file including genotypes for all individuals (this needs to be zipped and indexed, as well as other possible manipulations, see [this paragraph in the preprocessing](https://github.com/powellgenomicslab/tenk10k_phase1/blob/main/Demuxafy/preprocessing/prepare_inputs.md#vcf-manipulation))
 * to specify the individuals from the VCF that are expected in the specific pool / library analysed
 * it is possible to specify the total number of individuals in the pool (even if not in the VCF) using the -N flag, for which we created number of individual files
