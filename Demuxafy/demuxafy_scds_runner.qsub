@@ -6,9 +6,9 @@
 #$ -r yes
 #$ -l mem_requested=80G
 #$ -N scds_demuxafy_TenK10K_scRNA
-#$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/scds/logs/scds_TenK10K_scRNA_S0001a.err
-#$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/scds/logs/scds_TenK10K_scRNA_S0001a.log
-#$ -t 1-1
+#$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/scds/logs/scds_TenK10K_scRNA_231213.err
+#$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/scds/logs/scds_TenK10K_scRNA_231213.log
+#$ -t 2-24
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
