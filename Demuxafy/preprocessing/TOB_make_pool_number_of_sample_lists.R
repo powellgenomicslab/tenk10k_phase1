@@ -6,7 +6,7 @@ donor_info_folder = "/share/ScratchGeneral/anncuo/tenk10k/donor_info/"
 pool_df = fread(paste0(donor_info_folder,"TOB_TenK10K_pool_info_v3.csv"))
 colnames(pool_df) = gsub(" ","_",colnames(pool_df))
 
-# load sample lists (created in )
+# load sample lists (created in TOB_make_pool_sample_lists.R)
 samples_dir = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/samples_in_pools_drews_names/"
 
 #############################################################################
