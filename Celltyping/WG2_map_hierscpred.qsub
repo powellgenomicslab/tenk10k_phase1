@@ -1,0 +1,35 @@
+#$ -N clasify_cells
+#$ -q short.q
+#$ -l mem_requested=50G
+#$ -S /bin/bash
+#$ -r yes
+#$ -cwd 
+#$ -o results/2021-11-19_hier_scpred
+#$ -e results/2021-11-19_hier_scpred
+
+# mkdir results/2021-11-19_hier_scpred
+
+cd $SGE_O_WORKDIR
+
+# Set environmental variables
+input=results/2021-10-28_pools
+output=results/2021-11-19_hier_scpred
+
+# Get job info
+echo "JOB: $JOB_ID TASK: $SGE_TASK_ID HOSTNAME: $HOSTNAME"
+
+# Get basefile name
+files=($(ls ${input} | grep ".RDS"))
+i="$(($SGE_TASK_ID-1))"
+
+filename=${files[$i]}
+filename=$(echo $filename | sed 's/.RDS//')
+
+echo "Running for: $filename"
+
+# Run main command
+singularity exec -B $SGE_O_WORKDIR bin/cell_classification.sif \
+  Rscript /map_hierscpred.R \
+  --file ${input}/${filename}.RDS \
+  --out ${filename}_out \
+  --path ${output}
