@@ -1,6 +1,6 @@
 # Input files recap
 
-## Common inputs
+## Common inputs (CellRanger)
 
 All tools require count information which gets outputted directly from Cellranger:
 
@@ -8,3 +8,11 @@ All tools require count information which gets outputted directly from Cellrange
 * vireo requires **bams**: ```outs/possorted_genome_bam.bam```
 * vireo also requires to specify **barcodes** (cell list), which can be extracted directly from cellranger (```outs/filtered_feature_bc_matrix/barcodes.tsv.gz```), although we will use those from cellbender (```cellbender_output_cell_barcodes.csv```)
 
+## Genotypes
+
+Additionally, in order to demultiplex (assign cells to donors, _e.g._, using vireo), genotype files are required.
+
+Vireo requires:
+
+* a VCF file including genotypes for all individuals (this needs to be zipped and indexed, see:)
+* to specify the individuals from the VCF that are expected in the specific pool / library analysed
