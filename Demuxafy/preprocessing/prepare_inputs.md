@@ -1,6 +1,16 @@
-# Additional Data Preparation
+# Simple pre-processing steps
 
-Demuxalot and Dropulation (the two demultiplexing tools used here) need genotype files (as well as the CellRanger outputs), which need a little more preparation.
+## Extract cellranger libraries 
+
+This is used for scds, scDblFinder.
+
+```bash
+ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231214_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_231214.txt
+```
+
+## Additional data preparation for demultiplexing tools
+
+Compared to the doublet detection tools, Vireo, Demuxalot and Dropulation (demultiplexing tools) need genotype files (as well as the CellRanger outputs), which need a little more preparation.
 
 ## Expression files
 
