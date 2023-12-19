@@ -16,4 +16,6 @@ Vireo requires:
 
 * a VCF file including genotypes for all individuals (this needs to be zipped and indexed, as well as other possible manipulations, see [this paragraph in the preprocessing](https://github.com/powellgenomicslab/tenk10k_phase1/blob/main/Demuxafy/preprocessing/prepare_inputs.md#vcf-manipulation))
 * to specify the individuals from the VCF that are expected in the specific pool / library analysed
-* it is possible to specify the total number of individuals in the pool (even if not in the VCF) using the -N flag, for which we created number of individual files
+  * use all of the individuals [extracted from the VCF](https://github.com/powellgenomicslab/tenk10k_phase1/blob/main/Demuxafy/preprocessing/prepare_inputs.md#individual-files-directly-from-vcf)
+  * or specify the specific ones included in the pool e.g. using [this script](TOB_make_pool_sample_lists.R) 
+* it is possible to specify the total number of individuals in the pool (even if not in the VCF) using the -N flag, for which we [created number of individual files](TOB_make_pool_number_of_sample_lists.R)
