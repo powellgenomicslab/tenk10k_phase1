@@ -14,3 +14,9 @@ Reference-based approaches include:
 
 The single-cell eQTL Gen consortium recommends the following approach, [instruction docs](https://powellgenomicslab.github.io/WG2-pipeline-classification-docs/general.html) for working group 2 (WG2), classification.
 
+* download singularity image
+* create Seurat object (one per sequencing library)
+* run map_azimuth.R
+* run map_hierscpred.R
+* compare
+* maybe merge?
