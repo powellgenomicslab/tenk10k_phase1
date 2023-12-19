@@ -6,6 +6,8 @@ donor_info_folder = "/share/ScratchGeneral/anncuo/tenk10k/donor_info/"
 pool_df = fread(paste0(donor_info_folder,"TOB_TenK10K_pool_info_v3.csv"))
 colnames(pool_df) = gsub(" ","_",colnames(pool_df))
 
+# load sample lists (created in )
+samples_dir = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/samples_in_pools_drews_names/"
 
 #############################################################################
 ##########################     13 / 10 / 2023     ###########################
@@ -23,6 +25,30 @@ Samples recap: all TOB, 64 libraries in total:
 
 # libraries sequenced on Oct 13th, 2023 (hence the name 231013)
 output_file = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples_231013.txt"
+
+cellranger_samples = list.files("/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/","S")
+df = data.frame(V1 = cellranger_samples)
+
+# add expected and genotyped donor counts
+for (sample in unique(df$V1)){
+    df_s = read.csv(paste0(samples_dir, sample, ".tsv"), sep="\t", header = F)
+    pool = gsub("a","",gsub("b","",gsub("c","",sample)))
+    df[df$V1 == sample, "V2"] = nrow(df_s)
+    df[df$V1 == sample, "V3"] = length(unique(pool_df[pool_df$Tenk10k_pool == pool, "TOB_ID"]$TOB_ID))
+}
+
+# add maxi pools (not directly linked to a single pool)
+df[df$V1 == "S0021-24a", "V3"] = df[df$V1 == "S0021a", "V3"] + df[df$V1 == "S0022a", "V3"] + df[df$V1 == "S0023a", "V3"] + df[df$V1 == "S0024a", "V3"]
+df[df$V1 == "S0021-24b", "V3"] = df[df$V1 == "S0021-24a", "V3"]
+df[df$V1 == "S0025-28a", "V3"] = df[df$V1 == "S0025a", "V3"] + df[df$V1 == "S0026a", "V3"] + df[df$V1 == "S0027a", "V3"] + df[df$V1 == "S0028a", "V3"]
+df[df$V1 == "S0025-28b", "V3"] = df[df$V1 == "S0025-28a", "V3"]
+df[df$V1 == "S0030-33a", "V3"] = df[df$V1 == "S0030a", "V3"] + df[df$V1 == "S0031a", "V3"] + df[df$V1 == "S0032a", "V3"] + df[df$V1 == "S0033a", "V3"]
+df[df$V1 == "S0030-33b", "V3"] = df[df$V1 == "S0030-33a", "V3"]
+
+# save
+colnames(df) <- c()
+fwrite(df, output_file, sep="\t")
+
 
 #############################################################################
 ##########################     13 / 12 / 2023     ###########################
