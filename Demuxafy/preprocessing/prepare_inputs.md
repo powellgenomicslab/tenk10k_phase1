@@ -13,7 +13,7 @@ ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk1
 
 ## VCF manipulation
 
-### Add "chr" to VCF to match BAM files
+### add "chr" to VCF to match BAM files
 
 First, copy to own folder and unzip:
 
@@ -34,7 +34,7 @@ awk '{
       }' Merged_MAF0.05_hg38_nochr.vcf > Merged_MAF0.05_hg38_chr.vcf
 ```
 
-Finally, zip again and index:
+### zip and index
 
 ```bash
 module use /share/ClusterShare/apps/brenner/Modules/modulefiles
