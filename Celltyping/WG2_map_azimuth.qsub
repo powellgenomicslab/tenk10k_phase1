@@ -28,10 +28,12 @@ AZIMUTH_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/${SA
 mkdir /share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/${SAMPLE}
 mkdir /share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/${SAMPLE}/step2_azimuth
 
+cd $SGE_O_WORKDIR
+
 # Run main command
 singularity exec --bind $BIND_PATH_DATA \
                  --bind $BIND_PATH_OUTPUT \
-                 -B $SIF Rscript /map_azimuth.R \
+                 -B $SGE_O_WORKDIR $SIF Rscript /map_azimuth.R \
                  --file $RDS \
                  --path $AZIMUTH_OUTDIR 
 
