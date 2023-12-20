@@ -1,35 +1,37 @@
-#$ -N clasify_cells
-#$ -q short.q
-#$ -l mem_requested=50G
+#!/bin/bash
 #$ -S /bin/bash
+#$ -cwd
+#$ -V
 #$ -r yes
-#$ -cwd 
-#$ -o results/2021-10-28_cell_type_annotation
-#$ -e results/2021-10-28_cell_type_annotation
+#$ -l mem_requested=50G
+#$ -l tmp_requested=50G
+#$ -N classify_cells_azimuth
+#$ -q short.q
+#$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/logs/azimuth_TenK10K_scRNA_231213.err
+#$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/logs/azimuth_TenK10K_scRNA_231213.log
+#$ -t 1-24
+#$ -m ae
+#$ -M a.cuomo@garvan.org.au
 
-# mkdir results/2021-10-28_cell_type_annotation
+SIF=/share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/cell_classification.sif
+BIND_PATH_DATA=/directflow
+BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
 
-cd $SGE_O_WORKDIR
+i=${SGE_TASK_ID};
+SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs_231213.txt)
 
-# Set environmental variables
-input=/share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/seurat_objects/
-output=/share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/cell_type_annotation/
+echo "Performing Azimuth cell classification on sample: $SAMPLE"
 
-# Get job info
-echo "JOB: $JOB_ID TASK: $SGE_TASK_ID HOSTNAME: $HOSTNAME"
+RDS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/seurat_objects/${SAMPLE}.rds"
+AZIMUTH_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/${SAMPLE}"
 
-# Get basefile name
-files=($(ls ${input} | grep ".RDS"))
-i="$(($SGE_TASK_ID-1))"
-
-filename=${files[$i]}
-filename=$(echo $filename | sed 's/.RDS//')
-
-echo "Classifying: $filename"
+mkdir /share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/${SAMPLE}
 
 # Run main command
-singularity exec -B $SGE_O_WORKDIR bin/cell_classification.sif \
-  Rscript /map_azimuth.R \
-  --file ${input}/${filename}.RDS \
-  --out ${filename}_out \
-  --path ${output}
+singularity exec --bind $BIND_PATH_DATA \
+                 --bind $BIND_PATH_OUTPUT \
+                 -B $SIF Rscript /map_azimuth.R \
+                 --file $RDS \
+                 --path $AZIMUTH_OUTDIR 
+
+
