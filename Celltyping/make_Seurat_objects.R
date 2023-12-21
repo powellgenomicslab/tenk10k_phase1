@@ -13,6 +13,7 @@ for (sample in cellranger_samples){
   pbmc[["percent.mt"]] <- PercentageFeatureSet(pbmc, pattern = "^MT-")
   pbmc <- NormalizeData(pbmc, normalization.method = "LogNormalize", scale.factor = 10000)
   pbmc <- FindVariableFeatures(pbmc, selection.method = "vst", nfeatures = 2000)
+  all.genes <- rownames(pbmc)
   pbmc <- ScaleData(pbmc, features = all.genes)
   out_file = paste0(out_folder, sample, ".rds")
   saveRDS(pbmc, file = out_file)
