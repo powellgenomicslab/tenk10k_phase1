@@ -9,6 +9,9 @@ library(Seurat)
 # 24 samples from 231213
 cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231213_tenk10k_gencode44/cellranger_outs/"
 
+# 41 samples from 231214
+# cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231214_tenk10k_gencode44/cellranger_outs/"
+
 cellranger_samples = list.files(cellranger_dir, pattern = "S.") 
 
 out_folder = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/seurat_objects/"
