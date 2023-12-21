@@ -4,7 +4,11 @@ i <- as.numeric(args[1])
 library(Seurat)
 
 # 64 samples from 231013
-cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
+# cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
+
+# 24 samples from 231213
+cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231213_tenk10k_gencode44/cellranger_outs/"
+
 cellranger_samples = list.files(cellranger_dir, pattern = "S.") 
 
 out_folder = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/seurat_objects/"
