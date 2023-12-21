@@ -1,15 +1,11 @@
 args <- commandArgs(trailingOnly=TRUE)
 i <- as.numeric(args[1])
 
-print(i)
-
 library(Seurat)
 
 # 64 samples from 231013
 cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
 cellranger_samples = list.files(cellranger_dir, pattern = "S.") 
-
-print(cellranger_samples)
 
 out_folder = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/seurat_objects/"
 
