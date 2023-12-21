@@ -9,7 +9,7 @@
 #$ -q short.q
 #$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/logs/scpred_TenK10K_scRNA_231213.err
 #$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/logs/scpred_TenK10K_scRNA_231213.log
-#$ -t 1-24
+#$ -t 6-6
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
@@ -18,19 +18,25 @@ BIND_PATH_DATA=/directflow
 BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
 
 i=${SGE_TASK_ID};
-SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs_231213.txt)
+SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs_231013.txt)
 
 echo "Performing hierarchical scPred cell classification on sample: $SAMPLE"
 
 RDS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/seurat_objects/${SAMPLE}.rds"
-SCPRED_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/${SAMPLE}"
+SCPRED_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/${SAMPLE}/step3_hierscpred/"
 
 mkdir /share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/${SAMPLE}
+mkdir /share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/${SAMPLE}/step3_hierscpred
+
+cd $SGE_O_WORKDIR
 
 # Run main command
 singularity exec --bind $BIND_PATH_DATA \
                  --bind $BIND_PATH_OUTPUT \
-                 -B $SIF Rscript /map_hierscpred.R \
+                 -B $SGE_O_WORKDIR $SIF Rscript /map_hierscpred.R \
                  --file $RDS \
                  --path $SCPRED_OUTDIR \
                  --plan multiprocess
+
+
+
