@@ -17,7 +17,8 @@ sample = cellranger_samples[i]
 
 print(paste0("Create Seurat object for ",sample))
 
-cellranger_path = paste0(cellranger_dir,sample,"/outs/filtered_feature_bc_matrix/")
+#cellranger_path = paste0(cellranger_dir,sample,"/outs/filtered_feature_bc_matrix/")
+cellranger_path = paste0(cellranger_dir,sample,"/cellranger_count/"sample,"/outs/filtered_feature_bc_matrix/")
 pbmc.data <- Read10X(data.dir = cellranger_path)
 pbmc <- CreateSeuratObject(counts = pbmc.data, project = sample, min.cells = 3, min.features = 200)
 pbmc[["percent.mt"]] <- PercentageFeatureSet(pbmc, pattern = "^MT-")
