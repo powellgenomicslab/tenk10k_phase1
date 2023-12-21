@@ -1,6 +1,8 @@
 args <- commandArgs(trailingOnly=TRUE)
 i <- args[1]
 
+print(i)
+
 library(Seurat)
 
 # 64 samples from 231013
