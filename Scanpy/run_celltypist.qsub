@@ -3,8 +3,8 @@
 #$ -cwd
 #$ -V
 #$ -r yes
-#$ -l mem_requested=50G
-#$ -l tmp_requested=20G
+#$ -l mem_requested=20G
+#$ -l tmp_requested=10G
 #$ -N run_celltypist_per_sample
 #$ -q short.q
 #$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/logs/run_celltypist_TenK10K_scRNA_231213.err
