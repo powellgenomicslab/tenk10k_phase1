@@ -28,7 +28,7 @@ samples = glob.glob(cellranger_dir+"S*")
 # mismatch in index between bash and python
 sample = samples[i-1]
 print(sample)
-sample = sample.replace(cellranger_dir,"",sample)
+sample = sample.replace(cellranger_dir,"")
 print(sample)
 
 predicted_filename = output_dir+sample+"_celltypist_predicted.h5"
