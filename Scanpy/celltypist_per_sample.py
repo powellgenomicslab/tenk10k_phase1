@@ -25,7 +25,9 @@ cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_J
 output_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/celltypist/"
 
 samples = glob.glob(cellranger_dir+"S*")
-sample = samples[i]
+# mismatch in index between bash and python
+sample = samples[i-1]
+print(sample)
 
 predicted_filename = output_dir+sample+"_celltypist_predicted.h5"
 if os.path.exists(predicted_filename):
