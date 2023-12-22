@@ -27,6 +27,7 @@ output_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/d
 samples = glob.glob(cellranger_dir+"S*")
 # mismatch in index between bash and python
 sample = samples[i-1]
+print(sample)
 sample = sample.replace(cellranger_dir,"",sample)
 print(sample)
 
