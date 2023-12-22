@@ -32,7 +32,9 @@ if os.path.exists(predicted_filename):
   sys.exit("File already exists!")
 
 # load adata
-adata=sc.read_10x_h5(sample+"/outs/filtered_feature_bc_matrix.h5")
+# filtered_matrix = sample+"/outs/filtered_feature_bc_matrix.h5"
+filtered_matrix = sample+"/cellranger_count/"+sample+"/outs/filtered_feature_bc_matrix.h5"
+adata=sc.read_10x_h5(filtered_matrix)
 sc.pp.normalize_total(adata, target_sum=1e4)
 sc.pp.log1p(adata)
 
