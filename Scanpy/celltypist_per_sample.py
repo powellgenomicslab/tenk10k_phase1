@@ -27,7 +27,6 @@ output_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/d
 samples = glob.glob(cellranger_dir+"S*")
 # mismatch in index between bash and python
 sample = samples[i-1]
-print(sample)
 sample = sample.replace(cellranger_dir,"")
 print(sample)
 
@@ -52,8 +51,8 @@ model = models.Model.load(model = 'Immune_All_Low.pkl')
 predictions = celltypist.annotate(adata, model = 'Immune_All_Low.pkl', majority_voting = True)
 adata_predicted = predictions.to_adata()
 
-# plot UMAP with cell types annotations
-sc.pl.umap(adata_predicted, color = 'majority_voting')
+# umap
+sc.tl.umap(adata_predicted)
 
 # save
 adata_predicted.write(predicted_filename)
