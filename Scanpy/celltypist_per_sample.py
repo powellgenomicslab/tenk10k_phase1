@@ -27,6 +27,7 @@ output_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/d
 samples = glob.glob(cellranger_dir+"S*")
 # mismatch in index between bash and python
 sample = samples[i-1]
+sample = sample.replace(cellranger_dir,"",sample)
 print(sample)
 
 predicted_filename = output_dir+sample+"_celltypist_predicted.h5"
@@ -34,8 +35,8 @@ if os.path.exists(predicted_filename):
   sys.exit("File already exists!")
 
 # load adata
-# filtered_matrix = sample+"/outs/filtered_feature_bc_matrix.h5"
-filtered_matrix = sample+"/cellranger_count/"+sample+"/outs/filtered_feature_bc_matrix.h5"
+# filtered_matrix = cellranger_dir+sample+"/outs/filtered_feature_bc_matrix.h5"
+filtered_matrix = cellranger_dir+sample+"/cellranger_count/"+sample+"/outs/filtered_feature_bc_matrix.h5"
 adata=sc.read_10x_h5(filtered_matrix)
 sc.pp.normalize_total(adata, target_sum=1e4)
 sc.pp.log1p(adata)
