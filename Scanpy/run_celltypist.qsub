@@ -7,8 +7,8 @@
 #$ -l tmp_requested=20G
 #$ -N run_celltypist_per_sample
 #$ -q short.q
-#$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/logs/run_celltypist_TenK10K_scRNA_S0001a.err
-#$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/logs/run_celltypist_TenK10K_scRNA_S0001a.log
+#$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/logs/run_celltypist_TenK10K_scRNA_S0001a.err
+#$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/logs/run_celltypist_TenK10K_scRNA_S0001a.log
 #$ -t 1-1
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
