@@ -13,8 +13,9 @@ Repo for analyses of the pilot phase of TenK10K.
   * [Demuxafy combiner script](Demuxafy/demuxafy_combiner.qsub), qsub script to run Demuxafy combiner for each sequencing library (requires scds, scDblFinder, vireo results)
 * Cell Typing  
   * [make Seurat objects scripts](Celltyping/make_Seurat_objects.qsub), qsub script running the [R script](Celltyping/make_Seurat_object_one_sample.R) building Seurat objects for each sequencing library prior to cell typing using Azimuth / scPred
-  * [Azimuth cell typing runner](Celltyping/WG2_map_azimuth.qsub), qsub script to perform celltyping using Azimuth using sceQTLGen WG2 image (requires Seurat objects)
-  * [hierarchical scPred cell typing runner](Celltyping/WG2_map_hierscpred.qsub), qsub script to perform celltyping using hierarchical scPred using sceQTLGen WG2 image (requires Seurat objects)
+  * [Azimuth cell typing runner](Celltyping/WG2_map_azimuth.qsub), qsub script to perform celltyping using Azimuth for each sequencing library using sceQTLGen WG2 image (requires Seurat objects)
+  * [hierarchical scPred cell typing runner](Celltyping/WG2_map_hierscpred.qsub), qsub script to perform celltyping using hierarchical scPred for each sequencing library using sceQTLGen WG2 image (requires Seurat objects)
+  * [Cell typing combiner script](Celltyping/combine_results.qsub), qsub script running the [R script](Celltyping/combine_results_one_sample.R) which combines cell types prediction for each sequencing library obtained using Azimuth and scPred (erquires azimuth and hierarchical scPred results)
 
 ## Pre-processing
 
