@@ -7,9 +7,9 @@
 #$ -l mem_requested=100G
 #$ -l tmp_requested=50G
 #$ -N vireo_demuxafy_TenK10K_scRNA
-#$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_final_S0025-28.err
-#$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_final_S0025-28.log
-#$ -t 27-28
+#$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_final_S0025-28b.err
+#$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_final_S0025-28b.log
+#$ -t 28
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
@@ -43,21 +43,21 @@ FIELD="GT"
 mkdir /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/vireo_output_final/${SAMPLE}
 
 # Count number of alleles using cellSNP-lite
-singularity exec --bind $BIND_PATH_DATA \
-                --bind $BIND_PATH_OUTPUT \
-                $SIF cellsnp-lite \
-                -s $BAM -b $BARCODES \
-                -O $VIREO_OUTDIR \
-                -R $VCF \
-                -p 20 \
-                --minMAF 0.1 \
-                --minCOUNT 20 \
-                --gzip
+#singularity exec --bind $BIND_PATH_DATA \
+#                --bind $BIND_PATH_OUTPUT \
+#                $SIF cellsnp-lite \
+#                -s $BAM -b $BARCODES \
+#                -O $VIREO_OUTDIR \
+#                -R $VCF \
+#                -p 20 \
+#                --minMAF 0.1 \
+#                --minCOUNT 20 \
+#                --gzip
 
 # Filter SNPs identified by cellSNP-lite
-singularity exec --bind $BIND_PATH_DATA \
-                --bind $BIND_PATH_OUTPUT \
-                $SIF bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf.gz -S $INDS -Ov -o $VIREO_OUTDIR/donor_subset.vcf
+#singularity exec --bind $BIND_PATH_DATA \
+#                --bind $BIND_PATH_OUTPUT \
+#                $SIF bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf.gz -S $INDS -Ov -o $VIREO_OUTDIR/donor_subset.vcf
 
 # Demultiplex using vireo
 singularity exec --bind $BIND_PATH_DATA \
