@@ -17,17 +17,17 @@ Repo for analyses of the pilot phase of TenK10K.
     * [Azimuth cell typing runner](Celltyping/WG2_map_azimuth.qsub), qsub script to perform celltyping using Azimuth for each sequencing library using sceQTLGen WG2 image (requires Seurat objects)
     * [hierarchical scPred cell typing runner](Celltyping/WG2_map_hierscpred.qsub), qsub script to perform celltyping using hierarchical scPred for each sequencing library using sceQTLGen WG2 image (requires Seurat objects)
     * [Consortium WG2 cell typing combiner script](Celltyping/combine_results.qsub), qsub script running the [R script](Celltyping/combine_results_one_sample.R) which combines cell types prediction for each sequencing library obtained using Azimuth and scPred (requires azimuth and hierarchical scPred results)
-  * Celltypist script 
-* Scanpy data wrangling
-  * qsub script running the Python script adding all metadata to scanpy object for each sequencing library (requires results from CellBender, Demuxafy combiner, WG2 cell typing combiner) and performing initial QC
-  * Python script combining results into a single AnnData object and performing batch correction / data integration using Harmony 
+  * [Celltypist runner](Scanpy/celltypist_runner.qsub), qsub script running the [Python script](Scanpy/celltypist_per_sample.py) performing cell typing using Cell Typist for each sequencing library
+* Scanpy data wrangling & data integration
+  * [Add info runner](Scanpy/run_add_metadata.qsub), qsub script running the [Python script](Scanpy/add_metadata_per_sample.py) adding all metadata to scanpy object for each sequencing library (requires results from CellBender, Demuxafy combiner, WG2 cell typing combiner, celltypist results) and performing initial QC
+  * Python script combining results into a single AnnData object and performing batch correction + data integration using Harmony 
 
 ## Pre-processing
 
 * [CellBender](https://cellbender.readthedocs.io/en/latest/tutorial/index.html) for ambient RNA detection
 * [Demuxafy](https://demultiplexing-doublet-detecting-docs.readthedocs.io/en/latest/index.html) for demultiplexing and doublet detection, specifically:
-  * [vireo] for demultiplexing, as it allows to include the number of donors expected per pool, regardless of whether we have genotype data for them
-  * majority voting of [vireo], [scds] and [scDblFinder] for doublet detection 
+  * [vireo])() for demultiplexing, as it allows to include the number of donors expected per pool, regardless of whether we have genotype data for them
+  * majority voting of [vireo](), [scds]() and [scDblFinder]() for doublet detection 
 * QC & normalisation using [Scanpy](https://scanpy.readthedocs.io/en/stable/)
 * batch correction / integration using [Harmony](https://portals.broadinstitute.org/harmony/) 
 * cell typing testing different strategies, starting with [CellTypist](https://www.celltypist.org/)
