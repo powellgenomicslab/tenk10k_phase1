@@ -7,9 +7,9 @@
 #$ -l mem_requested=100G
 #$ -l tmp_requested=50G
 #$ -N vireo_demuxafy_TenK10K_scRNA
-#$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_final_S0025-28b.err
-#$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_final_S0025-28b.log
-#$ -t 28
+#$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_final_S0021-24.err
+#$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_final_S0021-24.log
+#$ -t 13-14
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
@@ -18,8 +18,8 @@ BIND_PATH_DATA=/directflow
 BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
 
 #PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples.txt"
-#PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples_231213.txt"
 PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples_231013.txt"
+#PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples_231213.txt"
 #PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples_231214.txt"
 
 SAMPLE=`head -n $SGE_TASK_ID $PARAMS | tail -n 1 | awk '{print $1}'`
