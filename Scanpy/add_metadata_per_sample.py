@@ -1,5 +1,6 @@
 import glob
 import os
+import re
 import sys
 
 import pandas as pd
@@ -35,6 +36,12 @@ cellbender_dir = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/cellbende
 # Demuxafy files (combined results)
 demuxafy_dir = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/combined_output_scds_scdblfinder_vireo/"
 
+# Celltypist files
+celltypist_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/celltypist/"
+
+# scPred files
+scpred_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/"
+
 # Output directory
 output_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/filtered_scanpy_objects/"
 
@@ -63,13 +70,37 @@ adata.obs = pd.concat([adata.obs,cellbender_df], axis=1)
 
 # add cell typing info
 # celltypist
+celltypist_file = celltypist_dir + sample + "_celltypist_predicted.h5"
+celltypist_adata = sc.read(celltypist_file)
+celltypist_df = celltypist_adata.obs[celltypist_adata.obs.index.isin(cells_cellranger)]
+
+# rename columns to specify where the info comes from
+celltypist_df.columns = ["celltypist_" + i for i in celltypist_df.columns]
+
+# add celltypist info to adata obs
+adata.obs = pd.concat([adata.obs,celltypist_df], axis=1)
+
 # azimuth + hierarchical scPred
+scpred_file = scpred_dir + sample + "/combined_metadata.csv"
+scpred_df = pd.read_csv(scpred_file, index_col=0)
+scpred_df = scpred_df[scpred_df.index.isin(cells_cellranger)]
+
+# rename columns to specify where the info comes from
+scpred_df.drop(["orig.ident.1","nCount_RNA.1","nFeature_RNA.1","percent.mt.1"], axis=1, inplace=True)
+scpred_df.rename(columns={'orig.ident': 'sample', 'percent.mt': 'percent_mt',
+                         'predicted.celltype.l2': 'azimuth_predicted_celltype_l2',
+                         'predicted.celltype.l2.score': 'azimuth_predicted_celltype_l2_score'}, inplace=True)
+scpred_df.columns = ["wg2_" + i for i in scpred_df.columns]
+
+# add scpred info to adata obs
+adata.obs = pd.concat([adata.obs,scpred_df], axis=1)
 
 # get combined demultiplexing + doublet info
 demuxafy_file = demuxafy_dir + sample + "/combined_results_w_combined_assignments.tsv"
 demuxafy_df = pd.read_csv(demuxafy_file, sep="\t")
 demuxafy_df.index = demuxafy_df['Barcode']
-demuxafy_df = demuxafy_df.drop(columns=['Barcode'])
+demuxafy_df.drop(columns=['Barcode'], inplace=True)
+demuxafy_df = demuxafy_df[demuxafy_df.index.isin(cells_cellranger)]
 
 # add this info to the obs as well
 adata.obs = pd.concat([adata.obs,demuxafy_df], axis=1)
@@ -101,12 +132,12 @@ sc.pl.highly_variable_genes(adata)
 plt.savefig(output_dir+"figures/"+sample+"_hvgs.pdf")
 
 # add individual and sample id pre-merging
-adata.obs["individual"] = sample
-donors = adata.obs['MajoritySinglet_Individual_Assignment']
+adata.obs["sample"] = sample
+adata.obs["individual"] = adata.obs['MajoritySinglet_Individual_Assignment']
 
 # add samples ID to donors that are just added by vireo to make them unique
 donor_regex = re.compile(r'donor[0-9]+')
-adata.obs["individual"] = [f"{i}_{sample}" if re.match(donor_regex, i) else i for i in donors]
+adata.obs["individual"] = [f"{i}_{sample}" if re.match(donor_regex, str(i)) else i for i in adata.obs["individual"]]
 
 # save
 adata.write(output_filename)
