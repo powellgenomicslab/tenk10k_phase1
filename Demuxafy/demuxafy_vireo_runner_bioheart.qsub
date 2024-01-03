@@ -9,7 +9,7 @@
 #$ -N vireo_demuxafy_TenK10K_scRNA
 #$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_bioheart.err
 #$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_bioheart.log
-#$ -t 1-1
+#$ -t 2-2
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
