@@ -38,16 +38,16 @@ FIELD="GT"
 mkdir /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/vireo_output_final/${SAMPLE}
 
 # Count number of alleles using cellSNP-lite
-#singularity exec --bind $BIND_PATH_DATA \
-#                --bind $BIND_PATH_OUTPUT \
-#                $SIF cellsnp-lite \
-#                -s $BAM -b $BARCODES \
-#                -O $VIREO_OUTDIR \
-#                -R $VCF \
-#                -p 20 \
-#                --minMAF 0.1 \
-#                --minCOUNT 20 \
-#                --gzip
+singularity exec --bind $BIND_PATH_DATA \
+                --bind $BIND_PATH_OUTPUT \
+                $SIF cellsnp-lite \
+                -s $BAM -b $BARCODES \
+                -O $VIREO_OUTDIR \
+                -R $VCF \
+                -p 20 \
+                --minMAF 0.1 \
+                --minCOUNT 20 \
+                --gzip
 
 # Filter SNPs identified by cellSNP-lite
 singularity exec --bind $BIND_PATH_DATA \
