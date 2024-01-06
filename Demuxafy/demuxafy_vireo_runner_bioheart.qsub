@@ -7,9 +7,9 @@
 #$ -l mem_requested=100G
 #$ -l tmp_requested=50G
 #$ -N vireo_demuxafy_TenK10K_scRNA
-#$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_bioheart_231214.err
-#$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_bioheart_231214.log
-#$ -t 1-17
+#$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_bioheart_S0047.err
+#$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_bioheart_S0047.log
+#$ -t 3-3
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
@@ -38,16 +38,16 @@ FIELD="GT"
 mkdir /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/vireo_output_final/${SAMPLE}
 
 # Count number of alleles using cellSNP-lite
-singularity exec --bind $BIND_PATH_DATA \
-                --bind $BIND_PATH_OUTPUT \
-                $SIF cellsnp-lite \
-                -s $BAM -b $BARCODES \
-                -O $VIREO_OUTDIR \
-                -R $VCF \
-                -p 20 \
-                --minMAF 0.1 \
-                --minCOUNT 20 \
-                --gzip
+#singularity exec --bind $BIND_PATH_DATA \
+#                --bind $BIND_PATH_OUTPUT \
+#                $SIF cellsnp-lite \
+#                -s $BAM -b $BARCODES \
+#                -O $VIREO_OUTDIR \
+#                -R $VCF \
+#                -p 20 \
+#                --minMAF 0.1 \
+#                --minCOUNT 20 \
+#                --gzip
 
 # Filter SNPs identified by cellSNP-lite
 singularity exec --bind $BIND_PATH_DATA \
