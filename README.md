@@ -52,4 +52,4 @@ Repo for analyses of the pilot phase of TenK10K.
 * First batch: Oct 13th, 2023 (aka ```231013```): 64 sequencing libraries (TOB only), 578 unique individuals
 * Second batch: Dec 13th, 2023 (```231213```): 24 sequencing libraries (TOB only), 222 unique individuals
 * Third batch: Dec 14th, 2023 (```231214```): 41 sequencing libraries (24 TOB, 17 BioHEART), 343 unique individuals, (210 TOB, 133 BioHEART)
-* Fourth batch: Jan ?, 2024 ():
+* Fourth batch: Jan ?, 2024 (): 18 sequencing libraries, XX unique individuals.
