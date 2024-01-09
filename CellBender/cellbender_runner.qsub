@@ -7,9 +7,9 @@
 #$ -l tmp_requested=50G
 #$ -l nvgpu=3
 #$ -N cellbender_TenK10K_scRNA
-#$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellbender_output_smaller_learning_rate/logs/cellbender_TenK10K_scRNA_231214.err
-#$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellbender_output_smaller_learning_rate/logs/cellbender_TenK10K_scRNA_231214.log
-#$ -t 1-41
+#$ -e /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellbender_output_smaller_learning_rate/logs/cellbender_TenK10K_scRNA_S0092.err
+#$ -o /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellbender_output_smaller_learning_rate/logs/cellbender_TenK10K_scRNA_S0092.log
+#$ -t 1-1
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
@@ -20,19 +20,20 @@ echo " Running CellBender on TenK10K_scRNA samples"
 echo "----------------------------------------------------------------"
 
 i=${SGE_TASK_ID};
-SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs_231214.txt)
+SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs_240108.txt)
 
 #SAMPLE=S0001a
 
 echo "Performing ambient background removal on sample: $SAMPLE"
 
-mkdir /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellbender_output_smaller_learning_rate/${SAMPLE}
-cd /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellbender_output_smaller_learning_rate/${SAMPLE}
+mkdir /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/cellbender_output_smaller_learning_rate/${SAMPLE}
+cd /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/cellbender_output_smaller_learning_rate/${SAMPLE}
 
 # COUNTS="/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/$SAMPLE/outs/raw_feature_bc_matrix.h5"
 # COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231213_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/raw_feature_bc_matrix.h5"
-COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231214_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/raw_feature_bc_matrix.h5"
-CELLBENDER_OUTDIR="/share/ScratchGeneral/anncuo/tenk10k/data_processing/cellbender_output_smaller_learning_rate/${SAMPLE}/"
+# COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231214_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/raw_feature_bc_matrix.h5"
+COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240108_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/raw_feature_bc_matrix.h5"
+CELLBENDER_OUTDIR="/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/cellbender_output_smaller_learning_rate/${SAMPLE}/"
 
 conda run -n cellbender cellbender remove-background \
       --cuda \
