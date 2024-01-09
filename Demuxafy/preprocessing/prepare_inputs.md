@@ -9,6 +9,7 @@ cd /share/ScratchGeneral/anncuo/tenk10k/data_processing/
 ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231013_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_231013.txt
 ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231213_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_231213.txt
 ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231214_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_231214.txt
+ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240108_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_240108.txt
 ```
 
 ## VCF manipulation
