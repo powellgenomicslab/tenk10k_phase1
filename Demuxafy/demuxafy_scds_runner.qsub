@@ -6,9 +6,9 @@
 #$ -r yes
 #$ -l mem_requested=80G
 #$ -N scds_demuxafy_TenK10K_scRNA
-#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/scds/logs/scds_TenK10K_scRNA_S0092.err
-#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/scds/logs/scds_TenK10K_scRNA_S0092.log
-#$ -t 1-1
+#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/scds/logs/scds_TenK10K_scRNA_240108.err
+#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/scds/logs/scds_TenK10K_scRNA_240108.log
+#$ -t 1-18
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
