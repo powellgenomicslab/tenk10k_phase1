@@ -1,6 +1,6 @@
-# TenK10K phase1
+# TenK10K phase1 scRNA-seq processing steps
 
-Repo for analyses of the pilot phase of TenK10K.
+Repo for analyses of the pilot phase of TenK10K (scRNA-seq processing only for now).
 
 ## Pipeline
 
@@ -33,11 +33,6 @@ Repo for analyses of the pilot phase of TenK10K.
 * batch correction / integration using [Harmony](https://portals.broadinstitute.org/harmony/) 
 * cell typing testing different strategies, starting with [CellTypist](https://www.celltypist.org/)
 
-## Main analysis
-
-* [SAIGE-QTL](https://github.com/weizhou0/qtl) for association between genetic variants (common and rare) and single-cell expression
-* variant annotation
-
 ## Results on Brenner
 
 * CellBender results: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/cellbender_output_smaller_learning_rate/{SAMPLE}/```
@@ -52,4 +47,4 @@ Repo for analyses of the pilot phase of TenK10K.
 * First batch: Oct 13th, 2023 (aka ```231013```): 64 sequencing libraries (TOB only), 578 unique individuals
 * Second batch: Dec 13th, 2023 (```231213```): 24 sequencing libraries (TOB only), 222 unique individuals
 * Third batch: Dec 14th, 2023 (```231214```): 41 sequencing libraries (24 TOB, 17 BioHEART), 343 unique individuals, (210 TOB, 133 BioHEART)
-* Fourth batch: Jan ?, 2024 (): 18 sequencing libraries, XX unique individuals.
+* Fourth batch: Jan 8th, 2024 (```240108```): 18 sequencing libraries (BioHEART only), 140 unique individuals.
