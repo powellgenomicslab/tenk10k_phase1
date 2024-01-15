@@ -28,8 +28,8 @@ echo "Performing Azimuth cell classification on sample: $SAMPLE"
 RDS="/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/seurat_objects/${SAMPLE}.rds"
 AZIMUTH_OUTDIR="/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/${SAMPLE}/step2_azimuth/"
 
-mkdir /share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/${SAMPLE}
-mkdir /share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/${SAMPLE}/step2_azimuth
+mkdir /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/${SAMPLE}
+mkdir /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/${SAMPLE}/step2_azimuth
 
 cd $SGE_O_WORKDIR
 
