@@ -17,13 +17,13 @@ cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_J
 
 cellranger_samples = list.files(cellranger_dir, pattern = "S.") 
 
-out_folder = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/seurat_objects/"
+out_folder = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/seurat_objects/"
 
 sample = cellranger_samples[i]
 
 print(paste0("Create Seurat object for ",sample))
 
-#cellranger_path = paste0(cellranger_dir,sample,"/outs/filtered_feature_bc_matrix/")
+# cellranger_path = paste0(cellranger_dir,sample,"/outs/filtered_feature_bc_matrix/")
 cellranger_path = paste0(cellranger_dir,sample,"/cellranger_count/",sample,"/outs/filtered_feature_bc_matrix/")
 pbmc.data <- Read10X(data.dir = cellranger_path)
 pbmc <- CreateSeuratObject(counts = pbmc.data, project = sample, min.cells = 3, min.features = 200)
