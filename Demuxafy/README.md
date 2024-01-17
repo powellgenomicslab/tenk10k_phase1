@@ -14,7 +14,7 @@ The scripts in this folder are structured as follows:
 * Doublet detection tools:
   * [Scds script](demuxafy_scds_runner.qsub) using [scds](https://github.com/kostkalab/scds)
   * [ScDblFinder script](demuxafy_scdblfinder_runner.qsub) uses [scDblFinder](https://github.com/plger/scDblFinder)
-* [Combiner script](demuxafy_combiner.qsub) combines all results using majority voting
+* [Combiner script](demuxafy_combiner.qsub) combines all results (atm: vireo, scds, scDblFinder) using majority voting
 
 ### Pre-processing
 
