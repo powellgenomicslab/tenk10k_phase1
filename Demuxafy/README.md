@@ -9,7 +9,8 @@ The scripts in this folder are structured as follows:
 ### Runners
 
 * Demultiplexing tools:
-  * [Vireo script](demuxafy_vireo_runner.qsub) using [vireo](https://vireosnp.readthedocs.io/en/latest/index.html)
+  * [Vireo script (TOB)](demuxafy_vireo_runner_tob.qsub) using [vireo](https://vireosnp.readthedocs.io/en/latest/index.html)
+  * [Vireo script (BioHEART)](demuxafy_vireo_runner_bioheart.qsub) using [vireo](https://vireosnp.readthedocs.io/en/latest/index.html)
 * Doublet detection tools:
   * [Scds script](demuxafy_scds_runner.qsub) using [scds](https://github.com/kostkalab/scds)
   * [ScDblFinder script](demuxafy_scdblfinder_runner.qsub) uses [scDblFinder](https://github.com/plger/scDblFinder)
