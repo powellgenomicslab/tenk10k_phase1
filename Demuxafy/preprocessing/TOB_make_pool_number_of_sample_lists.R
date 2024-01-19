@@ -132,3 +132,49 @@ df[df$V1 == "S0034-37b", "V3"] = df[df$V1 == "S0034-37a", "V3"]
 # save
 colnames(df) <- c()
 fwrite(df, output_file, sep="\t")
+
+
+#############################################################################
+##########################     15 / 01 / 2024     ###########################
+#############################################################################
+
+Samples recap: mix of TOB and BioHEART, 25 libraries in total:
+
+TOB (8 libraries):
+
+* Pools sequenced 
+  * entirety of S0015 (S0015a, S0015b, S0015c)
+  * previously missing sequences of S0014 (S0014b, S0014c), S0016 (S0016a) and S0037 (S0037b, S0037c)
+
+BioHEART (17 libraries and pools):
+
+* Pools sequenced
+  * S0040 to S0044
+  * S0054 to S0056 (+ one maxi pool of S0058+S0059 together)
+  * S0135
+  * S0138 and S00139
+  * S0141 to S0145
+* All pools are sequenced just once
+
+
+# onto libraries sequenced on Jan 15th, 2024 (240115)
+# this includes BioHEART individuals / pools, which will be handled differently.
+output_file = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples_240115.txt"
+
+cellranger_samples = list.files("/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240115_tenk10k_gencode44/cellranger_outs/","S")
+bioheart_pools = cellranger_samples[9:25]
+df = data.frame(V1 = cellranger_samples[!(cellranger_samples %in% bioheart_pools)])
+
+# add expected and genotyped donor counts
+for (sample in unique(df$V1)){
+    df_s = read.csv(paste0(samples_dir, sample, ".tsv"), sep="\t", header = F)
+    pool = gsub("a","",gsub("b","",gsub("c","",gsub("d","",sample))))
+    df[df$V1 == sample, "V2"] = nrow(df_s)
+    df[df$V1 == sample, "V3"] = length(unique(pool_df[pool_df$Tenk10k_pool == pool, "TOB_ID"]$TOB_ID))
+}
+
+# save
+colnames(df) <- c()
+fwrite(df, output_file, sep="\t")
+
+
