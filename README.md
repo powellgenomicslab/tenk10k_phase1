@@ -24,7 +24,7 @@ Repo for analyses of the pilot phase of TenK10K (scRNA-seq processing only for n
   * [Add info runner](Scanpy/run_add_metadata.qsub), qsub script running the [Python script](Scanpy/add_metadata_per_sample.py) adding all metadata to scanpy object for each sequencing library (requires results from CellBender, Demuxafy combiner, WG2 cell typing combiner, celltypist results) and performing initial QC
   * Python script combining results into a single AnnData object and performing batch correction + data integration using Harmony 
 
-## Pre-processing
+## Pre-processing tools used
 
 * [CellBender](https://cellbender.readthedocs.io/en/latest/tutorial/index.html) for ambient RNA detection
 * [Demuxafy](https://demultiplexing-doublet-detecting-docs.readthedocs.io/en/latest/index.html) for demultiplexing and doublet detection, specifically:
@@ -32,7 +32,7 @@ Repo for analyses of the pilot phase of TenK10K (scRNA-seq processing only for n
   * majority voting of [vireo](https://vireosnp.readthedocs.io/en/latest/manual.html), [scds](https://github.com/kostkalab/scds) and [scDblFinder](https://github.com/plger/scDblFinder) for doublet detection 
 * QC & normalisation using [Scanpy](https://scanpy.readthedocs.io/en/stable/)
 * batch correction / integration using [Harmony](https://portals.broadinstitute.org/harmony/) 
-* cell typing testing different strategies, starting with [CellTypist](https://www.celltypist.org/)
+* cell typing using [scPred](), [Azimuth](), and [CellTypist](https://www.celltypist.org/)
 
 ## Results on Brenner
 
@@ -47,7 +47,7 @@ Repo for analyses of the pilot phase of TenK10K (scRNA-seq processing only for n
 
 * First batch: Oct 13th, 2023 (aka ```231013```): 64 sequencing libraries (TOB only), 578 unique individuals
 * Second batch: Dec 13th, 2023 (```231213```): 24 sequencing libraries (TOB only), 222 unique individuals
-* Third batch: Dec 14th, 2023 (```231214```): 41 sequencing libraries (24 TOB, 17 BioHEART), 343 unique individuals, (210 TOB, 133 BioHEART)
+* Third batch: Dec 14th, 2023 (```231214```): 41 sequencing libraries (24 TOB, 17 BioHEART), 343 unique individuals (210 TOB, 133 BioHEART).
 * Fourth batch: Jan 8th, 2024 (```240108```): 18 sequencing libraries (BioHEART only), 140 unique individuals.
 * Fifth batch: Jan 12th, 2024 (```240112```): 18 sequencing libraries (BioHEART only), 139 unique individuals.
-* Sixth batch: Jan 15th, 2024 (```240115```): 25 sequencing libraries (8 TOB, 17 BioHEART), XX unique individuals.
+* Sixth batch: Jan 15th, 2024 (```240115```): 25 sequencing libraries (8 TOB, 17 BioHEART), XX unique individuals (XX TOB, YY BioHEART).
