@@ -4,6 +4,7 @@ Repo for analyses of the pilot phase of TenK10K (scRNA-seq processing only for n
 
 ## Pipeline
 
+* Create a file summarising sequencing libraries included in the latest run (by running [this](https://github.com/powellgenomicslab/tenk10k_phase1/blob/main/Demuxafy/preprocessing/prepare_inputs.md#extract-cellranger-libraries))
 * Ambient RNA
   * [CellBender runner](CellBender/cellbender_runner.qsub), qsub script to run CellBender for each sequencing library
 * Doublet Detection + Demultiplexing  
