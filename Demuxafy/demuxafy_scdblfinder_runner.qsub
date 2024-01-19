@@ -6,9 +6,9 @@
 #$ -r yes
 #$ -l mem_requested=80G
 #$ -N scdblfinder_demuxafy_TenK10K_scRNA
-#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/scdblfinder/logs/scdblfinder_TenK10K_scRNA_240112.err
-#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/scdblfinder/logs/scdblfinder_TenK10K_scRNA_240112.log
-#$ -t 1-18
+#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/scdblfinder/logs/scdblfinder_TenK10K_scRNA_240115.err
+#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/scdblfinder/logs/scdblfinder_TenK10K_scRNA_240115.log
+#$ -t 1-25
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
@@ -18,7 +18,7 @@ BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
 
 i=${SGE_TASK_ID};
 
-SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs_240112.txt)
+SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs_240115.txt)
 
 echo "Performing scDblFinder doublet detection on sample: $SAMPLE"
 
@@ -26,7 +26,8 @@ echo "Performing scDblFinder doublet detection on sample: $SAMPLE"
 # COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231213_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix.h5"
 # COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231214_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix.h5"
 # COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240108_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix.h5"
-COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240112_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix.h5"
+# COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240112_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix.h5"
+COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240115_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix.h5"
 SCDBLFINDER_OUTDIR="/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/scdblfinder_output/${SAMPLE}"
 
 mkdir /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/scdblfinder_output/${SAMPLE}
