@@ -45,7 +45,7 @@ FIELD="GT"
 mkdir /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/vireo_output_final/${SAMPLE}
 
 # Count number of alleles using cellSNP-lite
-#singularity exec --bind $BIND_PATH_DATA \
+# singularity exec --bind $BIND_PATH_DATA \
 #                --bind $BIND_PATH_OUTPUT \
 #                $SIF cellsnp-lite \
 #                -s $BAM -b $BARCODES \
