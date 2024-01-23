@@ -50,6 +50,6 @@ Repo for analyses of the pilot phase of TenK10K (scRNA-seq processing only for n
 * Third batch: Dec 14th, 2023 (```231214```): 41 sequencing libraries (24 TOB, 17 BioHEART), 343 unique individuals (210 TOB, 133 BioHEART).
 * Fourth batch: Jan 8th, 2024 (```240108```): 18 sequencing libraries (BioHEART only), 140 unique individuals.
 * Fifth batch: Jan 12th, 2024 (```240112```): 18 sequencing libraries (BioHEART only), 139 unique individuals.
-* Sixth batch: Jan 15th, 2024 (```240115```): 25 sequencing libraries (8 TOB, 17 BioHEART), XX unique individuals (XX TOB, YY BioHEART).
-* Seventh batch: Jan 16th, 2024 (```240116```): 17 sequencing libraries (BioHEART only), XX unique individuals.
+* Sixth batch: Jan 15th, 2024 (```240115```): 25 sequencing libraries (8 TOB, 17 BioHEART), XX unique individuals (XX TOB, 61 BioHEART).
+* Seventh batch: Jan 16th, 2024 (```240116```): 17 sequencing libraries (BioHEART only), 132 unique individuals.
 * Eighth batch: Jan 19th, 2024 (```240119```):
