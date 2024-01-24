@@ -36,6 +36,7 @@ echo "Performing vireo demultiplexing + doublet detection on sample: $SAMPLE, wi
 # BAM="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240108_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/possorted_genome_bam.bam"
 # BAM="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240112_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/possorted_genome_bam.bam"
 BAM="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240115_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/possorted_genome_bam.bam"
+
 BARCODES=/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/cellbender_output_smaller_learning_rate/${SAMPLE}/cellbender_output_cell_barcodes.csv
 VIREO_OUTDIR="/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/vireo_output_final/${SAMPLE}"
 VCF=/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/genotypes/bioheart/demux_vcf_common_variants.vcf.bgz
@@ -45,16 +46,16 @@ FIELD="GT"
 mkdir /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/vireo_output_final/${SAMPLE}
 
 # Count number of alleles using cellSNP-lite
-singularity exec --bind $BIND_PATH_DATA \
-                --bind $BIND_PATH_OUTPUT \
-                $SIF cellsnp-lite \
-                -s $BAM -b $BARCODES \
-                -O $VIREO_OUTDIR \
-                -R $VCF \
-                -p 20 \
-                --minMAF 0.1 \
-                --minCOUNT 20 \
-                --gzip
+# singularity exec --bind $BIND_PATH_DATA \
+#                --bind $BIND_PATH_OUTPUT \
+#                $SIF cellsnp-lite \
+#                -s $BAM -b $BARCODES \
+#                -O $VIREO_OUTDIR \
+#                -R $VCF \
+#                -p 20 \
+#                --minMAF 0.1 \
+#                --minCOUNT 20 \
+#                --gzip
 
 # Filter SNPs identified by cellSNP-lite
 singularity exec --bind $BIND_PATH_DATA \
