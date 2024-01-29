@@ -7,9 +7,9 @@
 #$ -l tmp_requested=50G
 #$ -N classify_cells_azimuth
 #$ -q short.q
-#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/azimuth_TenK10K_scRNA_240119.err
-#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/azimuth_TenK10K_scRNA_240119.log
-#$ -t 1-17
+#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/azimuth_TenK10K_scRNA_S0088.err
+#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/azimuth_TenK10K_scRNA_S0088.log
+#$ -t 5-5
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
