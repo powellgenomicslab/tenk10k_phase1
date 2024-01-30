@@ -49,7 +49,7 @@ print(sample)
 cellbender_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/cellbender_output_smaller_learning_rate/"
 
 # Demuxafy files (combined results)
-demuxafy_dir = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/combined_output_scds_scdblfinder_vireo/"
+demuxafy_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/combined_output_scds_scdblfinder_vireo/"
 
 # Celltypist files
 celltypist_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/celltypist/"
