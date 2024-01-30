@@ -14,13 +14,28 @@ i = int(sys.argv[1])
 # CellRanger files 
 
 # 64 samples from 231013
-cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
+# cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
 
 # 24 samples from 231213
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231213_tenk10k_gencode44/cellranger_outs/"
 
 # 41 samples from 231214
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231214_tenk10k_gencode44/cellranger_outs/"
+
+# 18 samples from 240108
+cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240108_tenk10k_gencode44/cellranger_outs/"
+
+# 18 samples from 240112
+# cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240112_tenk10k_gencode44/cellranger_outs/"
+
+# 25 samples from 240115
+# cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240115_tenk10k_gencode44/cellranger_outs/"
+
+# 17 samples from 240116
+# cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240116_tenk10k_gencode44/cellranger_outs/"
+
+# 17 samples from 240119
+# cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240119_tenk10k_gencode44/cellranger_outs/"
 
 cellranger_files = glob.glob(cellranger_dir+"S*")
 
@@ -31,7 +46,7 @@ sample = sample.replace(cellranger_dir,"")
 print(sample)
 
 # Cellbender files
-cellbender_dir = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/cellbender_output_smaller_learning_rate/"
+cellbender_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/cellbender_output_smaller_learning_rate/"
 
 # Demuxafy files (combined results)
 demuxafy_dir = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/demuxafy/combined_output_scds_scdblfinder_vireo/"
