@@ -19,7 +19,7 @@ Repo for analyses of the pilot phase of TenK10K (scRNA-seq processing only for n
     * [hierarchical scPred cell typing runner](Celltyping/WG2_map_hierscpred.qsub), qsub script to perform celltyping using hierarchical scPred for each sequencing library using sceQTLGen WG2 image (requires Seurat objects)
     * [Consortium WG2 cell typing combiner script](Celltyping/combine_results.qsub), qsub script running the [R script](Celltyping/combine_results_one_sample.R) which combines cell types prediction for each sequencing library obtained using Azimuth and scPred (requires azimuth and hierarchical scPred results)
   * Celltypist
-    * [Celltypist runner](Scanpy/celltypist_runner.qsub), qsub script running the [Python script](Scanpy/celltypist_per_sample.py) performing cell typing using Cell Typist for each sequencing library
+    * [Celltypist runner](Scanpy/run_celltypist.qsub), qsub script running the [Python script](Scanpy/celltypist_per_sample.py) performing cell typing using Cell Typist for each sequencing library
 * Scanpy data wrangling & data integration
   * [Add info runner](Scanpy/run_add_metadata.qsub), qsub script running the [Python script](Scanpy/add_metadata_per_sample.py) adding all metadata to scanpy object for each sequencing library (requires results from CellBender, Demuxafy combiner, WG2 cell typing combiner, celltypist results) and performing initial QC
   * Python script combining results into a single AnnData object and performing batch correction + data integration using Harmony 
