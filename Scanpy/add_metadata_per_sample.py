@@ -65,8 +65,8 @@ if os.path.exists(output_filename):
   sys.exit("File already exists!")
 
 # Load Cellranger counts
-filtered_matrix = cellranger_dir+sample+"/outs/filtered_feature_bc_matrix.h5"
-# filtered_matrix = cellranger_dir+sample+"/cellranger_count/"+sample+"/outs/filtered_feature_bc_matrix.h5"
+# filtered_matrix = cellranger_dir+sample+"/outs/filtered_feature_bc_matrix.h5"
+filtered_matrix = cellranger_dir+sample+"/cellranger_count/"+sample+"/outs/filtered_feature_bc_matrix.h5"
 adata=sc.read_10x_h5(filtered_matrix)
 
 # Load Cellbender file
