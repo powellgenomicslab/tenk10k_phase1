@@ -6,9 +6,9 @@
 #$ -r yes
 #$ -l mem_requested=80G
 #$ -N combiner_demuxafy_TenK10K_scRNA
-#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/combined/logs/comb_TenK10K_scRNA_vireo_S0014b.err
-#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/combined/logs/comb_TenK10K_scRNA_vireo_S0014b.log
-#$ -t 1-1
+#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/combined/logs/comb_TenK10K_scRNA_vireo_S0056_S0058-59v2.err
+#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/combined/logs/comb_TenK10K_scRNA_vireo_S0056_S0058-59v2.log
+#$ -t 16-17
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
