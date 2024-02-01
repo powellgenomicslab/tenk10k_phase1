@@ -7,9 +7,9 @@
 #$ -l tmp_requested=50G
 #$ -l nvgpu=3
 #$ -N cellbender_TenK10K_scRNA
-#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/cellbender_output_smaller_learning_rate/logs/cellbender_TenK10K_scRNA_S0058-59v2.err
-#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/cellbender_output_smaller_learning_rate/logs/cellbender_TenK10K_scRNA_S0058-59v2.log
-#$ -t 17-17
+#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/cellbender_output_smaller_learning_rate/logs/cellbender_TenK10K_scRNA_S0056.err
+#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/cellbender_output_smaller_learning_rate/logs/cellbender_TenK10K_scRNA_S0056.log
+#$ -t 16-16
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
