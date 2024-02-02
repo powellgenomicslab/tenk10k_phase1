@@ -60,7 +60,8 @@ scpred_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/d
 # Output directory
 output_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/filtered_scanpy_objects/"
 
-output_filename = output_dir+sample+"_w_metadata_basic_pp.h5ad"
+# output_filename = output_dir+sample+"_w_metadata_basic_pp.h5ad"
+output_filename = output_dir+"maxi_pool_"+sample+"_w_metadata_basic_pp.h5ad"
 if os.path.exists(output_filename):
   sys.exit("File already exists!")
 
@@ -112,7 +113,8 @@ scpred_df.columns = ["wg2_" + i for i in scpred_df.columns]
 adata.obs = pd.concat([adata.obs,scpred_df], axis=1)
 
 # get combined demultiplexing + doublet info
-demuxafy_file = demuxafy_dir + sample + "/combined_results_w_combined_assignments.tsv"
+demuxafy_file = demuxafy_dir + "maxi_pool_", sample + "/combined_results_w_combined_assignments.tsv"
+# demuxafy_file = demuxafy_dir + sample + "/combined_results_w_combined_assignments.tsv"
 demuxafy_df = pd.read_csv(demuxafy_file, sep="\t")
 demuxafy_df.index = demuxafy_df['Barcode']
 demuxafy_df.drop(columns=['Barcode'], inplace=True)
