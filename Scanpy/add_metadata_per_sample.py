@@ -113,7 +113,7 @@ scpred_df.columns = ["wg2_" + i for i in scpred_df.columns]
 adata.obs = pd.concat([adata.obs,scpred_df], axis=1)
 
 # get combined demultiplexing + doublet info
-demuxafy_file = demuxafy_dir + "maxi_pool_", sample + "/combined_results_w_combined_assignments.tsv"
+demuxafy_file = demuxafy_dir + "maxi_pool_" + sample + "/combined_results_w_combined_assignments.tsv"
 # demuxafy_file = demuxafy_dir + sample + "/combined_results_w_combined_assignments.tsv"
 print(demuxafy_file)
 demuxafy_df = pd.read_csv(demuxafy_file, sep="\t")
