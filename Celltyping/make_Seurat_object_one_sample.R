@@ -30,7 +30,7 @@ cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_J
 
 cellranger_samples = list.files(cellranger_dir, pattern = "S.") 
 
-out_folder = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/seurat_objects/"
+out_folder = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/seurat_objects/test/"
 
 sample = cellranger_samples[i]
 
