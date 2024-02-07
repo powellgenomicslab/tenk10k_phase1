@@ -7,9 +7,9 @@
 #$ -l tmp_requested=20G
 #$ -N make_seurat_for_cell_classification
 #$ -q short.q
-#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/make_seurat_TenK10K_scRNA_240119.err
-#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/make_seurat_TenK10K_scRNA_240119.log
-#$ -t 1-17
+#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/make_seurat_TenK10K_scRNA_test.err
+#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/make_seurat_TenK10K_scRNA_test.log
+#$ -t 1-1
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
