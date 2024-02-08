@@ -3,13 +3,13 @@
 #$ -cwd
 #$ -V
 #$ -r yes
-#$ -l mem_requested=50G
-#$ -l tmp_requested=20G
+#$ -l mem_requested=80G
+#$ -l tmp_requested=50G
 #$ -N make_seurat_for_cell_classification
 #$ -q short.q
-#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/make_seurat_TenK10K_scRNA_231013_newrun.err
-#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/make_seurat_TenK10K_scRNA_231013_newrun.log
-#$ -t 1-64
+#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/make_seurat_TenK10K_scRNA_S0023b_newrun.err
+#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/make_seurat_TenK10K_scRNA_S0023b_newrun.log
+#$ -t 22-22
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
