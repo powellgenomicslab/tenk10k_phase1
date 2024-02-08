@@ -4,7 +4,7 @@ i <- as.numeric(args[1])
 library(Seurat)
 
 # 64 samples from 231013
-cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
+# cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
 
 # 24 samples from 231213
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231213_tenk10k_gencode44/cellranger_outs/"
@@ -25,7 +25,7 @@ cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/pro
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240116_tenk10k_gencode44/cellranger_outs/"
 
 # 17 samples from 240119
-# cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240119_tenk10k_gencode44/cellranger_outs/"
+cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240119_tenk10k_gencode44/cellranger_outs/"
 
 
 cellranger_samples = list.files(cellranger_dir, pattern = "S.") 
@@ -36,8 +36,8 @@ sample = cellranger_samples[i]
 
 print(paste0("Create Seurat object for ",sample))
 
-cellranger_path = paste0(cellranger_dir,sample,"/outs/filtered_feature_bc_matrix/")
-# cellranger_path = paste0(cellranger_dir,sample,"/cellranger_count/",sample,"/outs/filtered_feature_bc_matrix/")
+# cellranger_path = paste0(cellranger_dir,sample,"/outs/filtered_feature_bc_matrix/")
+cellranger_path = paste0(cellranger_dir,sample,"/cellranger_count/",sample,"/outs/filtered_feature_bc_matrix/")
 pbmc.data <- Read10X(data.dir = cellranger_path)
 # pbmc <- CreateSeuratObject(counts = pbmc.data, project = sample, min.cells = 3, min.features = 200)
 # filtering will be done in scanpy, so skip here
