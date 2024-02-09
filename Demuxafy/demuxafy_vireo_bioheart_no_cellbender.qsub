@@ -7,9 +7,9 @@
 #$ -l mem_requested=120G
 #$ -l tmp_requested=80G
 #$ -N bioheart_vireo_no_cb_demuxafy_TenK10K_scRNA
-#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_bioheart_231214_no_cb.err
-#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_bioheart_231214_no_cb.log
-#$ -t 25-41
+#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_bioheart_240108_no_cb.err
+#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_bioheart_240108_no_cb.log
+#$ -t 1-18
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
@@ -17,8 +17,8 @@ SIF=/share/ScratchGeneral/anncuo/software/Demuxafy.sif
 BIND_PATH_DATA=/directflow
 BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
 
-PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples_231214_bioheart.txt"
-# PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples_240108_bioheart.txt"
+# PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples_231214_bioheart.txt"
+PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples_240108_bioheart.txt"
 # PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples_240112_bioheart.txt"
 # PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples_240115_bioheart.txt"
 # PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples_240116_bioheart.txt"
@@ -33,10 +33,12 @@ echo "$now"
 
 echo "Performing vireo demultiplexing + doublet detection on sample: $SAMPLE, with $N_EXPECTED_DONORS expected donors"
 
-BAM="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231214_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/possorted_genome_bam.bam"
-BARCODES=/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231214_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix/barcodes.tsv.gz
+# BAM="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231214_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/possorted_genome_bam.bam"
+# BARCODES=/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231214_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix/barcodes.tsv.gz
 
-# BAM="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240108_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/possorted_genome_bam.bam"
+BAM="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240108_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/possorted_genome_bam.bam"
+BARCODES=/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240108_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix/barcodes.tsv.gz
+
 # BAM="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240112_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/possorted_genome_bam.bam"
 # BAM="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240115_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/possorted_genome_bam.bam"
 # BAM="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240116_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/possorted_genome_bam.bam"
