@@ -11,7 +11,7 @@ samples = list.files(scpred_dir, pattern = "S.")
 sample = samples[i]
 
 out_file = paste0(scpred_dir, sample, "/combined_metadata.csv")
-if (file.exists(out_file) == TRUE){quit(save = "no", status = 1, runLast = FALSE)}
+# if (file.exists(out_file) == TRUE){quit(save = "no", status = 1, runLast = FALSE)}
 
 print(paste0("Combine cell classification results for ",sample))
 
