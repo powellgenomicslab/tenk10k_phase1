@@ -7,9 +7,9 @@
 #$ -l tmp_requested=50G
 #$ -N classify_cells_hierarchical_scpred
 #$ -q short.q
-#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/scpred_TenK10K_scRNA_231214_newseurat.err
-#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/scpred_TenK10K_scRNA_231214_newseurat.log
-#$ -t 1-41
+#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/scpred_TenK10K_scRNA_231213_newseurat.err
+#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/scpred_TenK10K_scRNA_231213_newseurat.log
+#$ -t 1-24
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
@@ -18,7 +18,7 @@ BIND_PATH_DATA=/directflow
 BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
 
 i=${SGE_TASK_ID};
-SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs_231214.txt)
+SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs_231213.txt)
 
 echo "Performing hierarchical scPred cell classification on sample: $SAMPLE"
 
