@@ -7,8 +7,8 @@
 #$ -l tmp_requested=80G
 #$ -N classify_cells_azimuth
 #$ -q short.q
-#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/azimuth_TenK10K_scRNA_240112_newseurat.err
-#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/azimuth_TenK10K_scRNA_240112_newseurat.log
+#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/azimuth_TenK10K_scRNA_240108_newseurat.err
+#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/azimuth_TenK10K_scRNA_240108_newseurat.log
 #$ -t 1-18
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
@@ -18,7 +18,7 @@ BIND_PATH_DATA=/directflow
 BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
 
 i=${SGE_TASK_ID};
-SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs_240112.txt)
+SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs_240108.txt)
 
 echo "Performing Azimuth cell classification on sample: $SAMPLE"
 
