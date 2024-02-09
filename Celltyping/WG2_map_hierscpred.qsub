@@ -9,7 +9,7 @@
 #$ -q short.q
 #$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/scpred_TenK10K_scRNA_240112_newseurat.err
 #$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/scpred_TenK10K_scRNA_240112_newseurat.log
-#$ -t 1-12
+#$ -t 13-18
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
