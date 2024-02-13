@@ -5,7 +5,7 @@ We run CellBender ([paper](https://www.nature.com/articles/s41592-023-01943-7), 
 We consider default parameters except for a decreased ```learning rate``` value (1e-6 instead of the default 1e-4).
 
 At present we do not perform any hard filters based on the Cellbender results, but annotate our cells based on the % ambient RNA identified for future reference.
-We do this as part of the [script]() where we annotate each library's AnnData object with results from different tools.
+We do this as part of the [script](../Scanpy/add_metadata_per_sample.py) where we annotate each library's AnnData object with results from different tools.
 
 Note that we are running v0.3.0 upon recommendation of the lead author, Stephen Fleming (there were some issues with v0.3.1).
 
