@@ -27,4 +27,5 @@ As the input files expected here are Seurat objects (one per sequencing library)
 * Create Seurat objects, shell script to run R script for each sequencing library independently
 * Run hierarchical scPred shell script
 * Run Azimuth shell script
+* Combine results into a TSV
 * celltypist
