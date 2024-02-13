@@ -75,3 +75,14 @@ colnames(df5) <- c()
 out_file = paste0(new_samples_dir, maxi_pool, ".tsv")
 fwrite(df5, out_file, sep="\t")
 # the copy for maxi_pool="S0030-33b"
+
+maxi_pool = "S0034-37a"
+df1 = read.csv(paste0(new_samples_dir,"S0034.tsv"),sep="\t", header = F)
+df2 = read.csv(paste0(new_samples_dir,"S0035.tsv"),sep="\t", header = F)
+df3 = read.csv(paste0(new_samples_dir,"S0036.tsv"),sep="\t", header = F)
+df4 = read.csv(paste0(new_samples_dir,"S0037.tsv"),sep="\t", header = F)
+df5 = rbind(df1,df2,df3,df4)
+colnames(df5) <- c()
+out_file = paste0(new_samples_dir, maxi_pool, ".tsv")
+fwrite(df5, out_file, sep="\t")
+# the copy for maxi_pool="S0034-37b"
