@@ -14,7 +14,7 @@
 #$ -M a.cuomo@garvan.org.au
 
 R_PATH="/share/ScratchGeneral/anncuo/jupyter/conda_notebooks/envs/r_notebook/bin"
-RSCRIPT="/share/ScratchGeneral/anncuo/github_repos/tenk10k_phase1/Celltyping/combine_results_one_sample.R"
+RSCRIPT="/share/ScratchGeneral/anncuo/github_repos/tenk10k_phase1/Celltyping/scpred/combine_results_one_sample.R"
 
 # Do the main job
 ${R_PATH}/Rscript ${RSCRIPT} ${SGE_TASK_ID}
