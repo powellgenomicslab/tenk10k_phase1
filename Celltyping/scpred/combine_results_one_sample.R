@@ -113,11 +113,11 @@ createheatmap <- function(x, order = TRUE){
 }    
 
 fig_dir <- paste0(scpred_dir, "figures/")
-pdf(paste0(fig_dir, sample"_count_comparison_heatmap.pdf"), width=20, height=20)
+pdf(paste0(fig_dir, sample,"_count_comparison_heatmap.pdf"), width=20, height=20)
 createheatmap(x)[1]
 dev.off()
 
-pdf(paste0(fig_dir, sample"_prop_comparison_heatmap.pdf"), width=20, height=20)
+pdf(paste0(fig_dir, sample,"_prop_comparison_heatmap.pdf"), width=20, height=20)
 createheatmap(x)[2]
 dev.off()
 
