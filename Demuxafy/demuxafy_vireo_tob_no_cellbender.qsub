@@ -4,12 +4,12 @@
 #$ -cwd
 #$ -V
 #$ -r yes
-#$ -l mem_requested=100G
-#$ -l tmp_requested=50G
+#$ -l mem_requested=120G
+#$ -l tmp_requested=80G
 #$ -N vireo_demuxafy_TenK10K_scRNA
-#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_no_cb_25_28maxi_tob.err
-#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_no_cb_25_28maxi_tob.log
-#$ -t 27-28
+#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_no_cb_21_24b_maxi_tob.err
+#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_no_cb_21_24b_maxi_tob.log
+#$ -t 14-14
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
