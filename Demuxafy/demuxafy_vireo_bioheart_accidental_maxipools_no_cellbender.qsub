@@ -7,9 +7,9 @@
 #$ -l mem_requested=150G
 #$ -l tmp_requested=100G
 #$ -N bioheart_vireo_no_cb_demuxafy_TenK10K_scRNA
-#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_bioheart_S0041_43_44_maxi_no_cb.err
-#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_bioheart_S0041_43_44_maxi_no_cb.log
-#$ -t 1-3
+#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_bioheart_S0045_46_47_maxi_no_cb.err
+#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/vireo/logs/vireo_TenK10K_scRNA_bioheart_S0045_46_47_maxi_no_cb.log
+#$ -t 4-6
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
@@ -27,11 +27,11 @@ echo "$now"
 
 echo "Performing vireo demultiplexing + doublet detection on sample: $SAMPLE, with $N_EXPECTED_DONORS expected donors"
 
-# BAM="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231214_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/possorted_genome_bam.bam"
-# BARCODES=/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231214_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix/barcodes.tsv.gz
+BAM="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231214_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/possorted_genome_bam.bam"
+BARCODES=/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231214_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix/barcodes.tsv.gz
 
-BAM="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240115_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/possorted_genome_bam.bam"
-BARCODES="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240115_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix/barcodes.tsv.gz"
+# BAM="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240115_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/possorted_genome_bam.bam"
+# BARCODES="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240115_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix/barcodes.tsv.gz"
 
 VIREO_OUTDIR="/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/vireo_output_no_cb/maxi_pool_${SAMPLE}"
 VCF=/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/genotypes/bioheart/demux_vcf_common_variants.vcf.bgz
