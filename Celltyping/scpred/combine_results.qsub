@@ -3,8 +3,8 @@
 #$ -cwd
 #$ -V
 #$ -r yes
-#$ -l mem_requested=50G
-#$ -l tmp_requested=20G
+#$ -l mem_requested=80G
+#$ -l tmp_requested=50G
 #$ -N combine_cell_classification_results
 #$ -q short.q
 #$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/combine_cell_classification_TenK10K_scRNA_S0088.err
