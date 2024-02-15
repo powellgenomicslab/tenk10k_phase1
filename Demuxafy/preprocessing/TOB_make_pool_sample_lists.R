@@ -39,7 +39,7 @@ for (tenk10k_pool in tenk10k_pools){
     colnames(df) <- c()
     fwrite(df, new_file, sep="\t")
 }
-# then copy each file over for a,b,c( replicates
+# then copy each file over for a,b,c(,d) replicates
 
 # maxi pools
 
