@@ -118,10 +118,18 @@ fwrite(df, output_file, sep="\t")
 
 
 ################################################################
-################### Old Multiome Pools ######################
+##################### Old Multiome Pools #######################
 ################################################################
 
-# donor info at: https://docs.google.com/document/d/1pDB8argxXxOCsJ48qVAGZcfevNwAFiKFidDcFSkc6vs/edit
+# Explanation from Ellie (https://centrepopgen.slack.com/archives/D033C82R1L5/p1706498219785809):
+
+# Basically these four pools (Anna: S0056-59?) were tested in 2021 for multiome under the name ES001_P1 through ES001_P4. 
+# We thought we'd be able to just thaw the existing pools and recapture, but on thawing there weren't enough cells of high enough quality. 
+# We captured what we could that day (which ended up being ES001_P1 (now called S0056) and a maxi-pool of ES001_P3 and ES001_P4 (now called S0058-59) 
+# knowing that the numbers would be low and I'd need to recreate these pools. 
+# When thawing the original PBMC vials again to repeat the pooling, some of the samples were insufficient to repeat, so didn't exist in the final iteration of the pool
+
+# donor info recap (original vs new) at: https://docs.google.com/document/d/1pDB8argxXxOCsJ48qVAGZcfevNwAFiKFidDcFSkc6vs/edit
 
 #### S0056
 
