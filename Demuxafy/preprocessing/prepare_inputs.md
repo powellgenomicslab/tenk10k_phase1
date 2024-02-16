@@ -27,7 +27,7 @@ cp /directflow/SCCGGroupShare/projects/SeyhanYazar/onek1k/genotype_hg38/Merged_M
 gunzip /share/ScratchGeneral/anncuo/tenk10k/data_processing/genotypes/Merged_MAF0.05_hg38_nochr.vcf.gz /share/ScratchGeneral/anncuo/tenk10k/data_processing/genotypes/Merged_MAF0.05_hg38_nochr.vcf
 ```
 
-Then, add "chr":
+Then, add "chr" (from https://www.biostars.org/p/98582/):
 
 ```bash
 awk '{
