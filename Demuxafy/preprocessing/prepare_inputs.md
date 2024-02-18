@@ -51,7 +51,7 @@ tabix -p vcf Merged_MAF0.05_hg38_chr.vcf.gz
 ```
 
 
-### Individual files directly from VCF
+### extract lists of individuals directly from VCF
 
 First, get the list of individuals from the ```VCF``` using ```bcftools```:
 
