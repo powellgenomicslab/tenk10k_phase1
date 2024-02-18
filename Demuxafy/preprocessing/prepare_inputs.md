@@ -3,7 +3,7 @@
 ## Extract cellranger libraries 
 
 This is used for most tools used here to know what samples to consider when parallelising.
-Eventually, all scripts will be moved from ```/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/{sequencing_batch}_tenk10k_gencode44/``` to ```/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/``` but that os not completed yet.
+Eventually, all scripts will be moved from ```/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/{sequencing_batch}_tenk10k_gencode44/``` to ```/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/``` but that has not completed yet.
 
 ```bash
 cd /share/ScratchGeneral/anncuo/tenk10k/data_processing/
