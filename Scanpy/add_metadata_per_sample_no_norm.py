@@ -70,8 +70,8 @@ filtered_matrix = cellranger_dir+sample+"/cellranger_count/"+sample+"/outs/filte
 adata=sc.read_10x_h5(filtered_matrix)
 
 # Load Cellbender file
-# cellbender_file = cellbender_dir + sample + "/" + sample + "cellbender_output.h5"
-cellbender_file = cellbender_dir + sample + "/cellbender_output.h5"
+cellbender_file = cellbender_dir + sample + "/" + sample + "cellbender_output.h5"
+# cellbender_file = cellbender_dir + sample + "/cellbender_output.h5"
 cellbender_adata = anndata_from_h5(cellbender_file)
 
 # subset to cells estimated by Cellranger
