@@ -110,7 +110,6 @@ scpred_df.columns = ["wg2_" + i for i in scpred_df.columns]
 
 # add scpred info to adata obs
 adata.obs = pd.concat([adata.obs,scpred_df], axis=1)
-adata = adata[adata.obs['wg2_scpred_prediction'].notna()]
 
 # get combined demultiplexing + doublet info
 demuxafy_file = demuxafy_dir + sample + "/combined_results_w_combined_assignments.tsv"
@@ -153,6 +152,10 @@ adata.obs["individual"] = adata.obs['MajoritySinglet_Individual_Assignment']
 # add samples ID to donors that are just added by vireo to make them unique
 donor_regex = re.compile(r'donor[0-9]+')
 adata.obs["individual"] = [f"{i}_{sample}" if re.match(donor_regex, str(i)) else i for i in adata.obs["individual"]]
+
+# cell type and individual info are key, so drop if NA
+adata = adata[adata.obs['individual'].notna()]
+adata = adata[adata.obs['wg2_scpred_prediction'].notna()]
 
 # save
 adata.write(output_filename)
