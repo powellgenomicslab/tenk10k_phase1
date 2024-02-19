@@ -9,12 +9,34 @@ import matplotlib.pyplot as plt
 
 from cellbender.remove_background.downstream import anndata_from_h5
 
+# index provided, running one sequencing library at a time
 i = int(sys.argv[1])
 
 # CellRanger files 
 
-# all 224 samples copied here
-# cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
+# 64 samples from 231013
+cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231013_tenk10k_gencode44/cellranger_outs/"
+
+# 24 samples from 231213
+# cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231213_tenk10k_gencode44/cellranger_outs/"
+
+# 41 samples from 231214
+# cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231214_tenk10k_gencode44/cellranger_outs/"
+
+# 18 samples from 240108
+# cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240108_tenk10k_gencode44/cellranger_outs/"
+
+# 18 samples from 240112
+# cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240112_tenk10k_gencode44/cellranger_outs/"
+
+# 25 samples from 240115
+# cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240115_tenk10k_gencode44/cellranger_outs/"
+
+# 17 samples from 240116
+# cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240116_tenk10k_gencode44/cellranger_outs/"
+
+# 17 samples from 240119
+# cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240119_tenk10k_gencode44/cellranger_outs/"
 
 cellranger_files = glob.glob(cellranger_dir+"S*")
 
@@ -22,7 +44,6 @@ samples = glob.glob(cellranger_dir+"S*")
 # mismatch in index between bash and python
 sample = samples[i-1]
 sample = sample.replace(cellranger_dir,"")
-print(sample)
 
 # Cellbender files
 cellbender_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/cellbender_output_smaller_learning_rate/"
@@ -44,8 +65,8 @@ if os.path.exists(output_filename):
   sys.exit("File already exists!")
 
 # Load Cellranger counts
-filtered_matrix = cellranger_dir+sample+"/outs/filtered_feature_bc_matrix.h5"
-# filtered_matrix = cellranger_dir+sample+"/cellranger_count/"+sample+"/outs/filtered_feature_bc_matrix.h5"
+# filtered_matrix = cellranger_dir+sample+"/outs/filtered_feature_bc_matrix.h5"
+filtered_matrix = cellranger_dir+sample+"/cellranger_count/"+sample+"/outs/filtered_feature_bc_matrix.h5"
 adata=sc.read_10x_h5(filtered_matrix)
 
 # Load Cellbender file
@@ -89,6 +110,7 @@ scpred_df.columns = ["wg2_" + i for i in scpred_df.columns]
 
 # add scpred info to adata obs
 adata.obs = pd.concat([adata.obs,scpred_df], axis=1)
+adata = adata[adata.obs['wg2_scpred_prediction'].notna()]
 
 # get combined demultiplexing + doublet info
 demuxafy_file = demuxafy_dir + sample + "/combined_results_w_combined_assignments.tsv"
@@ -102,6 +124,7 @@ adata.obs = pd.concat([adata.obs,demuxafy_df], axis=1)
 
 # filter data to cells that are singlets and assigned to an individual 
 adata = adata[~adata.obs['MajoritySinglet_Individual_Assignment'].isin(["unassigned","doublet"])]
+adata = adata[adata.obs['MajoritySinglet_Individual_Assignment'].notna()]
 
 # preprocessing & QC plotting
 adata.var_names_make_unique()
@@ -121,8 +144,9 @@ plt.savefig(output_dir+"figures/"+sample+"_tot_counts_tot_genes.pdf")
 adata = adata[adata.obs.n_genes_by_counts < 6000, :]
 adata = adata[adata.obs.pct_counts_mt < 20, :]
 
-# add individual and sample id pre-merging
-adata.obs["sample"] = sample
+# add cell, individual and sequencing library id pre-merging
+adata.obs.index = 
+adata.obs["sequencing_library"] = sample
 adata.obs["individual"] = adata.obs['MajoritySinglet_Individual_Assignment']
 
 # add samples ID to donors that are just added by vireo to make them unique
@@ -132,8 +156,4 @@ adata.obs["individual"] = [f"{i}_{sample}" if re.match(donor_regex, str(i)) else
 # save
 adata.write(output_filename)
 
-# sc.pp.normalize_total(adata, target_sum=1e4) #normalize every cell to 10,000 UMI
-# sc.pp.log1p(adata)
-# sc.pp.highly_variable_genes(adata, min_mean=0.0125, max_mean=3, min_disp=0.5)
-# sc.pl.highly_variable_genes(adata)
-# plt.savefig(output_dir+"figures/"+sample+"_hvgs.pdf")
+
