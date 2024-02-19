@@ -4,17 +4,17 @@ We use Python's [Scanpy](https://scanpy.readthedocs.io/en/stable/) as main proce
 
 ## Scripts
 
-* First, we add Cellbender, Demuxafy and cell typing results to each sequencing library's AnnData object, using [this script](), run in parallel using [this runner]()
+* First, we add Cellbender, Demuxafy and cell typing results to each sequencing library's AnnData object, using [this script](add_metadata_per_sample_no_norm.py), run in parallel using [this runner](run_add_metadata.qsub).
 
 Next, prepare input files for association analysis (which we will transfer to GCP for SAIGE-QTL running):
 
-* Concatenate all raw objects with meta, add gene info
-* Split by chromosome, cell type -- this files contain most necessary information: gene expression (all genes), individual id and batch information, gene information to determine cis window
+* Concatenate all raw objects with meta, add gene info. [Script](combine_files_add_gene_info.py).
+* Split by chromosome, cell type -- this files contain most necessary information: gene expression (all genes), individual id and batch information, gene information to determine cis window. [Script](prepare_pheno.py).
 
 Separately, to build cell type expression covariates:
 
 * One sequencing library at a time, we perform basic pre-processing and QC. [Script](), [runner]().
-* We merge all objects into a single one, then split by covariates, integrate using Harmony, generate (Harmony) principal components, one cell type at a time
+* We merge all objects into a single one, then split by covariates, integrate using Harmony, generate (Harmony) principal components, one cell type at a time. [Script](prepare_cell_covs.py).
 
 Finally, for visualisation purposes, 
 
