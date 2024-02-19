@@ -15,10 +15,10 @@ i = int(sys.argv[1])
 # CellRanger files 
 
 # 64 samples from 231013
-cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231013_tenk10k_gencode44/cellranger_outs/"
+# cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231013_tenk10k_gencode44/cellranger_outs/"
 
 # 24 samples from 231213
-# cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231213_tenk10k_gencode44/cellranger_outs/"
+cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231213_tenk10k_gencode44/cellranger_outs/"
 
 # 41 samples from 231214
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231214_tenk10k_gencode44/cellranger_outs/"
@@ -70,8 +70,8 @@ filtered_matrix = cellranger_dir+sample+"/cellranger_count/"+sample+"/outs/filte
 adata=sc.read_10x_h5(filtered_matrix)
 
 # Load Cellbender file
-cellbender_file = cellbender_dir + sample + "/" + sample + "cellbender_output.h5"
-# cellbender_file = cellbender_dir + sample + "/cellbender_output.h5"
+# cellbender_file = cellbender_dir + sample + "/" + sample + "cellbender_output.h5"
+cellbender_file = cellbender_dir + sample + "/cellbender_output.h5"
 cellbender_adata = anndata_from_h5(cellbender_file)
 
 # subset to cells estimated by Cellranger
