@@ -20,12 +20,36 @@ The scripts in this folder are structured as follows:
 
 * [preprocessing scripts folder](preprocessing/)
 
-<!---
 ### Post-processing
 
+Update maxi pool vireo results as correct ones, and non-maxi pool ones as outdated.
+This only affects S0041, S0043, S0044, S0045, S0046, S0047.
+
+```bash
+cd /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/vireo_output_no_cb/
+
+# move single pools to old
+mv S0041/ old_S0041
+mv S0043/ old_S0043
+mv S0044/ old_S0044
+mv S0045/ old_S0045
+mv S0046/ old_S0046
+
+# move maxi pools to current
+mv maxi_pool_S0041/ S0041/
+mv maxi_pool_S0043/ S0043/
+mv maxi_pool_S0044/ S0044/
+mv maxi_pool_S0045/ S0045/
+mv maxi_pool_S0046/ S0046/
+mv maxi_pool_S0047/ S0047/
+```
+
+
+<!---
 * [demuxafy_dropulation_manual_summary.R](demuxafy_dropulation_manual_summary.R)
 
 ### other tools
+
 * [Demuxalot script](demuxafy_demuxalot_runner.qsub) using [Demuxalot](https://pypi.org/project/demuxalot/), requires genotypes
 * [Dropulation script](demuxafy_dropulation_runner.qsub) using [Dropulation](https://github.com/broadinstitute/Drop-seq/blob/master/doc/Census-seq_Computational_Protcools.pdf), requires genotypes
 * [DoubletDetection script](demuxafy_doubletdetection_runner.qsub) uses [DoubletDetection](https://github.com/JonathanShor/DoubletDetection)
