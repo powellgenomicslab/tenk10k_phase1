@@ -18,7 +18,7 @@ BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
 
 i=${SGE_TASK_ID};
 
-SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs_240115.txt)
+SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs_231214.txt)
 
 echo "Combining all doublet detection results for sample: $SAMPLE"
 
