@@ -145,7 +145,8 @@ adata = adata[adata.obs.n_genes_by_counts < 6000, :]
 adata = adata[adata.obs.pct_counts_mt < 20, :]
 
 # add cell, individual and sequencing library id pre-merging
-adata.obs.index = 
+adata.obs["original_barcode"] = adata.obs.inde
+adata.obs.index = [i.replace("-1",f"_{sample}") for i in adata.obs["original_barcode"]]
 adata.obs["sequencing_library"] = sample
 adata.obs["individual"] = adata.obs['MajoritySinglet_Individual_Assignment']
 
