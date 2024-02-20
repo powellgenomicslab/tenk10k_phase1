@@ -15,7 +15,7 @@ Separately, to build cell type expression covariates:
 
 * Take concatenated object, split by cell type, perform basic QC & norm, integrate using Harmony, generate (Harmony) principal components, all one cell type at a time. [Script](prepare_cell_covs.py).
 
-Finally, for visualisation purposes, 
+Finally, for visualisation purposes (not there yet) 
 
 * One sequencing library at a time, we perform basic pre-processing and QC. [Script](), [runner]().
 * we merge all objects into a single one, perform batch correction using Harmony (all cell types), and plot the data. [Script]().
