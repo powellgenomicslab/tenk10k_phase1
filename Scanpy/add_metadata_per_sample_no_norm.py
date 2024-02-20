@@ -145,9 +145,34 @@ adata = adata[adata.obs.pct_counts_mt < 20, :]
 
 # add cell, individual and sequencing library id pre-merging
 adata.obs["original_barcode"] = adata.obs.index
-adata.obs.index = [i.replace("-1",f"_{sample}") for i in adata.obs["original_barcode"]]
+adata.obs["new_cell_name"] = [i.replace("-1",f"_{sample}") for i in adata.obs["original_barcode"]]
 adata.obs["sequencing_library"] = sample
 adata.obs["individual"] = adata.obs['MajoritySinglet_Individual_Assignment']
+
+# add cohort info
+seqlib_cohort_map_file = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/sequencing_library_to_cohort_map.csv"
+seqlib_cohort_map_df = pd.read_csv(seqlib_cohort_map_file)
+cohort = seqlib_cohort_map_df[seqlib_cohort_map_df['sequencing_library']==sample]['cohort'].values[0]
+adata.obs["cohort"] = cohort
+
+# add individual info based on cohort
+if cohort == 'TOB':
+  # map onek1k ids to cpg ids
+  df_samples_file = "/share/ScratchGeneral/anncuo/OneK1K/scrna-seq_grch38_association_files_OneK1K_CPG_IDs.tsv"
+  df_samples = pd.read_csv(df_samples_file, sep="\t")
+  df_samples.columns = ['onek1k_id','cpg_id','tob_id']
+  df_samples['individual'] = [donor.split("_")[-1] for donor in df_samples['onek1k_id']]
+  adata.obs = adata.obs.merge(df_samples, on='individual', how='left')
+  adata.obs['onek1k_donor'] = adata.obs['individual']
+  adata.obs['individual'] = adata.obs['cpg_id']
+
+if cohort == 'BioHEART':
+  cpg_map_file = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/str_sample-sex-mapping_sample_karyotype_sex_mapping.csv"
+  cpg_map_df = pd.read_csv(cpg_map_file)
+  cpg_map_df.columns = ['individual','ct_id','sex_karyotype']
+  cpg_map_df.drop(columns=['sex_karyotype'], inplace=True)
+  adata.obs = adata.obs.merge(cpg_map_df, on='individual', how='left')
+  adata.obs['cpg_id'] = adata.obs['individual']
 
 # add samples ID to donors that are just added by vireo to make them unique
 donor_regex = re.compile(r'donor[0-9]+')
@@ -156,6 +181,8 @@ adata.obs["individual"] = [f"{i}_{sample}" if re.match(donor_regex, str(i)) else
 # cell type and individual info are key, so drop if NA
 adata = adata[adata.obs['individual'].notna()]
 adata = adata[adata.obs['wg2_scpred_prediction'].notna()]
+
+adata.obs.index = adata.obs["new_cell_name"]
 
 # save
 adata.write(output_filename)
