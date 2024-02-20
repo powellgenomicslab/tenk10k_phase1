@@ -149,6 +149,10 @@ adata.obs["new_cell_name"] = [i.replace("-1",f"_{sample}") for i in adata.obs["o
 adata.obs["sequencing_library"] = sample
 adata.obs["individual"] = adata.obs['MajoritySinglet_Individual_Assignment']
 
+# add samples ID to donors that are just added by vireo to make them unique
+donor_regex = re.compile(r'donor[0-9]+')
+adata.obs["individual"] = [f"{i}_{sample}" if re.match(donor_regex, str(i)) else i for i in adata.obs["individual"]]
+
 # add cohort info
 seqlib_cohort_map_file = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/sequencing_library_to_cohort_map.csv"
 seqlib_cohort_map_df = pd.read_csv(seqlib_cohort_map_file)
@@ -174,15 +178,11 @@ if cohort == 'BioHEART':
   adata.obs = adata.obs.merge(cpg_map_df, on='individual', how='left')
   adata.obs['cpg_id'] = adata.obs['individual']
 
-# add samples ID to donors that are just added by vireo to make them unique
-donor_regex = re.compile(r'donor[0-9]+')
-adata.obs["individual"] = [f"{i}_{sample}" if re.match(donor_regex, str(i)) else i for i in adata.obs["individual"]]
+adata.obs.index = [donor for donor in adata.obs["new_cell_name"]]
 
 # cell type and individual info are key, so drop if NA
 adata = adata[adata.obs['individual'].notna()]
 adata = adata[adata.obs['wg2_scpred_prediction'].notna()]
-
-adata.obs.index = adata.obs["new_cell_name"]
 
 # save
 adata.write(output_filename)
