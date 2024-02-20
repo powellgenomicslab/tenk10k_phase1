@@ -35,5 +35,5 @@ gene_info_df = gene_info[gene_info.index.isin(genes_cellranger)]
 adata.var = pd.concat([adata.var,gene_info_df], axis=1)
 
 # write
-out_file = f'{out_dir}224_libraries/concatenated_gene_info.csv'
+out_file = f'{out_dir}224_libraries/concatenated_gene_info.h5ad'
 adata.write(out_file)
