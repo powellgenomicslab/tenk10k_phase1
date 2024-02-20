@@ -6,7 +6,7 @@ celltype = sys.argv[1]
 chromosome = sys.argv[2]
 
 # Specify which files this script will generate
-output_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/integrated_objects/cpg_anndata/"
+output_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/integrated_objects/cpg_anndata"
 # Specify which directory the files generated here will be saved to
 # AnnData object: expression + gene info + batch info (batch=sequencing library)
 adata_out_file = f'{output_dir}/{celltype}_chr{chromosome}.h5ad'
@@ -23,5 +23,3 @@ adata_ct_chr.obs['cell'] = adata_ct_chr.obs.index
 
 # write
 adata_ct_chr.write(adata_out_file)
-
-
