@@ -60,7 +60,7 @@ scpred_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/d
 # Output directory
 output_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy_objects_w_metadata/"
 
-output_filename = output_dir+sample+"_w_metadata.h5ad"
+output_filename = output_dir+sample+"_w_metadata_donor_info.h5ad"
 if os.path.exists(output_filename):
   sys.exit("File already exists!")
 
