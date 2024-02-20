@@ -7,9 +7,9 @@
 #$ -l tmp_requested=40G
 #$ -N add_metadata_per_sample
 #$ -q short.q
-#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy/logs/add_metadata_TenK10K_scRNA_S0067.err
-#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy/logs/add_metadata_TenK10K_scRNA_S0067.log
-#$ -t 41-41
+#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy/logs/add_metadata_TenK10K_scRNA_S0009a.err
+#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy/logs/add_metadata_TenK10K_scRNA_S0009a.log
+#$ -t 1-1
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
