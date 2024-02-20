@@ -9,7 +9,7 @@ output_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/d
 
 # Specify which files this script will generate
 # CSV for expression covariates (principal components after Harmony correction)
-pcs_out_file = f'{output_dir}/{celltype}_expression_pcs.csv'
+pcs_out_file = f'{output_dir}/{celltype}_expression_pcs.h5ad'
 
 # Load integrated AnnData object
 input_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/integrated_objects/"
