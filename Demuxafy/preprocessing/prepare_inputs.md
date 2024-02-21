@@ -6,7 +6,7 @@ This is used for most tools used here to know what samples to consider when para
 Eventually, all scripts will be moved from ```/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/{sequencing_batch}_tenk10k_gencode44/``` to ```/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/``` but that has not completed yet.
 
 ```bash
-cd /share/ScratchGeneral/anncuo/tenk10k/data_processing/
+cd /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing
 ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231013_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_231013.txt
 ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231213_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_231213.txt
 ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231214_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_231214.txt
@@ -15,6 +15,7 @@ ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk1
 ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240115_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_240115.txt
 ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240116_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_240116.txt
 ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240119_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_240119.txt
+ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240214_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_240214.txt
 ```
 
 ## VCF manipulation
