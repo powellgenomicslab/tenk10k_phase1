@@ -6,19 +6,20 @@
 #$ -r yes
 #$ -l mem_requested=80G
 #$ -N scds_demuxafy_TenK10K_scRNA
-#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/scds/logs/scds_TenK10K_scRNA_240119.err
-#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy_output/scds/logs/scds_TenK10K_scRNA_240119.log
-#$ -t 1-17
+#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/scds/logs/scds_TenK10K_scRNA_240214.err
+#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/scds/logs/scds_TenK10K_scRNA_240214.log
+#$ -t 1-16
 #$ -m ae
-#$ -M a.cuomo@garvan.org.au
+#$ -M b.bowen@garvan.org.au
 
 SIF=/share/ScratchGeneral/anncuo/software/Demuxafy.sif
 BIND_PATH_DATA=/directflow
-BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
+# BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
+SEQ_DATE="240214" # Date the library was sequenced, corresponding to file names
 
 i=${SGE_TASK_ID};
 
-SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs_240119.txt)
+SAMPLE=$(sed "${i}q;d" /directflow/SCCGGroupShare/projects/${USER}/tenk10k_phase1/data_processing/cellranger_outs_${SEQ_DATE}.txt)
 
 echo "Performing scds doublet detection on sample: $SAMPLE"
 
@@ -29,14 +30,13 @@ echo "Performing scds doublet detection on sample: $SAMPLE"
 # COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240112_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix.h5"
 # COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240115_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix.h5"
 # COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240116_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix.h5"
-COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240119_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix.h5"
+COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/${SEQ_DATE}_tenk10k_gencode44/cellranger_outs/${SAMPLE}/cellranger_count/${SAMPLE}/outs/filtered_feature_bc_matrix.h5"
 
-SCDS_OUTDIR="/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/scds_output/${SAMPLE}"
+SCDS_OUTDIR="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/scds/output/${SAMPLE}"
 
-mkdir /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/scds_output/${SAMPLE}
+mkdir -p ${SCDS_OUTDIR}
 
 singularity exec --bind $BIND_PATH_DATA \
-                --bind $BIND_PATH_OUTPUT \
                 $SIF scds.R \
                 -o $SCDS_OUTDIR \
                 -t $COUNTS
