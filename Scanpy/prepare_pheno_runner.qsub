@@ -1,0 +1,21 @@
+#!/bin/bash
+#$ -S /bin/bash
+#$ -cwd
+#$ -V
+#$ -r yes
+#$ -l mem_requested=80G
+#$ -l tmp_requested=40G
+#$ -N prepare_pheno
+#$ -q short.q
+#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy/logs/prepare_pheno.err
+#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy/logs/prepare_pheno.log
+#$ -t 1-22
+#$ -m ae
+#$ -M a.cuomo@garvan.org.au
+
+PY_PATH="/share/ScratchGeneral/anncuo/jupyter/conda_notebooks/envs/cellregmap_notebook/bin/"
+PYSCRIPT="/share/ScratchGeneral/anncuo/github_repos/tenk10k_phase1/Scanpy/prepare_pheno.py"
+CELLTYPE="B naive" 
+
+# Do the main job
+${PY_PATH}/python ${PYSCRIPT} ${CELLTYPE} ${SGE_TASK_ID}
