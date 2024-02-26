@@ -10,11 +10,11 @@ output_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/d
 
 # Specify which files this script will generate
 # CSV for expression covariates (principal components after Harmony correction)
-pcs_out_file = f'{output_dir}/{celltype}_expression_pcs.h5ad'
+pcs_out_file = f'{output_dir}/{celltype}_expression_pcs.csv'
 
 # Load integrated AnnData object
 input_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/integrated_objects/"
-input_file = f"{out_dir}224_libraries/concatenated_gene_info.csv"
+input_file = f"{input_dir}224_libraries/concatenated_gene_info_donor_info.h5ad"
 
 adata = sc.read(input_file)
 
