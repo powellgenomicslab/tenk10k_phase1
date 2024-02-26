@@ -7,14 +7,14 @@
 #$ -l tmp_requested=20G
 #$ -N make_seurat_for_cell_classification
 #$ -q short.q
-#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/make_seurat_TenK10K_scRNA_S0112_newrun.err
-#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/make_seurat_TenK10K_scRNA_S0112_newrun.log
-#$ -t 11-11
+#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/make_seurat_TenK10K_scRNA_240214.err
+#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/make_seurat_TenK10K_scRNA_240214.log
+#$ -t 1-16
 #$ -m ae
-#$ -M a.cuomo@garvan.org.au
+#$ -M b.bowen@garvan.org.au
 
 R_PATH="/share/ScratchGeneral/anncuo/jupyter/conda_notebooks/envs/r_notebook/bin"
-RSCRIPT="/share/ScratchGeneral/anncuo/github_repos/tenk10k_phase1/Celltyping/make_Seurat_object_one_sample.R"
+RSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Celltyping/scpred/make_Seurat_object_one_sample.R"
 
 # Do the main job
 ${R_PATH}/Rscript ${RSCRIPT} ${SGE_TASK_ID}

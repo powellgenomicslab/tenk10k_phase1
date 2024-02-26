@@ -6,7 +6,7 @@ library(viridis)
 args <- commandArgs(trailingOnly=TRUE)
 i <- as.numeric(args[1])
 
-scpred_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/"
+scpred_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Celltyping/scpred"
 samples = list.files(scpred_dir, pattern = "S.")
 sample = samples[i]
 

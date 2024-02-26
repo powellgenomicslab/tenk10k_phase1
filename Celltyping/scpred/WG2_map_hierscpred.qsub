@@ -7,23 +7,26 @@
 #$ -l tmp_requested=80G
 #$ -N classify_cells_hierarchical_scpred
 #$ -q short.q
-#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/scpred_TenK10K_scRNA_S0088_newseurat.err
-#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/scpred_TenK10K_scRNA_S0088_newseurat.log
-#$ -t 5-5
+#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/hierscpred_TenK10K_scRNA_240214_newseurat.err
+#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/hierscpred_TenK10K_scRNA_240214_newseurat.log
+#$ -t 1-16
 #$ -m ae
-#$ -M a.cuomo@garvan.org.au
+#$ -M b.bowen@garvan.org.au
 
 SIF=/share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/cell_classification.sif
 BIND_PATH_DATA=/directflow
-BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
+#BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
+SEQ_DATE="240214" # Date the library was sequenced, corresponding to file names
 
 i=${SGE_TASK_ID};
-SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs_240119.txt)
+SAMPLE=$(sed "${i}q;d" /directflow/SCCGGroupShare/projects/${USER}/tenk10k_phase1/data_processing/cellranger_outs_${SEQ_DATE}.txt)
 
 echo "Performing hierarchical scPred cell classification on sample: $SAMPLE"
 
-RDS="/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/seurat_objects_unfiltered/${SAMPLE}.rds"
-SCPRED_OUTDIR="/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/${SAMPLE}/step3_hierscpred/"
+RDS="/directflow/SCCGGroupShare/projects/${USER}/tenk10k_phase1/data_processing/scpred/seurat_objects_unfiltered/${SAMPLE}.rds"
+SCPRED_OUTDIR="/directflow/SCCGGroupShare/projects/${USER}/tenk10k_phase1/data_processing/scpred/${SAMPLE}/step3_hierscpred/"
+
+mkdir -p ${SCPRED_OUTDIR}
 
 # mkdir /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/${SAMPLE}
 # mkdir /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/${SAMPLE}/step3_hierscpred
@@ -32,7 +35,6 @@ cd $SGE_O_WORKDIR
 
 # Run main command
 singularity exec --bind $BIND_PATH_DATA \
-                 --bind $BIND_PATH_OUTPUT \
                  -B $SGE_O_WORKDIR $SIF Rscript /map_hierscpred.R \
                  --file $RDS \
                  --path $SCPRED_OUTDIR \

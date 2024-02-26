@@ -7,14 +7,14 @@
 #$ -l tmp_requested=50G
 #$ -N combine_cell_classification_results
 #$ -q short.q
-#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/combine_cell_classification_TenK10K_scRNA_S0088.err
-#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/combine_cell_classification_TenK10K_scRNA_S0088.log
-#$ -t 168-168
+#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/combine_cell_classification_TenK10K_scRNA_S0056a.err
+#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/combine_cell_classification_TenK10K_scRNA_S0056a.log
+#$ -t 1-16
 #$ -m ae
-#$ -M a.cuomo@garvan.org.au
+#$ -M b.bowen@garvan.org.au
 
 R_PATH="/share/ScratchGeneral/anncuo/jupyter/conda_notebooks/envs/r_notebook/bin"
-RSCRIPT="/share/ScratchGeneral/anncuo/github_repos/tenk10k_phase1/Celltyping/scpred/combine_results_one_sample.R"
+RSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Celltyping/scpred/combine_results_one_sample.R"
 
 # Do the main job
 ${R_PATH}/Rscript ${RSCRIPT} ${SGE_TASK_ID}
