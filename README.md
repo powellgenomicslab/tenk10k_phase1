@@ -21,8 +21,10 @@ Repo for analyses of the pilot phase of TenK10K (scRNA-seq processing only for n
   * Celltypist
     * [Celltypist runner](Celltyping/celltypist/run_celltypist.qsub), qsub script running the [Python script](Celltyping/celltypist/celltypist_per_sample.py) performing cell typing using Cell Typist for each sequencing library
 * Scanpy data wrangling & data integration
-  * [Add info runner](Scanpy/run_add_metadata.qsub), qsub script running the [Python script](Scanpy/add_metadata_per_sample.py) adding all metadata to scanpy object for each sequencing library (requires results from CellBender, Demuxafy combiner, WG2 cell typing combiner, celltypist results) and performing initial QC
-  * Python script combining results into a single AnnData object and performing batch correction + data integration using Harmony 
+  * [Add info runner](Scanpy/add_metadata_per_sample_no_norm.py), qsub script running the [Python script](Scanpy/add_metadata_per_sample.py) adding all metadata to scanpy object for each sequencing library (requires results from CellBender, Demuxafy combiner, WG2 cell typing combiner, celltypist results) and performing initial QC
+  * Python script combining results into a single AnnData object (concatenate), and add gene and donor info ([Python script](Scanpy/combine_files_add_gene_info.py))
+  * Python script making AnnData objects for each cell type, chromosome combo. [Python script](Scanpy/prepare_pheno.py), [qsub runner](Scanpy/prepare_pheno_runner.qsub).
+  * Python script making TSV objects containing expression PCs for each cell type. [Python script](Scanpy/prepare_cell_covs.py), [qsub runner](Scanpy/prepare_covs_runner.qsub).
 
 ## Pre-processing tools used
 
@@ -32,18 +34,19 @@ Repo for analyses of the pilot phase of TenK10K (scRNA-seq processing only for n
   * majority voting of [vireo](https://vireosnp.readthedocs.io/en/latest/manual.html), [scds](https://github.com/kostkalab/scds) and [scDblFinder](https://github.com/plger/scDblFinder) for doublet detection 
 * QC & normalisation using [Scanpy](https://scanpy.readthedocs.io/en/stable/)
 * batch correction / integration using [Harmony](https://portals.broadinstitute.org/harmony/) 
-* cell typing using [scPred](), [Azimuth](), and [CellTypist](https://www.celltypist.org/)
+* cell typing using [scPred](https://github.com/powellgenomicslab/scPred), [Azimuth](https://satijalab.github.io/azimuth/index.html), and [CellTypist](https://www.celltypist.org/)
 
 ## Results on Brenner
 
 * CellBender results: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/cellbender_output_smaller_learning_rate/{SAMPLE}/```
 * scds results: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/scds_output/{SAMPLE}/```
 * scDblFinder results: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/scdblfinder_output/{SAMPLE}/```
-* vireo results: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/vireo_output_final/{SAMPLE}/```
-* demuxafy combined results: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/combined_output_scds_scdblfinder_vireo/{SAMPLE}/```
+* vireo results: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/vireo_output_no_cb/{SAMPLE}/```
+* demuxafy combined results: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/combined_output_scds_scdblfinder_vireo_no_cb/{SAMPLE}/```
 * Consortium WG2 Azimuth results: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/{SAMPLE}/step2_azimuth/```
 * Consortium WG2 hierarchical scPred results: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/{SAMPLE}/step3_hierscpred/```
 * Celltypist results: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/celltypist/```
+* Scanpy / AnnData objects with metadata: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy_objects_w_metadata/```
 
 ## Keeping track of samples generated (scRNA-seq)
 
