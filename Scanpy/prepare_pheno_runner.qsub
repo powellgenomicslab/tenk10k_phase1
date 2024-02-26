@@ -3,8 +3,8 @@
 #$ -cwd
 #$ -V
 #$ -r yes
-#$ -l mem_requested=100G
-#$ -l tmp_requested=50G
+#$ -l mem_requested=150G
+#$ -l tmp_requested=80G
 #$ -N prepare_pheno
 #$ -q short.q
 #$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy/logs/prepare_pheno.err
