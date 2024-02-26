@@ -7,14 +7,14 @@
 #$ -l tmp_requested=20G
 #$ -N run_celltypist_per_sample
 #$ -q short.q
-#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/run_celltypist_TenK10K_scRNA_240119.err
-#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/run_celltypist_TenK10K_scRNA_240119.log
-#$ -t 1-17
+#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/run_celltypist_TenK10K_scRNA_S0056A.err
+#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/run_celltypist_TenK10K_scRNA_S0056A.log
+#$ -t 1-16
 #$ -m ae
-#$ -M a.cuomo@garvan.org.au
+#$ -M b.bowen@garvan.org.au
 
 PY_PATH="/share/ScratchGeneral/anncuo/jupyter/conda_notebooks/envs/cellregmap_notebook/bin/"
-PYSCRIPT="/share/ScratchGeneral/anncuo/github_repos/tenk10k_phase1/Scanpy/celltypist_per_sample.py"
+PYSCRIPT="/directflow/SCCGGroupShare/projects/${USER}/tenk10k_phase1/Celltyping/celltypist/celltypist_per_sample.py"
 
 # Do the main job
 ${PY_PATH}/python ${PYSCRIPT} ${SGE_TASK_ID}
