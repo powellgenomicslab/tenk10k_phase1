@@ -20,7 +20,7 @@ Repo for analyses of the pilot phase of TenK10K (scRNA-seq processing only for n
     * [Consortium WG2 cell typing combiner script](Celltyping/scpred/combine_results.qsub), qsub script running the [R script](Celltyping/combine_results_one_sample.R) which combines cell types prediction for each sequencing library obtained using Azimuth and scPred (requires azimuth and hierarchical scPred results)
   * Celltypist
     * [Celltypist runner](Celltyping/celltypist/run_celltypist.qsub), qsub script running the [Python script](Celltyping/celltypist/celltypist_per_sample.py) performing cell typing using Cell Typist for each sequencing library
-* Scanpy data wrangling & data integration
+* Scanpy data wrangling & data integration (to do AFTER everything else)
   * [Add info runner](Scanpy/add_metadata_per_sample_no_norm.py), qsub script running the [Python script](Scanpy/add_metadata_per_sample.py) adding all metadata to scanpy object for each sequencing library (requires results from CellBender, Demuxafy combiner, WG2 cell typing combiner, celltypist results) and performing initial QC
   * Python script combining results into a single AnnData object (concatenate), and add gene and donor info ([Python script](Scanpy/combine_files_add_gene_info.py))
   * Python script making AnnData objects for each cell type, chromosome combo. [Python script](Scanpy/prepare_pheno.py), [qsub runner](Scanpy/prepare_pheno_runner.qsub).
