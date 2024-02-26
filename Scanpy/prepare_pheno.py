@@ -14,7 +14,7 @@ adata_out_file = f'{output_dir}/{ct}_chr{chromosome}.h5ad'
 
 # Load integrated AnnData object
 input_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/integrated_objects/"
-input_file = f"{input_dir}224_libraries/concatenated_gene_info.csv"
+input_file = f"{input_dir}224_libraries/concatenated_gene_info_donor_info.h5ad"
 adata = sc.read(input_file)
 
 # Extract cell type and chromosome specific expression
