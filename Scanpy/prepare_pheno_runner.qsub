@@ -7,15 +7,15 @@
 #$ -l tmp_requested=80G
 #$ -N prepare_pheno
 #$ -q short.q
-#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy/logs/prepare_pheno_chr22.err
-#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy/logs/prepare_pheno_chr22.log
-#$ -t 22-22
+#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy/logs/prepare_pheno_NK.err
+#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy/logs/prepare_pheno_NK.log
+#$ -t 1-22
 #$ -m ae
 #$ -M a.cuomo@garvan.org.au
 
 PY_PATH="/share/ScratchGeneral/anncuo/jupyter/conda_notebooks/envs/cellregmap_notebook/bin/"
 PYSCRIPT="/share/ScratchGeneral/anncuo/github_repos/tenk10k_phase1/Scanpy/prepare_pheno.py"
-CELLTYPE="B naive" 
+CELLTYPE="NK" 
 CHROMOSOME=${SGE_TASK_ID};
 
 # Do the main job
