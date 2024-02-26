@@ -1,3 +1,4 @@
+import os
 import sys
 import pandas as pd
 import scanpy as sc
@@ -6,16 +7,17 @@ import scanpy.external as sce
 celltype = sys.argv[1]
 
 # Specify which directory the files generated here will be saved to
-output_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/integrated_objects/cpg_anndata/"
+output_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/integrated_objects/cpg_cell_covs"
 
 # Specify which files this script will generate
 # CSV for expression covariates (principal components after Harmony correction)
 pcs_out_file = f'{output_dir}/{celltype}_expression_pcs.csv'
+if os.path.exists(pcs_out_file):
+  sys.exit("File already exists!")
 
 # Load integrated AnnData object
 input_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/integrated_objects/"
 input_file = f"{input_dir}224_libraries/concatenated_gene_info_donor_info.h5ad"
-
 adata = sc.read(input_file)
 
 # Extract cell type specific expression
