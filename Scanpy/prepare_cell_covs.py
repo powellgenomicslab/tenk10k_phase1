@@ -34,7 +34,7 @@ sc.pp.scale(adata_ct, max_value=10)
 
 # integration
 sc.tl.pca(adata_ct, svd_solver='arpack')
-sce.pp.harmony_integrate(adata, 'sequencing_library')
+sce.pp.harmony_integrate(adata_ct, 'sequencing_library')
 df_harmony_pcs = pd.DataFrame(adata_ct.obsm['X_pca_harmony'])
 df_harmony_pcs.index = adata_ct.obs.index
 df_harmony_pcs.columns = [f"harmony_PC{i+1}" for i in df_harmony_pcs.columns]
