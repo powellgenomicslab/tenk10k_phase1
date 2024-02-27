@@ -11,7 +11,8 @@ output_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/d
 
 # Specify which files this script will generate
 # CSV for expression covariates (principal components after Harmony correction)
-pcs_out_file = f'{output_dir}/{celltype}_expression_pcs.csv'
+ct = celltype.replace(" ","_") # remove spaces from cell type names
+pcs_out_file = f'{output_dir}/{ct}_expression_pcs.csv'
 if os.path.exists(pcs_out_file):
   sys.exit("File already exists!")
 
@@ -37,6 +38,8 @@ sc.tl.pca(adata_ct, svd_solver='arpack')
 sce.pp.harmony_integrate(adata_ct, 'sequencing_library')
 df_harmony_pcs = pd.DataFrame(adata_ct.obsm['X_pca_harmony'])
 df_harmony_pcs.index = adata_ct.obs.index
+# remove batch automatically added at the end by integration
+df_harmony_pcs.index = [cell.split("-")[0] for cell in adata_ct.obs.index]
 df_harmony_pcs.columns = [f"harmony_PC{i+1}" for i in df_harmony_pcs.columns]
 
 # save PCs
