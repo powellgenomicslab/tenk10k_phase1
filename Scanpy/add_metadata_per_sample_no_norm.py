@@ -15,28 +15,23 @@ i = int(sys.argv[1])
 # CellRanger files 
 
 # 64 samples from 231013
-cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231013_tenk10k_gencode44/cellranger_outs/"
-
+# cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231013_tenk10k_gencode44/cellranger_outs/"
 # 24 samples from 231213
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231213_tenk10k_gencode44/cellranger_outs/"
-
 # 41 samples from 231214
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231214_tenk10k_gencode44/cellranger_outs/"
-
 # 18 samples from 240108
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240108_tenk10k_gencode44/cellranger_outs/"
-
 # 18 samples from 240112
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240112_tenk10k_gencode44/cellranger_outs/"
-
 # 25 samples from 240115
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240115_tenk10k_gencode44/cellranger_outs/"
-
 # 17 samples from 240116
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240116_tenk10k_gencode44/cellranger_outs/"
-
 # 17 samples from 240119
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240119_tenk10k_gencode44/cellranger_outs/"
+
+cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
 
 cellranger_files = glob.glob(cellranger_dir+"S*")
 
@@ -61,17 +56,21 @@ scpred_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/d
 output_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy_objects_w_metadata/"
 
 output_filename = output_dir+sample+"_w_metadata_donor_info.h5ad"
-if os.path.exists(output_filename):
-  sys.exit("File already exists!")
+# if os.path.exists(output_filename):
+  # sys.exit("File already exists!")
 
 # Load Cellranger counts
-# filtered_matrix = cellranger_dir+sample+"/outs/filtered_feature_bc_matrix.h5"
-filtered_matrix = cellranger_dir+sample+"/cellranger_count/"+sample+"/outs/filtered_feature_bc_matrix.h5"
+filtered_matrix = cellranger_dir+sample+"/outs/filtered_feature_bc_matrix.h5"
+# filtered_matrix = cellranger_dir+sample+"/cellranger_count/"+sample+"/outs/filtered_feature_bc_matrix.h5"
 adata=sc.read_10x_h5(filtered_matrix)
 
 # Load Cellbender file
-cellbender_file = cellbender_dir + sample + "/" + sample + "cellbender_output.h5"
-# cellbender_file = cellbender_dir + sample + "/cellbender_output.h5"
+cellbender_file1 = cellbender_dir + sample + "/" + sample + "cellbender_output.h5"
+cellbender_file2 = cellbender_dir + sample + "/cellbender_output.h5"
+if os.path.exists(cellbender_file1):
+  cellbender_file = cellbender_file1
+if os.path.exists(cellbender_file2):
+  cellbender_file = cellbender_file2
 cellbender_adata = anndata_from_h5(cellbender_file)
 
 # subset to cells estimated by Cellranger
