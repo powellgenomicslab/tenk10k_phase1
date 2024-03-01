@@ -1,6 +1,10 @@
 # Data + logs
 data_processing
 
+# R
+.RData
+.Rhistory
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
