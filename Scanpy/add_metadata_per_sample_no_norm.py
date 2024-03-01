@@ -15,7 +15,7 @@ i = int(sys.argv[1])
 # CellRanger files 
 
 # 64 samples from 231013
-cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231013_tenk10k_gencode44/cellranger_outs/"
+# cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231013_tenk10k_gencode44/cellranger_outs/"
 
 # 24 samples from 231213
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231213_tenk10k_gencode44/cellranger_outs/"
@@ -38,6 +38,9 @@ cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_J
 # 17 samples from 240119
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240119_tenk10k_gencode44/cellranger_outs/"
 
+# 16 samples from 240214
+cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240214_tenk10k_gencode44/cellranger_outs/"
+
 cellranger_files = glob.glob(cellranger_dir+"S*")
 
 samples = glob.glob(cellranger_dir+"S*")
@@ -46,19 +49,19 @@ sample = samples[i-1]
 sample = sample.replace(cellranger_dir,"")
 
 # Cellbender files
-cellbender_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/cellbender_output_smaller_learning_rate/"
+cellbender_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cellbender/output/smaller_learning_rate/"
 
 # Demuxafy files (combined results, vireo w/o cb)
-demuxafy_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/combined_output_scds_scdblfinder_vireo_no_cb/"
+demuxafy_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/combine_results/output/combined_output_scds_scdblfinder_vireo_no_cb/"
 
 # Celltypist files
-celltypist_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/celltypist/"
+celltypist_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/celltypist/"
 
 # scPred files
-scpred_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/"
+scpred_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/"
 
 # Output directory
-output_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy_objects_w_metadata/"
+output_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/scanpy_objects_w_metadata/"
 
 output_filename = output_dir+sample+"_w_metadata_donor_info.h5ad"
 if os.path.exists(output_filename):
@@ -70,7 +73,7 @@ filtered_matrix = cellranger_dir+sample+"/cellranger_count/"+sample+"/outs/filte
 adata=sc.read_10x_h5(filtered_matrix)
 
 # Load Cellbender file
-cellbender_file = cellbender_dir + sample + "/" + sample + "cellbender_output.h5"
+cellbender_file = cellbender_dir + sample + "/cellbender_output.h5"
 # cellbender_file = cellbender_dir + sample + "/cellbender_output.h5"
 cellbender_adata = anndata_from_h5(cellbender_file)
 
@@ -106,6 +109,8 @@ scpred_df.drop(["orig.ident.1","nCount_RNA.1","nFeature_RNA.1","percent.mt.1"], 
 scpred_df.rename(columns={'orig.ident': 'sample', 'percent.mt': 'percent_mt',
                          'predicted.celltype.l2': 'azimuth_predicted_celltype_l2',
                          'predicted.celltype.l2.score': 'azimuth_predicted_celltype_l2_score'}, inplace=True)
+celltype_columns = ['azimuth_predicted_celltype_l2', 'scpred_prediction']
+scpred_df[celltype_columns] = scpred_df[celltype_columns].replace(' ', '_')
 scpred_df.columns = ["wg2_" + i for i in scpred_df.columns]
 
 # add scpred info to adata obs

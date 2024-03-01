@@ -7,8 +7,8 @@
 #$ -l tmp_requested=50G
 #$ -N combine_cell_classification_results
 #$ -q short.q
-#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/combine_cell_classification_TenK10K_scRNA_S0056a.err
-#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/combine_cell_classification_TenK10K_scRNA_S0056a.log
+#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/combine_cell_classification_TenK10K_scRNA_240214.err
+#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/combine_cell_classification_TenK10K_scRNA_240214.log
 #$ -t 1-16
 #$ -m ae
 #$ -M b.bowen@garvan.org.au

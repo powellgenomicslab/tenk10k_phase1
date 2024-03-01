@@ -74,13 +74,13 @@ get_n_donors_all_pools <- function(seq_date, cellranger_outs_path, save = FALSE,
     return(data.frame(sample = sample, donors_in_pool = donors_in_pool))
   }
 
-  # for each sample/sequencing library/pool: 1. creates file containing the donors in each sample, 2. counts how many donors there are and saves a table with total n donors for each of the samples
+  # for each sample/sequencing library/pool: 
   output <- all_samples_in_pool %>%
-    pull(V1) %>%
+    pull(V1) %>% # 1. creates file containing the donors in each sequencig library
     purrr::walk(\(x) get_donors_in_libraries(
       sample = x,
       bioheart_samples_dir = bioheart_samples_dir
-    )) %>%
+    )) %>% #2. counts how many donors there are and saves a table with total n donors for each of the sequencing libraries 
     purrr::map(
       \(x) get_n_donors_sample(sample = x)
     ) %>%
@@ -93,7 +93,6 @@ get_n_donors_all_pools <- function(seq_date, cellranger_outs_path, save = FALSE,
   }
   return(output)
 }
-
 
 get_n_donors_all_pools(
   seq_date = "240214",
