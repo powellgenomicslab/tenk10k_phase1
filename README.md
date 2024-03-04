@@ -10,7 +10,7 @@ Repo for analyses of the pilot phase of TenK10K (scRNA-seq processing only for n
 * Doublet Detection + Demultiplexing  
   * [scds runner](Demuxafy/demuxafy_scds_runner.qsub), qsub script to run scds for each sequencing library using Demuxafy image
   * [scDblFinder runner](Demuxafy/demuxafy_scdblfinder_runner.qsub), qsub script to run scDblFinder for each sequencing library using Demuxafy image
-  * [vireo runner](Demuxafy/demuxafy_vireo_runner.qsub), qsub script to run vireo for each sequencing library using Demuxafy image (requires CellBender results, genotype info)
+  * [vireo runner](Demuxafy/demuxafy_vireo_runner.qsub), qsub script to run vireo for each sequencing library using Demuxafy image (requires CellBender results, genotype info) -- note that running vireo requires knowing which individuals we expect in each pool, detailed in scripts in [this folder](/Demuxafy/preprocessing/)
   * [Demuxafy combiner script](Demuxafy/demuxafy_combiner.qsub), qsub script to run Demuxafy combiner for each sequencing library (requires scds, scDblFinder, vireo results)
 * Cell Typing
   * Consortium WG2 (scPred + Azimuth)  
