@@ -21,10 +21,11 @@ Repo for analyses of the pilot phase of TenK10K (scRNA-seq processing only for n
   * Celltypist
     * [Celltypist runner](Celltyping/celltypist/run_celltypist.qsub), qsub script running the [Python script](Celltyping/celltypist/celltypist_per_sample.py) performing cell typing using Cell Typist for each sequencing library
 * Scanpy data wrangling & data integration (to do AFTER everything else)
-  * [Add info runner](Scanpy/add_metadata_per_sample_no_norm.py), qsub script running the [Python script](Scanpy/add_metadata_per_sample.py) adding all metadata to scanpy object for each sequencing library (requires results from CellBender, Demuxafy combiner, WG2 cell typing combiner, celltypist results) and performing initial QC
+  * [Add info runner](Scanpy/run_add_metadata.qsub), qsub script running the [Python script](Scanpy/add_metadata_per_sample_no_norm.py) adding all metadata to scanpy object for each sequencing library (requires results from CellBender, Demuxafy combiner, WG2 cell typing combiner, celltypist results) and performing initial QC
   * Python script combining results into a single AnnData object (concatenate), and add gene and donor info ([Python script](Scanpy/combine_files_add_gene_info.py))
-  * Python script making AnnData objects for each cell type, chromosome combo. [Python script](Scanpy/prepare_pheno.py), [qsub runner](Scanpy/prepare_pheno_runner.qsub).
+  * Python script making AnnData objects for each cell type + chromosome combination. [Python script](Scanpy/prepare_pheno.py), [qsub runner](Scanpy/prepare_pheno_runner.qsub).
   * Python script making TSV objects containing expression PCs for each cell type. [Python script](Scanpy/prepare_cell_covs.py), [qsub runner](Scanpy/prepare_covs_runner.qsub).
+  * TO DO: Python script performing QC & processing on combined AnnData + plotting.
 
 ## Pre-processing tools used
 
@@ -58,4 +59,4 @@ Repo for analyses of the pilot phase of TenK10K (scRNA-seq processing only for n
 * 6th batch: Jan 15th, 2024 (```240115```): 25 sequencing libraries (8 TOB, 17 BioHEART), 173 unique individuals (112 TOB, 61 BioHEART).
 * 7th batch: Jan 16th, 2024 (```240116```): 17 sequencing libraries (BioHEART only), 132 unique individuals.
 * 8th batch: Jan 19th, 2024 (```240119```): 17 sequencing libraries (BioHEART only), 107 unique individuals.
-* 9th batch: Feb 14th, 2024 (```240214```): 16 sequencing libraries (BioHEART only), XX unique individuals.
+* 9th batch: Feb 14th, 2024 (```240214```): 16 sequencing libraries (BioHEART only), 42 unique individuals.
