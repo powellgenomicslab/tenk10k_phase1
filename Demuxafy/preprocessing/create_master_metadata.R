@@ -32,12 +32,19 @@ donor_pools_tob <- read_csv(donor_pools_tob_file) %>%
 # Onek1k metadata
 sqlite.driver <- dbDriver("SQLite")
 db <- dbConnect(sqlite.driver, dbname = onek1k_file_name)
-onek1k_metadata <- dbReadTable(db, "RECRUITED_DONORS") %>% tibble()
+onek1k_metadata <- dbReadTable(db, "RECRUITED_DONORS") %>%
+    tibble() %>%
+    janitor::clean_names()
+
+nrow(onek1k_metadata)
+nrow(donor_pools_tob)
+colnames(donor_pools_tob)
 
 # join the TOB data
-nrow(donor_pools_tob)
+all_tob <- onek1k_metadata %>%
+    full_join(donor_pools_tob, by = "tob_id")
 
-onek1k_metadata %>% rename()
+table(duplicated(donor_pools_tob$tob_id))
 
 master_table <- cpg_mapping %>%
     mutate(external_id_modified = external_id %>% str_remove("-PBMC")) %>%
@@ -54,3 +61,6 @@ master_table %>%
 # TODO: add which cohort the donor is from (TOB, bioheart, onek1k)
 # TODO: add which pool each cohort is from
 # TODO: add sequencing batches - each row will correspond to the sequencing batch i.e. will include the repeats
+cpg_mapping %>% write_csv("data_processing/str_sample-sex-mapping_sample_karyotype_sex_mapping.csv")
+
+onek1k_metadata %>% write_csv("data_processing/OneK1K_Metadata_donors.csv")

@@ -16,6 +16,7 @@ ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk1
 ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240116_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_240116.txt
 ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240119_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_240119.txt
 ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240214_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_240214.txt
+ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240223_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_240223.txt
 ```
 
 ## VCF manipulation

@@ -44,7 +44,7 @@ get_n_donors_all_pools <- function(seq_date, cellranger_outs_path, save = FALSE,
   get_donors_in_libraries <- function(sample, bioheart_samples_dir) {
     # read in the inputs
     donor_dir <- "/share/ScratchGeneral/anncuo/tenk10k/donor_info/"
-    bh_file <- paste0(donor_dir, "TenK10K_BioHeart_pool_info_v2.csv")
+    bh_file <- paste0(donor_dir, "TenK10K_BioHeart_pool_info_v3.csv")
     bh_df <- read.csv(bh_file)
 
     cpg_map_file <- "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/str_sample-sex-mapping_sample_karyotype_sex_mapping.csv"
@@ -94,10 +94,17 @@ get_n_donors_all_pools <- function(seq_date, cellranger_outs_path, save = FALSE,
   return(output)
 }
 
+# get_n_donors_all_pools(
+#   seq_date = "240214",
+#   cellranger_outs_path = "data_processing",
+#   save = "F",
+#   bioheart_samples_dir = bioheart_samples_dir
+# )
+
 get_n_donors_all_pools(
-  seq_date = "240214",
+  seq_date = "240223",
   cellranger_outs_path = "data_processing",
-  save = "F",
+  save = "T",
   bioheart_samples_dir = bioheart_samples_dir
 )
 

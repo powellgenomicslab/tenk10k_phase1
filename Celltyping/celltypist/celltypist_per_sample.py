@@ -8,6 +8,7 @@ import celltypist
 from celltypist import models
 
 i = int(sys.argv[1])
+SEQ_DATE=str(sys.argv[2])
 
 # CellRanger files 
 
@@ -36,9 +37,11 @@ i = int(sys.argv[1])
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240119_tenk10k_gencode44/cellranger_outs/"
 
 # 16 samples from 240214
-cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240214_tenk10k_gencode44/cellranger_outs/"
+# cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240214_tenk10k_gencode44/cellranger_outs/"
 
-# Ouput directory
+cellranger_dir = f"/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/{SEQ_DATE}_tenk10k_gencode44/cellranger_outs/""
+
+# Output directory
 output_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/celltypist/"
 
 samples = glob.glob(cellranger_dir+"S*")

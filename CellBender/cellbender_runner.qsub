@@ -7,9 +7,9 @@
 #$ -l tmp_requested=50G
 #$ -l nvgpu=3
 #$ -N cellbender_TenK10K_scRNA
-#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cellbender/logs/cellbender_TenK10K_scRNA_240214.err
-#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cellbender/logs/cellbender_TenK10K_scRNA_240214.log
-#$ -t 1-16
+#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cellbender/logs/cellbender_TenK10K_scRNA_240223.err
+#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cellbender/logs/cellbender_TenK10K_scRNA_240223.log
+#$ -t 1-19
 #$ -m ae
 #$ -M b.bowen@garvan.org.au
 
@@ -19,7 +19,8 @@ echo "----------------------------------------------------------------"
 echo " Running CellBender on TenK10K_scRNA samples"
 echo "----------------------------------------------------------------"
 
-SEQ_DATE="240214" # Date the library was sequenced, corresponding to file names
+# SEQ_DATE="240214" 
+SEQ_DATE="240223" # Date the library was sequenced, corresponding to file names
 
 i=${SGE_TASK_ID};
 
