@@ -3,13 +3,13 @@
 #$ -cwd
 #$ -V
 #$ -r yes
-#$ -l mem_requested=80G
+#$ -l mem_requested=100G
 #$ -l tmp_requested=50G
 #$ -l nvgpu=3
 #$ -N cellbender_TenK10K_scRNA
-#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cellbender/logs/cellbender_TenK10K_scRNA_240223.err
-#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cellbender/logs/cellbender_TenK10K_scRNA_240223.log
-#$ -t 1-19
+#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cellbender/logs/cellbender_TenK10K_scRNA_S0169-0170.err
+#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cellbender/logs/cellbender_TenK10K_scRNA_S0169-0170.log
+#$ -t 16-17
 #$ -m ae
 #$ -M b.bowen@garvan.org.au
 
@@ -31,6 +31,7 @@ SAMPLE=$(sed "${i}q;d" /directflow/SCCGGroupShare/projects/${USER}/tenk10k_phase
 echo "Performing ambient background removal on sample: $SAMPLE"
 
 CELLBENDER_OUTDIR="/directflow/SCCGGroupShare/projects/${USER}/tenk10k_phase1/data_processing/cellbender/output/smaller_learning_rate/${SAMPLE}/"
+
 mkdir -p ${CELLBENDER_OUTDIR}
 cd ${CELLBENDER_OUTDIR}
 
@@ -42,7 +43,23 @@ cd ${CELLBENDER_OUTDIR}
 # COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240115_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/raw_feature_bc_matrix.h5"
 # COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240116_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/raw_feature_bc_matrix.h5"
 # COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240119_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/raw_feature_bc_matrix.h5"
-COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/${SEQ_DATE}_tenk10k_gencode44/cellranger_outs/${SAMPLE}/cellranger_count/${SAMPLE}/outs/raw_feature_bc_matrix.h5"
+
+# Cellranger outputs the counts to here first
+COUNTS_GWCCG="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/${SEQ_DATE}_tenk10k_gencode44/cellranger_outs/${SAMPLE}/cellranger_count/${SAMPLE}/outs/raw_feature_bc_matrix.h5"
+
+# COUNTS are moved to here if there is enough space available:
+COUNTS_SCCGG="/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/${SAMPLE}/outs/raw_feature_bc_matrix.h5"
+
+# Will dynamically choose the counts directory depending on if data exists there (i.e. if it has been moved yet)
+if [ -f ${COUNTS_GWCCG} ]; then
+      echo "Using cellranger counts from ${COUNTS_GWCCG}"
+      COUNTS=$COUNTS_GWCCG
+elif [ -f ${COUNTS_SCCGG} ]; then
+      echo "Using cellranger counts from ${COUNTS_SCCGG}"
+      COUNTS=$COUNTS_SCCGG
+else 
+      echo "Counts for ${SAMPLE} could not be found"
+fi
 
 # conda run -n cellbender 
 . /home/${USER}/miniconda3/etc/profile.d/conda.sh
