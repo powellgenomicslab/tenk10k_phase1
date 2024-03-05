@@ -3,17 +3,17 @@ library(data.table)
 library(glue)
 
 # BioHEART donor information (which BioHEART IDs are in which pool)
-donor_dir <- "/share/ScratchGeneral/anncuo/tenk10k/donor_info/"
-bh_file <- paste0(donor_dir, "TenK10K_BioHeart_pool_info_v2.csv")
-bh_df <- read.csv(bh_file)
+# donor_dir <- "/share/ScratchGeneral/anncuo/tenk10k/donor_info/"
+# bh_file <- paste0(donor_dir, "TenK10K_BioHeart_pool_info_v2.csv")
+# bh_df <- read.csv(bh_file)
 
-# Map between BioHEART (CT) IDs and CPG IDs (from Hope)
-cpg_map_file <- "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/str_sample-sex-mapping_sample_karyotype_sex_mapping.csv"
-cpg_map_df <- read.csv(cpg_map_file)
+# # Map between BioHEART (CT) IDs and CPG IDs (from Hope)
+# cpg_map_file <- "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/str_sample-sex-mapping_sample_karyotype_sex_mapping.csv"
+# cpg_map_df <- read.csv(cpg_map_file)
 
-# Output directory
+# # Output directory
 bioheart_samples_dir <- "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/samples_in_pools_bioheart/"
-tenk10k_pools <- unique(bh_df$Pool)
+# tenk10k_pools <- unique(bh_df$Pool)
 
 ################################################################
 ################### Most BioHEART pools ########################
@@ -36,6 +36,7 @@ tenk10k_pools <- unique(bh_df$Pool)
 
 # get_donors_in_libraries("S0056a", bioheart_samples_dir = bioheart_samples_dir)
 
+# if this shows 0 donors in a pool check that the TenK10K_BioHeart_pool_info table has been updated, and check that the column names have not been changed
 get_n_donors_all_pools <- function(seq_date, cellranger_outs_path, save = FALSE, bioheart_samples_dir) {
   # get list of all samples in the sequencing library
   all_samples_in_pool <- fread(glue("{cellranger_outs_path}/cellranger_outs_{seq_date}.txt"), header = FALSE)
@@ -44,7 +45,7 @@ get_n_donors_all_pools <- function(seq_date, cellranger_outs_path, save = FALSE,
   get_donors_in_libraries <- function(sample, bioheart_samples_dir) {
     # read in the inputs
     donor_dir <- "/share/ScratchGeneral/anncuo/tenk10k/donor_info/"
-    bh_file <- paste0(donor_dir, "TenK10K_BioHeart_pool_info_v3.csv")
+    bh_file <- paste0(donor_dir, "TenK10K_BioHeart_pool_info_v4.csv")
     bh_df <- read.csv(bh_file)
 
     cpg_map_file <- "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/str_sample-sex-mapping_sample_karyotype_sex_mapping.csv"
@@ -53,8 +54,7 @@ get_n_donors_all_pools <- function(seq_date, cellranger_outs_path, save = FALSE,
     # strip off the annotations denoting re-sequenced samples
     tenk10k_pool <- str_remove(sample, pattern = "_re$|_repeat$|a$|b$")
     # use the tables to determine which donors (CPG ID's) are in each pool
-    sc_samples <- bh_df[bh_df$Pool == tenk10k_pool, "Sample.ID"]
-    cpg_samples <- cpg_map_df[cpg_map_df$external_id %in% sc_samples, "s"]
+    cpg_samples <- bh_df[bh_df$Pool == tenk10k_pool, "CPG_ID"]
     df <- data.frame(sample = cpg_samples)
     colnames(df) <- c()
 
@@ -74,13 +74,13 @@ get_n_donors_all_pools <- function(seq_date, cellranger_outs_path, save = FALSE,
     return(data.frame(sample = sample, donors_in_pool = donors_in_pool))
   }
 
-  # for each sample/sequencing library/pool: 
+  # for each sample/sequencing library/pool:
   output <- all_samples_in_pool %>%
     pull(V1) %>% # 1. creates file containing the donors in each sequencig library
     purrr::walk(\(x) get_donors_in_libraries(
       sample = x,
       bioheart_samples_dir = bioheart_samples_dir
-    )) %>% #2. counts how many donors there are and saves a table with total n donors for each of the sequencing libraries 
+    )) %>% # 2. counts how many donors there are and saves a table with total n donors for each of the sequencing libraries
     purrr::map(
       \(x) get_n_donors_sample(sample = x)
     ) %>%
@@ -104,7 +104,7 @@ get_n_donors_all_pools <- function(seq_date, cellranger_outs_path, save = FALSE,
 get_n_donors_all_pools(
   seq_date = "240223",
   cellranger_outs_path = "data_processing",
-  save = "T",
+  save = TRUE,
   bioheart_samples_dir = bioheart_samples_dir
 )
 
