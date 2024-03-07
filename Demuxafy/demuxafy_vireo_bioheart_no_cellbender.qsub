@@ -7,16 +7,17 @@
 #$ -l mem_requested=150G
 #$ -l tmp_requested=100G
 #$ -N bioheart_vireo_no_cb_demuxafy_TenK10K_scRNA
-#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/vireo/logs/vireo_TenK10K_scRNA_bioheart_S0056a_no_cb.err
-#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/vireo/logs/vireo_TenK10K_scRNA_bioheart_S0056a_no_cb.log
-#$ -t 1-16
+#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/vireo/logs/vireo_TenK10K_scRNA_bioheart_240223_no_cb.err
+#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/vireo/logs/vireo_TenK10K_scRNA_bioheart_240223_no_cb.log
+#$ -t 4-17
 #$ -m ae
 #$ -M b.bowen@garvan.org.au
 
 SIF=/share/ScratchGeneral/anncuo/software/Demuxafy.sif
 BIND_PATH_DATA=/directflow
 # BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
-SEQ_DATE="240214"
+# SEQ_DATE="240214"
+SEQ_DATE="240223"
 
 # PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples_231214_bioheart.txt"
 # PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples_240108_bioheart.txt"
@@ -26,7 +27,7 @@ SEQ_DATE="240214"
 # PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples_240119_bioheart.txt"
 # PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples_bioheart_accidental_maxipools.txt"
 
-PARAMS="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/libraries_nsamples_240214.txt" 
+PARAMS="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/libraries_nsamples_${SEQ_DATE}.txt" 
 
 SAMPLE=`head -n $SGE_TASK_ID $PARAMS | tail -n 1 | awk '{print $1}'`
 N_EXPECTED_DONORS=`head -n $SGE_TASK_ID $PARAMS | tail -n 1 | awk '{print $2}'`
@@ -55,6 +56,8 @@ VIREO_OUTDIR="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_pro
 VCF=/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/genotypes/bioheart/demux_vcf_common_variants.vcf.bgz
 INDS=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/samples_in_pools_bioheart/${SAMPLE}.tsv # list of individuals (specific per sample) 
 FIELD="GT" 
+# sample-specific logs 
+LOG="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/vireo/logs/sample_logs/vireo_${SAMPLE}_task${SGE_TASK_ID}.log"
 
 mkdir -p ${VIREO_OUTDIR}
 
@@ -67,11 +70,11 @@ singularity exec --bind $BIND_PATH_DATA \
                -p 20 \
                --minMAF 0.1 \
                --minCOUNT 20 \
-               --gzip
+               --gzip &>> ${LOG}
 
 # Filter SNPs identified by cellSNP-lite
 singularity exec --bind $BIND_PATH_DATA \
-                $SIF bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf.gz -S $INDS -Ov -o $VIREO_OUTDIR/donor_subset.vcf
+                $SIF bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf.gz -S $INDS -Ov -o $VIREO_OUTDIR/donor_subset.vcf &>> ${LOG}
 
 # Demultiplex using vireo
 singularity exec --bind $BIND_PATH_DATA \
@@ -81,4 +84,4 @@ singularity exec --bind $BIND_PATH_DATA \
                 -o $VIREO_OUTDIR \
                 -t $FIELD \
                 -N $N_EXPECTED_DONORS \
-                --callAmbientRNAs
+                --callAmbientRNAs &>> ${LOG}

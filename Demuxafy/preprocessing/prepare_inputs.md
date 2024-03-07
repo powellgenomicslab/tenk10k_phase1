@@ -18,6 +18,8 @@ ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk1
 ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240214_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_240214.txt
 ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240223_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_240223.txt
 ```
+Blake Notes:
+240223 - last 2 pools are multiome (S0212 S0213)
 
 ## VCF manipulation
 

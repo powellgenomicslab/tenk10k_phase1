@@ -7,14 +7,23 @@
 #$ -l tmp_requested=50G
 #$ -N combine_cell_classification_results
 #$ -q short.q
-#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/combine_cell_classification_TenK10K_scRNA_240214.err
-#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/combine_cell_classification_TenK10K_scRNA_240214.log
-#$ -t 1-16
+#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/combine_cell_classification_TenK10K_scRNA_240223.err
+#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/combine_cell_classification_TenK10K_scRNA_240223.log
+#$ -t 1-17
 #$ -m ae
 #$ -M b.bowen@garvan.org.au
 
 R_PATH="/share/ScratchGeneral/anncuo/jupyter/conda_notebooks/envs/r_notebook/bin"
 RSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Celltyping/scpred/combine_results_one_sample.R"
+SEQ_DATE=240223
+
+# sample-specific logs 
+SAMPLE=$(sed "${SGE_TASK_ID}q;d" /directflow/SCCGGroupShare/projects/${USER}/tenk10k_phase1/data_processing/cellranger_outs_${SEQ_DATE}.txt)
+LOG="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/sample_logs/scpred_combiner_${SAMPLE}_task${SGE_TASK_ID}.log"
 
 # Do the main job
-${R_PATH}/Rscript ${RSCRIPT} ${SGE_TASK_ID}
+# R script arguments:
+# 1st arg: job array number
+# 2nd arg: sequencing date for the batch (corresponds to the directory where cellranger output is)
+
+${R_PATH}/Rscript ${RSCRIPT} ${SGE_TASK_ID} ${SEQ_DATE} &>> ${LOG}

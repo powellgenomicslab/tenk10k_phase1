@@ -2,13 +2,17 @@ library(data.table)
 library(ggplot2)
 library(Seurat)
 library(viridis)
+library(glue)
 
 args <- commandArgs(trailingOnly = TRUE)
 i <- as.numeric(args[1])
+seq_date <- as.character(args[2])
 
 scpred_dir <- "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/"
-samples <- list.files(scpred_dir, pattern = "S.")
-sample <- samples[i]
+# samples <- list.files(scpred_dir, pattern = "S.")
+
+samples <- fread(glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cellranger_outs_{seq_date}.txt"), header = F)
+sample <- as.character(samples[i])
 
 out_file <- paste0(scpred_dir, sample, "/combined_metadata.csv")
 # if (file.exists(out_file) == TRUE){quit(save = "no", status = 1, runLast = FALSE)}
