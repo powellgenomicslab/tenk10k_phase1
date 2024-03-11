@@ -57,6 +57,8 @@ get_n_donors_all_pools <- function(seq_date, cellranger_outs_path, save = FALSE,
     cpg_samples <- bh_df[bh_df$Pool == tenk10k_pool, "CPG_ID"]
     df <- data.frame(sample = cpg_samples)
     colnames(df) <- c()
+    print(sample)
+    print(df)
 
     new_file <- paste0(bioheart_samples_dir, sample, ".tsv") # save to specified directory
     fwrite(df, new_file, sep = "\t") # create a file with the correct sequencing library name
