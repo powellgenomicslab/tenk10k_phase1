@@ -3,21 +3,21 @@
 #$ -cwd
 #$ -V
 #$ -r yes
-#$ -l mem_requested=80G
+#$ -l mem_requested=250G
 #$ -l tmp_requested=40G
 #$ -N prepare_ct_covs
 #$ -q short.q
-#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy/logs/prepare_ct_covs.err
-#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy/logs/prepare_ct_covs.log
-#$ -t 1-28
+#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/logs/prepare_ct_covs.err
+#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/logs/prepare_ct_covs.log
+#$ -t 1-31
 #$ -m ae
-#$ -M a.cuomo@garvan.org.au
+#$ -M b.bowen@garvan.org.au
 
 PY_PATH="/share/ScratchGeneral/anncuo/jupyter/conda_notebooks/envs/cellregmap_notebook/bin/"
-PYSCRIPT="/share/ScratchGeneral/anncuo/github_repos/tenk10k_phase1/Scanpy/prepare_cell_covs.py"
+PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/prepare_cell_covs.py"
 
 i=${SGE_TASK_ID};
-CELLTYPE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/scanpy/celltypes.txt)
+CELLTYPE=$(sed "${i}q;d" /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/unique_cell_types_wg2_scpred.txt)
 
 # Do the main job
 ${PY_PATH}/python ${PYSCRIPT} ${CELLTYPE} 
