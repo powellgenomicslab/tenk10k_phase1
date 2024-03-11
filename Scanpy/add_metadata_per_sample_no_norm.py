@@ -11,6 +11,7 @@ from cellbender.remove_background.downstream import anndata_from_h5
 
 # index provided, running one sequencing library at a time
 i = int(sys.argv[1])
+# seq_date = str(sys.argv[2]) # sequencing date is 2nd argument 
 
 # CellRanger files 
 
@@ -44,28 +45,19 @@ i = int(sys.argv[1])
 # Cellranger outs moved to here: 
 cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
 
-# get sample names from the cellranger_outs txt file 
-sample_names_file = open("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cellranger_outs_240214.txt", "r")
-sample_names_list = sample_names_file.read().split("\n")
-samples = [s for s in sample_names_list if s] # remove the blank value at the end of the list 
-sample = samples[i-1] # mismatch in index between bash and python
-
 # get cellranger outputs
 
-# cellranger data is now here /directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/
-# get the sample names from here data_processing/cellranger_outs_240214.txt and run just those?
-
-# cellranger_files = glob.glob(cellranger_dir+"S*")
-
-# samples = glob.glob(cellranger_dir+"S*")
-# # mismatch in index between bash and python
-# sample = samples[i-1]
-# sample = sample.replace(cellranger_dir,"")
-
-source_data_location = 'new' # set to 'old' or 'new' to read from blake / annna's directory structure
+source_data_location = 'old' # set to 'old' or 'new' to read from blake / annna's directory structure
                              # set to new for 240214 onwards
 
 if source_data_location == 'new':
+
+  # get sample names from the cellranger_outs txt file 
+  sample_names_file = open(f'/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cellranger_outs_{seq_date}.txt', "r")
+  sample_names_list = sample_names_file.read().split("\n")
+  samples = [s for s in sample_names_list if s] # remove the blank value at the end of the list 
+  sample = samples[i-1] # mismatch in index between bash and python
+
   # Cellbender files
   cellbender_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cellbender/output/smaller_learning_rate/"
   cellbender_file = cellbender_dir + sample + "/cellbender_output.h5"
@@ -81,10 +73,21 @@ if source_data_location == 'new':
 
 
 elif source_data_location == 'old':
+
+  samples = glob.glob(cellranger_dir+"S*")
+  # # mismatch in index between bash and python
+  sample = samples[i-1]
+  sample = sample.replace(cellranger_dir,"")
+  
   # Cellbender files
-  cellbender_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/cellbender_output_smaller_learning_rate/"
+  cellbender_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/cellbender_output_smaller_learning_rate/" 
+  
+  # some of these have the sample names appended to the start 
   cellbender_file = cellbender_dir + sample + "/" + sample + "cellbender_output.h5" 
   
+  if not os.path.exists(cellbender_file): 
+    cellbender_file = cellbender_dir + sample + "/" + "cellbender_output.h5"
+
   # Demuxafy files (combined results, vireo w/o cb)
   demuxafy_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/combined_output_scds_scdblfinder_vireo_no_cb/"
 
@@ -96,6 +99,8 @@ elif source_data_location == 'old':
 
 # Output directory
 output_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/scanpy_objects_w_metadata/"
+
+print(f'Combining metadata for {sample}')
 
 output_filename = output_dir+sample+"_w_metadata_donor_info.h5ad"
 if os.path.exists(output_filename):
