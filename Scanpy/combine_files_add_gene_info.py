@@ -1,4 +1,5 @@
 import glob
+import re
 import pandas as pd
 import scanpy as sc
 import scanpy.external as sce
@@ -33,6 +34,9 @@ gene_info.index = [gene.split(".")[0] for gene in gene_info['gene_id']]
 gene_info_df = gene_info[gene_info.index.isin(genes_cellranger)]
 # Add info
 adata.var = pd.concat([adata.var,gene_info_df], axis=1)
+
+# remove batch from cell index (handling cases of a hyphen in the sample name)
+adata.obs.index = [re.sub(r"-[0-9]+$", "", cell) for cell in adata.obs.index]
 
 # write
 out_file = f'{out_dir}240_libraries/concatenated_gene_info.h5ad'

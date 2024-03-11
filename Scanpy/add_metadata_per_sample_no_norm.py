@@ -17,25 +17,18 @@ i = int(sys.argv[1])
 
 # 64 samples from 231013
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231013_tenk10k_gencode44/cellranger_outs/"
-
 # 24 samples from 231213
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231213_tenk10k_gencode44/cellranger_outs/"
-
 # 41 samples from 231214
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231214_tenk10k_gencode44/cellranger_outs/"
-
 # 18 samples from 240108
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240108_tenk10k_gencode44/cellranger_outs/"
-
 # 18 samples from 240112
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240112_tenk10k_gencode44/cellranger_outs/"
-
 # 25 samples from 240115
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240115_tenk10k_gencode44/cellranger_outs/"
-
 # 17 samples from 240116
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240116_tenk10k_gencode44/cellranger_outs/"
-
 # 17 samples from 240119
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240119_tenk10k_gencode44/cellranger_outs/"
 
@@ -103,8 +96,8 @@ output_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_pro
 print(f'Combining metadata for {sample}')
 
 output_filename = output_dir+sample+"_w_metadata_donor_info.h5ad"
-if os.path.exists(output_filename):
-  sys.exit("File already exists!")
+# if os.path.exists(output_filename):
+  # sys.exit("File already exists!")
 
 # Load Cellranger counts
 # filtered_matrix = cellranger_dir+sample+"/outs/filtered_feature_bc_matrix.h5"
@@ -207,9 +200,15 @@ if cohort == 'TOB':
   # map onek1k ids to cpg ids
   df_samples_file = "/share/ScratchGeneral/anncuo/OneK1K/scrna-seq_grch38_association_files_OneK1K_CPG_IDs.tsv"
   df_samples = pd.read_csv(df_samples_file, sep="\t")
-  df_samples.columns = ['onek1k_id','cpg_id','tob_id']
-  df_samples['individual'] = [donor.split("_")[-1] for donor in df_samples['onek1k_id']]
-  adata.obs = adata.obs.merge(df_samples, on='individual', how='left')
+  df_samples.columns = ['onek1k_id','cpg_id_old','tob_id']
+  # the CPG in that file are actually old, so need an extra step to update to the more recent ones (using the same file as below)
+  cpg_map_file = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/str_sample-sex-mapping_sample_karyotype_sex_mapping.csv"
+  cpg_map_df = pd.read_csv(cpg_map_file)
+  cpg_map_df.columns = ['cpg_id','tob_id','sex_karyotype']
+  cpg_map_df.drop(columns=['sex_karyotype'], inplace=True) # drop this column
+  df_samples2 = df_samples.merge(cpg_map_df, on='tob_id', how='left')
+  df_samples2['individual'] = [donor.split("_")[-1] for donor in df_samples2['onek1k_id']]
+  adata.obs = adata.obs.merge(df_samples2, on='individual', how='left')
   adata.obs['onek1k_donor'] = adata.obs['individual']
   adata.obs['individual'] = adata.obs['cpg_id']
 

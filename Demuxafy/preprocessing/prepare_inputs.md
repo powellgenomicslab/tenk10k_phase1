@@ -3,7 +3,7 @@
 ## Extract cellranger libraries 
 
 This is used for most tools used here to know what samples to consider when parallelising.
-Eventually, all scripts will be moved from ```/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/{sequencing_batch}_tenk10k_gencode44/``` to ```/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/``` but that has not completed yet.
+Eventually, all scripts will be moved from ```/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/{sequencing_batch}_tenk10k_gencode44/``` to ```/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/``` (update: this has completed now for the first 240 libraries, all of the below, but there already are new libraries generated, e.g. at ```/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240223_tenk10k_gencode44/```).
 
 ```bash
 cd /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing

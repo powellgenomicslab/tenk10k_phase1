@@ -1,0 +1,23 @@
+#!/bin/bash
+#$ -S /bin/bash
+#$ -cwd
+#$ -V
+#$ -r yes
+#$ -l mem_requested=200G
+#$ -l tmp_requested=100G
+#$ -N prepare_pheno
+#$ -q short.q
+#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy/logs/prepare_pheno_NK_CD56bright.err
+#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy/logs/prepare_pheno_NK_CD56bright.log
+#$ -t 1-22
+#$ -m ae
+#$ -M a.cuomo@garvan.org.au
+
+PY_PATH="/share/ScratchGeneral/anncuo/jupyter/conda_notebooks/envs/cellregmap_notebook/bin/"
+PYSCRIPT="/share/ScratchGeneral/anncuo/github_repos/tenk10k_phase1/Scanpy/prepare_pheno.py"
+CELLTYPE="NK_CD56bright" 
+CHROMOSOME=${SGE_TASK_ID};
+
+# Do the main job
+echo "Command to run: ${PY_PATH}/python ${PYSCRIPT} ${CELLTYPE} ${CHROMOSOME}"
+${PY_PATH}/python ${PYSCRIPT} ${CELLTYPE} ${CHROMOSOME}
