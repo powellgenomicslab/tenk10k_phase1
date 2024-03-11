@@ -7,17 +7,30 @@
 #$ -l tmp_requested=100G
 #$ -N prepare_pheno
 #$ -q short.q
-#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy/logs/prepare_pheno_NK_CD56bright.err
-#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy/logs/prepare_pheno_NK_CD56bright.log
+#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/logs/prepare_pheno.err
+#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/logs/prepare_pheno.log
 #$ -t 1-22
 #$ -m ae
-#$ -M a.cuomo@garvan.org.au
+#$ -M b.bowen@garvan.org.au
 
 PY_PATH="/share/ScratchGeneral/anncuo/jupyter/conda_notebooks/envs/cellregmap_notebook/bin/"
-PYSCRIPT="/share/ScratchGeneral/anncuo/github_repos/tenk10k_phase1/Scanpy/prepare_pheno.py"
-CELLTYPE="NK_CD56bright" 
+PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/prepare_pheno.py"
+CELL_TYPES_FILE="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/unique_cell_types_wg2_scpred.txt"
 CHROMOSOME=${SGE_TASK_ID};
 
-# Do the main job
-echo "Command to run: ${PY_PATH}/python ${PYSCRIPT} ${CELLTYPE} ${CHROMOSOME}"
-${PY_PATH}/python ${PYSCRIPT} ${CELLTYPE} ${CHROMOSOME}
+# Check if the cell types file exists
+if [ -f "${CELL_TYPES_FILE}" ]; then
+    # read each cell type name from the file
+    while IFS= read -r line; do
+        echo "Running for cell type: ${line}"
+        CELLTYPE=${line} 
+        # Do the main job for that cell type 
+        echo "Command to run: ${PY_PATH}/python ${PYSCRIPT} ${CELLTYPE} ${CHROMOSOME}"
+        ${PY_PATH}/python ${PYSCRIPT} ${CELLTYPE} ${CHROMOSOME}
+
+    done < "${CELL_TYPES_FILE}"
+
+else
+    echo "File ${CELL_TYPES_FILE} does not exist."
+fi
+
