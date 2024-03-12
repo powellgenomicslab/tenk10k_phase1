@@ -18,6 +18,8 @@ PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/prepa
 
 i=${SGE_TASK_ID};
 CELLTYPE=$(sed "${i}q;d" /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/unique_cell_types_wg2_scpred.txt)
+LOG="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/logs/cell_type_logs/${CELLTYPE}_prepare_ct_covs_task${SGE_TASK_ID}.log"
+
 
 # Do the main job
-${PY_PATH}/python ${PYSCRIPT} ${CELLTYPE} 
+${PY_PATH}/python ${PYSCRIPT} ${CELLTYPE} &>> ${LOG}
