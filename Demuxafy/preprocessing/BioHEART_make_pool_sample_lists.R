@@ -37,12 +37,12 @@ bioheart_samples_dir <- "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phas
 # get_donors_in_libraries("S0056a", bioheart_samples_dir = bioheart_samples_dir)
 
 # if this shows 0 donors in a pool check that the TenK10K_BioHeart_pool_info table has been updated, and check that the column names have not been changed
-get_n_donors_all_pools <- function(seq_date, cellranger_outs_path, save = FALSE, bioheart_samples_dir) {
+get_n_donors_all_pools <- function(pool_list_suffix, pool_list_path, save = FALSE, bioheart_samples_dir) {
   # get list of all samples in the sequencing library
-  all_samples_in_pool <- fread(glue("{cellranger_outs_path}/cellranger_outs_{seq_date}.txt"), header = FALSE)
+  all_samples_in_pool <- fread(glue("{pool_list_path}/cellranger_outs_{pool_list_suffix}.txt"), header = FALSE)
 
   # creates a file for each sequencing library showing the donors in that sample pool
-  get_donors_in_libraries <- function(sample, bioheart_samples_dir) {
+  get_donors_in_libraries <- function(sample, bioheart_samples_dir, save) {
     # read in the inputs
     donor_dir <- "/share/ScratchGeneral/anncuo/tenk10k/donor_info/"
     bh_file <- paste0(donor_dir, "TenK10K_BioHeart_pool_info_v4.csv")
@@ -61,7 +61,9 @@ get_n_donors_all_pools <- function(seq_date, cellranger_outs_path, save = FALSE,
     print(df)
 
     new_file <- paste0(bioheart_samples_dir, sample, ".tsv") # save to specified directory
-    fwrite(df, new_file, sep = "\t") # create a file with the correct sequencing library name
+    if (save) {
+      fwrite(df, new_file, sep = "\t") # create a file with the correct sequencing library name
+    }
   }
 
   # this function gets the number of donors for a given sample
@@ -81,7 +83,8 @@ get_n_donors_all_pools <- function(seq_date, cellranger_outs_path, save = FALSE,
     pull(V1) %>% # 1. creates file containing the donors in each sequencig library
     purrr::walk(\(x) get_donors_in_libraries(
       sample = x,
-      bioheart_samples_dir = bioheart_samples_dir
+      bioheart_samples_dir = bioheart_samples_dir,
+      save = save
     )) %>% # 2. counts how many donors there are and saves a table with total n donors for each of the sequencing libraries
     purrr::map(
       \(x) get_n_donors_sample(sample = x)
@@ -90,22 +93,29 @@ get_n_donors_all_pools <- function(seq_date, cellranger_outs_path, save = FALSE,
 
   if (save) {
     # print("saving...")
-    output_path <- glue("{cellranger_outs_path}/libraries_nsamples_{seq_date}.txt")
+    output_path <- glue("{pool_list_path}/libraries_nsamples_{pool_list_suffix}.txt")
     write_tsv(output, output_path, col_names = FALSE)
   }
   return(output)
 }
 
 # get_n_donors_all_pools(
-#   seq_date = "240214",
-#   cellranger_outs_path = "data_processing",
+#   pool_list_suffix = "240214",
+#   pool_list_path = "data_processing",
 #   save = "F",
 #   bioheart_samples_dir = bioheart_samples_dir
 # )
 
+# get_n_donors_all_pools(
+#   pool_list_suffix = "240223",
+#   pool_list_path = "data_processing",
+#   save = TRUE,
+#   bioheart_samples_dir = bioheart_samples_dir
+# )
+
 get_n_donors_all_pools(
-  seq_date = "240223",
-  cellranger_outs_path = "data_processing",
+  pool_list_suffix = "possible_sample_swaps",
+  pool_list_path = "data_processing",
   save = TRUE,
   bioheart_samples_dir = bioheart_samples_dir
 )
