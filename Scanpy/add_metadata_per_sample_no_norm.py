@@ -11,7 +11,7 @@ from cellbender.remove_background.downstream import anndata_from_h5
 
 # index provided, running one sequencing library at a time
 i = int(sys.argv[1])
-# seq_date = str(sys.argv[2]) # sequencing date is 2nd argument 
+# seq_date = str(sys.argv[2]) # sequencing date is 2nd argument ?
 
 # CellRanger files 
 
@@ -31,7 +31,6 @@ i = int(sys.argv[1])
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240116_tenk10k_gencode44/cellranger_outs/"
 # 17 samples from 240119
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240119_tenk10k_gencode44/cellranger_outs/"
-
 # 16 samples from 240214
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240214_tenk10k_gencode44/cellranger_outs/"
 
@@ -39,9 +38,11 @@ i = int(sys.argv[1])
 cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
 
 # get cellranger outputs
-
 source_data_location = 'old' # set to 'old' or 'new' to read from blake / annna's directory structure
                              # set to new for 240214 onwards
+#seq_date = '240214' # if running on 'new' data also specify the seq_date
+
+# source_data_location = 'old'
 
 if source_data_location == 'new':
 
@@ -59,7 +60,7 @@ if source_data_location == 'new':
   demuxafy_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/combine_results/output/combined_output_scds_scdblfinder_vireo_no_cb/"
 
   # Celltypist files
-  celltypist_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/celltypist/"
+  celltypist_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/celltypist/output/"
 
   # scPred files
   scpred_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/"
@@ -96,8 +97,8 @@ output_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_pro
 print(f'Combining metadata for {sample}')
 
 output_filename = output_dir+sample+"_w_metadata_donor_info.h5ad"
-# if os.path.exists(output_filename):
-  # sys.exit("File already exists!")
+if os.path.exists(output_filename):
+  sys.exit("File already exists!")
 
 # Load Cellranger counts
 # filtered_matrix = cellranger_dir+sample+"/outs/filtered_feature_bc_matrix.h5"
@@ -182,7 +183,7 @@ adata = adata[adata.obs.pct_counts_mt < 20, :]
 # add cell, individual and sequencing library id pre-merging
 adata.obs["original_barcode"] = adata.obs.index
 adata.obs["new_cell_name"] = [i.replace("-1",f"_{sample}") for i in adata.obs["original_barcode"]]
-adata.obs["sequencing_library"] = sample
+adata.obs["sequencing_library"] = sample.replace('-', '_')
 adata.obs["individual"] = adata.obs['MajoritySinglet_Individual_Assignment']
 
 # add samples ID to donors that are just added by vireo to make them unique
@@ -198,17 +199,19 @@ adata.obs["cohort"] = cohort
 # add individual info based on cohort
 if cohort == 'TOB':
   # map onek1k ids to cpg ids
-  df_samples_file = "/share/ScratchGeneral/anncuo/OneK1K/scrna-seq_grch38_association_files_OneK1K_CPG_IDs.tsv"
+  df_samples_file = "/directflow/SCCGGroupShare/projects/anncuo/OneK1K_from_ScratchGeneral/scrna-seq_grch38_association_files_OneK1K_CPG_IDs.tsv"
   df_samples = pd.read_csv(df_samples_file, sep="\t")
   df_samples.columns = ['onek1k_id','cpg_id_old','tob_id']
   # the CPG in that file are actually old, so need an extra step to update to the more recent ones (using the same file as below)
   cpg_map_file = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/str_sample-sex-mapping_sample_karyotype_sex_mapping.csv"
   cpg_map_df = pd.read_csv(cpg_map_file)
   cpg_map_df.columns = ['cpg_id','tob_id','sex_karyotype']
+  cpg_map_df['tob_id'] = cpg_map_df['tob_id'].str.replace('-PBMC', '') # remove the trailing string present on only some TOB ID's 
   cpg_map_df.drop(columns=['sex_karyotype'], inplace=True) # drop this column
   df_samples2 = df_samples.merge(cpg_map_df, on='tob_id', how='left')
   df_samples2['individual'] = [donor.split("_")[-1] for donor in df_samples2['onek1k_id']]
   adata.obs = adata.obs.merge(df_samples2, on='individual', how='left')
+  
   adata.obs['onek1k_donor'] = adata.obs['individual']
   adata.obs['individual'] = adata.obs['cpg_id']
 
