@@ -13,8 +13,8 @@ output_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_pro
 # CSV for expression covariates (principal components after Harmony correction)
 ct = celltype.replace(" ","_") # remove spaces from cell type names
 pcs_out_file = f'{output_dir}/{ct}_expression_pcs.csv'
-if os.path.exists(pcs_out_file):
-  sys.exit("File already exists!")
+# if os.path.exists(pcs_out_file):
+#   sys.exit("File already exists!")
 
 # Load integrated AnnData object
 input_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects"

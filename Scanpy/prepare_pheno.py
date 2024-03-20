@@ -16,8 +16,8 @@ output_dir = f'{integrated_objects_dir}/cpg_anndata'
 # AnnData object: expression + gene info + batch info (batch=sequencing library)
 # ct = celltype.replace(' ','_') # remove spaces from cell type names
 adata_out_file = f'{output_dir}/{celltype}_chr{chromosome}.h5ad'
-if os.path.exists(adata_out_file):
-  sys.exit('File already exists!')
+# if os.path.exists(adata_out_file):
+#   sys.exit('File already exists!')
 
 # Load integrated AnnData object
 input_file = f'{integrated_objects_dir}/240_libraries_concatenated_gene_info.h5ad'
