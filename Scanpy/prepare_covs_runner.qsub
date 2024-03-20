@@ -3,16 +3,18 @@
 #$ -cwd
 #$ -V
 #$ -r yes
-#$ -l mem_requested=250G
+#$ -l mem_requested=300G
 #$ -l mem_free=250G
 #$ -l tmp_requested=40G
 #$ -N prepare_ct_covs
 #$ -q short.q
 #$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/logs/prepare_ct_covs.err
 #$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/logs/prepare_ct_covs.log
-#$ -t 2-2
+#$ -t 2-4:2
 #$ -m ae
 #$ -M b.bowen@garvan.org.au
+
+# NOTE: some of the cell types require more memory than others
 
 PY_PATH="/share/ScratchGeneral/anncuo/jupyter/conda_notebooks/envs/cellregmap_notebook/bin/"
 PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/prepare_cell_covs.py"
