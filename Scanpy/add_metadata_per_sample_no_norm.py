@@ -229,6 +229,9 @@ adata.obs.index = [donor for donor in adata.obs["new_cell_name"]]
 adata = adata[adata.obs['individual'].notna()]
 adata = adata[adata.obs['wg2_scpred_prediction'].notna()]
 
+# remove data for participants who withdrew consent 
+adata=adata[~adata.obs['cpg_id'].isin(['CT_557', 'CT_1545', 'CT_888'])]
+
 # save
 adata.write(output_filename)
 
