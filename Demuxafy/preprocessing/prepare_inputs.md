@@ -20,6 +20,7 @@ ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk1
 ```
 Blake Notes:
 240223 - last 2 pools are multiome (S0212 S0213)
+240319 - all 4 pools are multiome (S0212  S0213  S0214  S0215)
 
 ## VCF manipulation
 
