@@ -5,36 +5,39 @@
 #$ -r yes
 #$ -l mem_requested=100G
 #$ -l tmp_requested=80G
-#$ -N classify_cells_azimuth
+#$ -N azimuth_classify_cells
 #$ -q short.q
-#$ -e /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/azimuth_TenK10K_scRNA_231013_newseurat.err
-#$ -o /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/logs/azimuth_TenK10K_scRNA_231013_newseurat.log
-#$ -t 1-64
+#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/azimuth_TenK10K_scRNA_240223_newseurat.err
+#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/azimuth_TenK10K_scRNA_240223_newseurat.log
+#$ -t 2-17
 #$ -m ae
-#$ -M a.cuomo@garvan.org.au
+#$ -M b.bowen@garvan.org.au
 
 SIF=/share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/cell_classification.sif
 BIND_PATH_DATA=/directflow
-BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
+#BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
+SEQ_DATE="240223" # Date the library was sequenced, corresponding to file names
 
 i=${SGE_TASK_ID};
-SAMPLE=$(sed "${i}q;d" /share/ScratchGeneral/anncuo/tenk10k/data_processing/cellranger_outs_231013.txt)
+SAMPLE=$(sed "${i}q;d" /directflow/SCCGGroupShare/projects/${USER}/tenk10k_phase1/data_processing/cellranger_outs_${SEQ_DATE}.txt)
 
 echo "Performing Azimuth cell classification on sample: $SAMPLE"
 
-RDS="/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/seurat_objects_unfiltered/${SAMPLE}.rds"
-AZIMUTH_OUTDIR="/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/${SAMPLE}/step2_azimuth/"
+RDS="/directflow/SCCGGroupShare/projects/${USER}/tenk10k_phase1/data_processing/scpred/seurat_objects_unfiltered/${SAMPLE}.rds"
+AZIMUTH_OUTDIR="/directflow/SCCGGroupShare/projects/${USER}/tenk10k_phase1/data_processing/scpred/${SAMPLE}/step2_azimuth/"
 
+mkdir -p ${AZIMUTH_OUTDIR}
 # mkdir /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/${SAMPLE}
 # mkdir /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/${SAMPLE}/step2_azimuth
 
-cd $SGE_O_WORKDIR
+cd ${SGE_O_WORKDIR}
+
+LOG="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/sample_logs/azimuth_${SAMPLE}_task${SGE_TASK_ID}.log"
 
 # Run main command
 singularity exec --bind $BIND_PATH_DATA \
-                 --bind $BIND_PATH_OUTPUT \
                  -B $SGE_O_WORKDIR $SIF Rscript /map_azimuth.R \
                  --file $RDS \
-                 --path $AZIMUTH_OUTDIR 
+                 --path $AZIMUTH_OUTDIR &>> ${LOG} # log stdout and stderr in individual file for each sample
 
 

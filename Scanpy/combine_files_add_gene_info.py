@@ -5,10 +5,10 @@ import scanpy as sc
 import scanpy.external as sce
 
 # Output directory
-out_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/integrated_objects/"
+out_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/"
 
 # Filtered object directory
-scanpy_dir = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy_objects_w_metadata/"
+scanpy_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/scanpy_objects_w_metadata/"
 
 # extract all files
 scanpy_files = glob.glob(scanpy_dir+"S*")
@@ -39,5 +39,5 @@ adata.var = pd.concat([adata.var,gene_info_df], axis=1)
 adata.obs.index = [re.sub(r"-[0-9]+$", "", cell) for cell in adata.obs.index]
 
 # write
-out_file = f'{out_dir}224_libraries/concatenated_gene_info.h5ad'
+out_file = f'{out_dir}240_libraries/concatenated_gene_info.h5ad'
 adata.write(out_file)
