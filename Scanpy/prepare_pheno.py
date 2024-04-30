@@ -26,7 +26,7 @@ adata = sc.read(input_file)
 # Extract cell type and chromosome specific expression
 adata_ct = adata[adata.obs['wg2_scpred_prediction'] == celltype]
 adata_ct_chr = adata_ct[:, adata_ct.var['chr'] == f'chr{chromosome}']
-adata_ct_chr.obs['cell'] = adata_ct_chr.obs.index
+adata_ct_chr.obs['cell'] = [cell.split("-")[0] for cell in adata_ct_chr.obs.index]
 
 # write
 adata_ct_chr.write(adata_out_file)
