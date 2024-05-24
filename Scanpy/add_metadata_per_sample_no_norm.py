@@ -40,7 +40,7 @@ cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/pro
 # get cellranger outputs
 source_data_location = 'old' # set to 'old' or 'new' to read from blake / annna's directory structure
                              # set to new for 240214 onwards
-#seq_date = '240214' # if running on 'new' data also specify the seq_date
+# seq_date = '240214' # if running on 'new' data also specify the seq_date
 
 # source_data_location = 'old'
 
@@ -97,8 +97,8 @@ output_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_pro
 print(f'Combining metadata for {sample}')
 
 output_filename = output_dir+sample+"_w_metadata_donor_info.h5ad"
-if os.path.exists(output_filename):
-  sys.exit("File already exists!")
+# if os.path.exists(output_filename):
+#   sys.exit("File already exists!")
 
 # Load Cellranger counts
 # filtered_matrix = cellranger_dir+sample+"/outs/filtered_feature_bc_matrix.h5"
@@ -165,8 +165,11 @@ adata = adata[adata.obs['MajoritySinglet_Individual_Assignment'].notna()]
 # preprocessing & QC plotting
 adata.var_names_make_unique()
 sc.pp.filter_cells(adata, min_genes=200)
-adata.var['mt'] = adata.var_names.str.startswith('MT-')  # annotate the group of mitochondrial genes as 'mt'
-sc.pp.calculate_qc_metrics(adata, qc_vars=['mt'], percent_top=None, log1p=False, inplace=True)
+# calculate mitochondrial, ribosomal and hemoglobin gene expression 
+adata.var['mt'] = adata.var_names.str.startswith('MT-')
+adata.var['ribo'] = adata.var_names.str.startswith(('RPS', 'RPL'))
+adata.var['hb'] = adata.var_names.str.contains(('^HB[^(P)]'))
+sc.pp.calculate_qc_metrics(adata, qc_vars=['mt', 'ribo', 'hb'], percent_top=None, log1p=False, inplace=True)
 
 sc.pl.violin(adata, ['n_genes_by_counts', 'total_counts', 'pct_counts_mt'], jitter=0.4, multi_panel=True)
 plt.savefig(output_dir+"figures/"+sample+"_qc_violins.pdf")
@@ -177,8 +180,11 @@ plt.savefig(output_dir+"figures/"+sample+"_tot_counts_pct_mt.pdf")
 sc.pl.scatter(adata, x='total_counts', y='n_genes_by_counts')
 plt.savefig(output_dir+"figures/"+sample+"_tot_counts_tot_genes.pdf")
 
+# TODO: Calculate MADs and filter each pool based on these instead: 
+
 adata = adata[adata.obs.n_genes_by_counts < 6000, :]
 adata = adata[adata.obs.pct_counts_mt < 20, :]
+
 
 # add cell, individual and sequencing library id pre-merging
 adata.obs["original_barcode"] = adata.obs.index
@@ -231,6 +237,12 @@ adata = adata[adata.obs['wg2_scpred_prediction'].notna()]
 
 # remove data for participants who withdrew consent 
 adata=adata[~adata.obs['cpg_id'].isin(['CT_557', 'CT_1545', 'CT_888'])]
+
+
+# remove the gene-level QC columns as these get duplicated when concatenating the scanpy objects
+# Removing these columns from var as they get duplicated when we combine the objects
+columns_to_drop = [col for col in adata.var.columns if re.match(r'(n_cells_by_counts|mean_counts|pct_dropout_by_counts|total_counts)', col)]
+adata.var.drop(columns=columns_to_drop, inplace=True)
 
 # save
 adata.write(output_filename)

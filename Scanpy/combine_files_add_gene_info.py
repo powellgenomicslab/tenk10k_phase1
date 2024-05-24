@@ -2,6 +2,7 @@ import glob
 import re
 import pandas as pd
 import scanpy as sc
+import anndata as ad
 import scanpy.external as sce
 
 # Output directory
@@ -17,6 +18,11 @@ scanpy_files = glob.glob(scanpy_dir+"S*")
 datasets=[]
 for file in scanpy_files:
     adata = sc.read(file)
+    
+    # TODO: REMOVE QC columns before merging, otherwise the are duplicated for each pool and make the final object way bigger  
+    # columns_to_drop = [col for col in adata.var.columns if re.match(r'(n_cells_by_counts-\d+|mean_counts-\d+|pct_dropout_by_counts-\d+|total_counts-\d+)', col)]
+    # adata.var.drop(columns=columns_to_drop, inplace=True)
+
     datasets.append(adata)
 adata = datasets[0].concatenate(*datasets[1:])
 

@@ -40,6 +40,3 @@ singularity exec --bind $BIND_PATH_DATA \
                  --file $RDS \
                  --path $SCPRED_OUTDIR \
                  --plan multiprocess &>> ${LOG}
-
-
-

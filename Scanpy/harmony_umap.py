@@ -7,9 +7,9 @@ sc.settings.autosave = True  # save figures, do not show them
 sc.settings.set_figure_params(dpi=400, dpi_save=500)  # set sufficiently high resolution for saving
 sc.settings.figdir = '/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/figures'
 # filename = sys.argv[1]  # read filename from command line
-filename = '/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries_concatenated_gene_info_harmony_umap_notsne.h5ad'
+filename = '/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries/240_libraries_concatenated_gene_info.h5ad'
 
-def basic_analysis(filename):
+def analysis_harmony(filename):
     """ perform normalisation, scaling, feature selection, harmony integration to remove batch effects, and dimensionality reduction on the input scanpy object
         also generates a few UMAP and PCA figures 
     """
@@ -30,16 +30,6 @@ def basic_analysis(filename):
 
     # Dim Reduction - without Harmony batch correction for comparison
     sc.tl.pca(adata, svd_solver='arpack')
-    # sc.pp.neighbors(adata) 
-    # sc.tl.umap(adata) 
-
-    # # plotting (No Harmony)
-    # sc.pl.pca(adata, color = 'wg2_scpred_prediction', save='_cell_types_noharmony.png')
-    # sc.pl.pca(adata, color = ['cohort'], save='pca_cohort_noharmony.png')
-    
-    # # UMAP plotting (No Harmony)
-    # sc.pl.umap(adata, color='wg2_scpred_prediction', save='_celltypes_noharmony.png')
-    # sc.pl.umap(adata, color='cohort', save='_cohort_noharmony.png')
 
     # perform Harmony integration to remove technical batch effects between pools
     sce.pp.harmony_integrate(adata, 'sequencing_library')
@@ -57,15 +47,22 @@ def basic_analysis(filename):
     sc.pl.umap(adata, color='wg2_scpred_prediction', save='umap_celltypes2.png')
     sc.pl.umap(adata, color='cohort', save='umap_cohort2.png')
 
-    adata.write('/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries_concatenated_gene_info_harmony_umap_notsne.h5ad')
+    adata.write('/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries/240_libraries_concatenated_harmony.h5ad')
 
     # save the UMAP coords for plotting in R
     pd.DataFrame(adata.obsm['X_umap'],
              columns = ['UMAP1', 'UMAP2'],
-             index = adata.obs.index).to_csv('/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries_harmony_umap_covs.csv')
+             index = adata.obs.index).to_csv('/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries/240_libraries_harmony_umap_coords.csv')
     
     # get the celltypes for plotting in r 
-    adata.obs[['wg2_scpred_prediction', 'cohort']].to_csv('/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries_celltypes_by_cohort.csv')
+    adata.obs[['wg2_scpred_prediction', 'cohort', 'individual']].to_csv('/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries/240_libraries_celltypes_by_cohort.csv')
+    
+    # get a subset of the metadata for UMAP QC plots
+    adata.obs[['wg2_scpred_prediction', 'individual', 'cohort', 'n_genes', 'n_genes_by_counts',
+       'total_counts', 'total_counts_mt', 'pct_counts_mt', 'ct_id', 'cpg_id', 'pct_counts_ribo', 'pct_counts_hb']].to_csv('/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries/240_libraries_cell_metadata_subset.csv')
 
 if __name__ == "__main__":
-    basic_analysis(filename)
+    analysis_harmony(filename)
+
+
+#  adata.obs[['wg2_scpred_prediction', 'cohort', 'individual']].to_csv('/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries_archive/240_libraries_celltypes_by_cohort_indiv.csv')

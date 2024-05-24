@@ -1,5 +1,6 @@
 import os
 import sys
+import re
 import pandas as pd
 import scanpy as sc
 import scanpy.external as sce
@@ -16,7 +17,7 @@ pcs_out_file = f'{output_dir}/{celltype}_expression_pcs.csv'
 #   sys.exit("File already exists!")
 
 # Load integrated AnnData object
-input_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects"
+input_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries"
 input_file = f"{input_dir}/240_libraries_concatenated_gene_info.h5ad"
 adata = sc.read(input_file)
 
@@ -36,10 +37,10 @@ sc.pp.scale(adata_ct, max_value=10)
 sc.tl.pca(adata_ct, svd_solver='arpack')
 sce.pp.harmony_integrate(adata_ct, 'sequencing_library')
 df_harmony_pcs = pd.DataFrame(adata_ct.obsm['X_pca_harmony'])
-df_harmony_pcs.index = adata_ct.obs.index
 # remove batch automatically added at the end by integration
-df_harmony_pcs.index = [cell.split("-")[0] for cell in adata_ct.obs.index]
+df_harmony_pcs.index = [re.sub(r"-[0-9]+$", "", cell) for cell in adata_ct.obs.index]
 df_harmony_pcs.columns = [f"harmony_PC{i+1}" for i in df_harmony_pcs.columns]
 
 # save PCs
 df_harmony_pcs.to_csv(pcs_out_file)
+
