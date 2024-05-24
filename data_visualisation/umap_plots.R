@@ -12,12 +12,16 @@ library(data.table)
 cell_metadata <- read_csv("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries_cell_metadata_subset.csv") %>%
     rename("barcode" = 1)
 
+cell_cycle_metadata <- read_csv("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cell_cycle/240_libraries_cellcyle_phase.csv") %>%
+    rename("barcode" = 1)
+
 # read in the UMAP coordinates
 umap_coords <- read_csv("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries_harmony_umap_covs.csv") %>%
     rename("barcode" = 1)
 
 plot_data <- umap_coords %>%
     left_join(cell_metadata) %>%
+    left_join(cell_cycle_metadata) %>%
     rename("UMAP 1" = UMAP1, "UMAP 2" = UMAP2)
 
 # ⚙️ Functions ----
@@ -195,8 +199,18 @@ plot_data %>%
         dpi = 1300
     )
 
+# Umap colored by ell cycle phase
+
+plot_data %>%
+    ggUMAPplot(group.by = "phase") %>%
+    ggsave(
+        filename = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/figures/ggumap_cell_cycle_phase.png",
+        width = 9, height = 5,
+        dpi = 1300
+    )
+
 # Quality metric feature plots
-quality_metrics <- c("n_genes_by_counts", "total_counts", "pct_counts_mt")
+quality_metrics <- c("n_genes_by_counts", "total_counts", "pct_counts_mt", "S_score", "G2M_score")
 
 quality_metrics %>%
     purrr::walk(\(metric) ggFeaturePlot(
@@ -208,17 +222,11 @@ quality_metrics %>%
     ))
 
 
-# ----
+# Violin plots ----
 
-# violin plot function
-
-
-
+# TODO: violin plot function
 
 # ggViolin <- function(data) {
-
-
-
 
 # }
 
@@ -239,15 +247,6 @@ n_genes_by_counts_by_cell_types <- plot_data %>%
         panel.grid.minor.x = element_blank()
     )
 
-
-
-# n_genes_by_counts_by_cell_types <- plot_data %>%
-#     ggplot(aes(x = wg2_scpred_prediction, y = n_genes_by_counts, fill = wg2_scpred_prediction)) +
-#     geom_violin() +
-#     scale_fill_manual(values = setNames(tenk_color_pal$color, tenk_color_pal$cell_type), ) +
-#     theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), axis.title.y = element_blank())
-
-
 n_genes_by_counts_by_cell_types %>%
     ggsave(
         filename = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/figures/ggVln_n_genes_by_counts_by_cell_types.png",
@@ -256,7 +255,7 @@ n_genes_by_counts_by_cell_types %>%
         dpi = 300
     )
 
-# make violin plots for each sequencing batch
+# TODO: make violin plots for each sequencing batch
 
 
 
