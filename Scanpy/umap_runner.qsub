@@ -13,7 +13,12 @@
 #$ -M b.bowen@garvan.org.au
 
 PY_PATH="/directflow/SCCGGroupShare/projects/blabow/.conda/envs/cellregmap_notebook_bb/bin"
-PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/harmony_umap.py"
+
+# first pass harmony + UMAP
+# PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/harmony_umap.py"
+
+# second pass harmony + UMAP (after manual filtering of low-quality clusters)
+PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/rerun_harmony_umap.py"
 
 cd ${TMPDIR}
 # Run python script

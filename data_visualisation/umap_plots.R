@@ -5,18 +5,28 @@ library(glue)
 library(ggsci)
 library(RColorBrewer)
 library(data.table)
+library(Seurat)
 
 # 📗 Read in the data ----
 
 # read in the cell-level metadata
-cell_metadata <- read_csv("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries_cell_metadata_subset.csv") %>%
+# cell_metadata <- read_csv("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries_cell_metadata_subset.csv") %>%
+#     rename("barcode" = 1)
+
+# cell_cycle_metadata <- read_csv("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cell_cycle/240_libraries_cellcyle_phase.csv") %>%
+#     rename("barcode" = 1)
+
+cell_metadata <- read_csv("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries/240_libraries_cell_metadata_subset_filtered_reanalysed.csv") %>%
     rename("barcode" = 1)
 
 cell_cycle_metadata <- read_csv("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cell_cycle/240_libraries_cellcyle_phase.csv") %>%
     rename("barcode" = 1)
 
 # read in the UMAP coordinates
-umap_coords <- read_csv("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries_harmony_umap_covs.csv") %>%
+# umap_coords <- read_csv("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries_harmony_umap_covs.csv") %>%
+#     rename("barcode" = 1)
+
+umap_coords <- read_csv("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries/240_libraries_harmony_umap_coords_filtered_reanalysed.csv") %>%
     rename("barcode" = 1)
 
 plot_data <- umap_coords %>%
@@ -39,6 +49,7 @@ ggUMAPplot <- function(data,
                        plot.title = NULL,
                        size = 0.1,
                        stroke = 0,
+                       #    label = FALSE,
                        ...) {
     # data <- arrange(data, group.by)
     umap_ratio <- square.ratio(data[, c("UMAP 1", "UMAP 2")])
@@ -78,6 +89,11 @@ ggUMAPplot <- function(data,
         new.plot <- new.plot +
             labs(title = group.by)
     }
+
+    # if (label) {
+    #     Seurat::LabelClusters(new.plot, id = {{group.by}})
+    # }
+
     return(new.plot)
 }
 
@@ -131,12 +147,16 @@ ggFeaturePlot <- function(
 # generate nested colors with material theme
 red <- pal_material("red")(5)[2:5]
 purple <- pal_material("purple")(4)[2:4]
-indigo <- pal_material("indigo")(5)[]
-lightblue <- pal_material("light-blue")(7)[2:7]
-teal <- pal_material("teal")(5)[2:5]
+pink <- pal_material("pink")(7)
+deeppurple <- pal_material("deep-purple")(7)
+indigo <- pal_material("indigo")(7)[]
+blue <- pal_material("blue")(7)[]
+lightblue <- pal_material("light-blue")(7)
+teal <- pal_material("teal")(7)[]
 lightgreen <- pal_material("light-green")(5)[2:5]
-yellow <- pal_material("yellow")(3)[2:3]
-orange <- pal_material("orange")(2)[2]
+lime <- pal_material("lime")(7)[]
+yellow <- pal_material("yellow")(7)[]
+orange <- pal_material("orange")(4)[1:4]
 brown <- pal_material("brown")(4)[2:4]
 grey <- pal_material("grey")(4)[2:4]
 
@@ -145,59 +165,72 @@ tenk_color_pal <- tribble(
     # Lymphoid
     ## B cells
     "B_intermediate", red[1],
-    "B_memory", red[2],
-    "B_naive", red[3],
-    "Plasmablast", red[4],
+    "B_memory", red[4],
+    "B_naive", orange[1],
+    "Plasmablast", orange[4],
     ## NK cells
-    "NK", purple[1],
-    "NK_CD56bright", purple[2],
+    "NK", pink[5],
+    "NK_CD56bright", purple[1],
     "NK_Proliferating", purple[3],
     # CD8 T cells
-    "CD8_Naive", indigo[1],
-    "CD8_Proliferating", indigo[2],
-    "CD8_TCM", indigo[3],
-    "CD8_TEM", indigo[4],
+    "CD8_Naive", deeppurple[3],
+    "CD8_Proliferating", deeppurple[6],
+    "CD8_TCM", indigo[4],
+    "CD8_TEM", indigo[7],
     # CD4 T cells
-    "CD4_CTL", lightblue[1],
-    "CD4_Naive", lightblue[2],
-    "CD4_Proliferating", lightblue[3],
-    "CD4_TCM", lightblue[4],
-    "CD4_TEM", lightblue[5],
-    "Treg", lightblue[6],
+    "CD4_CTL", blue[2],
+    "CD4_Naive", blue[4],
+    "CD4_Proliferating", blue[6],
+    "CD4_TCM", lightblue[1],
+    "CD4_TEM", lightblue[4],
+    "Treg", lightblue[7],
     #
-    "dnT", teal[1],
-    "gdT", teal[2],
+    "dnT", grey[3],
+    "gdT", grey[6],
     "ILC", teal[3],
     "MAIT", teal[4],
     # myeloid
     ## DC
-    "pDC", lightgreen[1],
-    "cDC1", lightgreen[2],
+    "pDC", lime[3],
+    "cDC1", lime[7],
     "cDC2", lightgreen[3],
     "ASDC", lightgreen[4],
     ## Monocyte
-    "CD14_Mono", yellow[1],
-    "CD16_Mono", yellow[2],
+    "CD14_Mono", yellow[2],
+    "CD16_Mono", yellow[6],
     #
-    "HSPC", orange[1],
+    "HSPC", brown[3],
     #
-    "Platelet", brown[1],
-    "Eryth", brown[2],
+    # "Platelet", brown[1],
+    # "Eryth", brown[2],
     #
-    "Doublet", grey[2],
+    # "Doublet", grey[2],
 )
 
 # UMAP colored by cell type
 plot_data <- plot_data %>%
     mutate(wg2_scpred_prediction = factor(wg2_scpred_prediction, levels = tenk_color_pal$cell_type))
 
-plot_data %>%
-    ggUMAPplot(group.by = "wg2_scpred_prediction", colorpal = setNames(tenk_color_pal$color, tenk_color_pal$cell_type)) %>%
+cell_types_plot <- plot_data %>%
+    ggUMAPplot(group.by = "wg2_scpred_prediction", colorpal = setNames(tenk_color_pal$color, tenk_color_pal$cell_type))
+
+cell_types_plot %>%
     ggsave(
         filename = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/figures/ggumap_wg2_cell_types.png",
         width = 9, height = 5,
-        dpi = 1300
+        dpi = 1300,
     )
+
+cohort_plot <- plot_data %>%
+    ggUMAPplot(group.by = "cohort")
+
+cohort_plot %>%
+    ggsave(
+        filename = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/figures/ggumap_cohort.png",
+        width = 9, height = 5,
+        dpi = 1300,
+    )
+
 
 # Umap colored by ell cycle phase
 
@@ -210,7 +243,8 @@ plot_data %>%
     )
 
 # Quality metric feature plots
-quality_metrics <- c("n_genes_by_counts", "total_counts", "pct_counts_mt", "S_score", "G2M_score")
+# quality_metrics <- c("n_genes_by_counts", "total_counts", "pct_counts_mt", "S_score", "G2M_score")
+quality_metrics <- c("n_genes_by_counts", "total_counts", "pct_counts_mt")
 
 quality_metrics %>%
     purrr::walk(\(metric) ggFeaturePlot(
@@ -230,7 +264,7 @@ quality_metrics %>%
 
 # }
 
-# make violin plots for each cell type
+# make violin plots for each cell type / qc metric
 
 n_genes_by_counts_by_cell_types <- plot_data %>%
     pivot_longer(cols = {{ quality_metrics }}, names_to = "qc_metric", values_to = "qc_metric_value") %>%
@@ -256,9 +290,6 @@ n_genes_by_counts_by_cell_types %>%
     )
 
 # TODO: make violin plots for each sequencing batch
-
-
-
 
 # export ncells per sample
 
