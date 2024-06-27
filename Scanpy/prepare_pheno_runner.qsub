@@ -3,8 +3,8 @@
 #$ -cwd
 #$ -V
 #$ -r yes
-#$ -l mem_requested=200G
-#$ -l tmp_requested=100G
+#$ -l mem_requested=400G
+#$ -l tmp_requested=40G
 #$ -N prepare_pheno
 #$ -q short.q
 #$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/logs/prepare_pheno.err

@@ -1,5 +1,6 @@
 import os
 import sys
+import re
 import pandas as pd
 import scanpy as sc
 import scanpy.external as sce
@@ -7,7 +8,7 @@ import scanpy.external as sce
 celltype = sys.argv[1]
 
 # Specify which directory the files generated here will be saved to
-output_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/cpg_cell_covs"
+output_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries/cpg_cell_covs"
 
 # Specify which files this script will generate
 # CSV for expression covariates (principal components after Harmony correction)
@@ -16,18 +17,19 @@ pcs_out_file = f'{output_dir}/{celltype}_expression_pcs.csv'
 #   sys.exit("File already exists!")
 
 # Load integrated AnnData object
-input_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects"
-input_file = f"{input_dir}/240_libraries_concatenated_gene_info.h5ad"
+input_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries"
+input_file = f"{input_dir}/240_libraries_concatenated_harmony_leiden_filtered_reanalysed.h5ad" # Use the scanpy object that has had low seq-depth cluster removed 
 adata = sc.read(input_file)
 
 # Extract cell type specific expression
 adata_ct = adata[adata.obs['wg2_scpred_prediction'] == celltype]
+adata_ct = adata_ct.raw.to_adata() # to ensure HVG selection occurrs across all the HVG's for the cell subset 
 
 # normalisation (per cell type)
 sc.pp.normalize_total(adata_ct, target_sum=1e4)
 sc.pp.log1p(adata_ct)
 sc.pp.highly_variable_genes(adata_ct, min_mean=0.0125, max_mean=3, min_disp=0.5)
-adata_ct.raw = adata_ct
+# adata_ct.raw = adata_ct # unnecessary step 
 adata_ct = adata_ct[:, adata_ct.var.highly_variable]
 sc.pp.regress_out(adata_ct, ['total_counts', 'pct_counts_mt'])
 sc.pp.scale(adata_ct, max_value=10)
@@ -36,10 +38,10 @@ sc.pp.scale(adata_ct, max_value=10)
 sc.tl.pca(adata_ct, svd_solver='arpack')
 sce.pp.harmony_integrate(adata_ct, 'sequencing_library')
 df_harmony_pcs = pd.DataFrame(adata_ct.obsm['X_pca_harmony'])
-df_harmony_pcs.index = adata_ct.obs.index
 # remove batch automatically added at the end by integration
-df_harmony_pcs.index = [cell.split("-")[0] for cell in adata_ct.obs.index]
+df_harmony_pcs.index = [re.sub(r"-[0-9]+$", "", cell) for cell in adata_ct.obs.index]
 df_harmony_pcs.columns = [f"harmony_PC{i+1}" for i in df_harmony_pcs.columns]
 
 # save PCs
 df_harmony_pcs.to_csv(pcs_out_file)
+

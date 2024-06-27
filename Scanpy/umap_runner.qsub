@@ -3,18 +3,22 @@
 #$ -cwd
 #$ -V
 #$ -r yes
-#$ -l mem_requested=1000G
-#$ -l mem_free=1000G
+#$ -l mem_requested=800G
 #$ -l tmp_requested=40G
-#$ -N umap_scanpy
-#$ -q short.q
-#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/logs/umap_no_tsne.err
-#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/logs/umap_no_tsne.log
+#$ -N harmony_umap
+#$ -q long.q
+#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/logs/umap_all_batches.err
+#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/logs/umap_all_batches.log
 #$ -m ae
 #$ -M b.bowen@garvan.org.au
 
-PY_PATH="/share/ScratchGeneral/anncuo/jupyter/conda_notebooks/envs/cellregmap_notebook/bin"
-PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/harmony_umap.py"
+PY_PATH="/directflow/SCCGGroupShare/projects/blabow/.conda/envs/cellregmap_notebook_bb/bin"
+
+# first pass harmony + UMAP
+# PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/harmony_umap.py"
+
+# second pass harmony + UMAP (after manual filtering of low-quality clusters)
+PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/rerun_harmony_umap.py"
 
 cd ${TMPDIR}
 # Run python script
