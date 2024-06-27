@@ -3,7 +3,7 @@
 #$ -cwd
 #$ -V
 #$ -r yes
-#$ -l mem_requested=200G
+#$ -l mem_requested=400G
 #$ -l tmp_requested=40G
 #$ -N prepare_pheno
 #$ -q short.q

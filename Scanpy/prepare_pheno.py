@@ -21,7 +21,7 @@ adata_out_file = f'{output_dir}/{celltype}_chr{chromosome}.h5ad'
 #   sys.exit('File already exists!')
 
 # Load integrated AnnData object
-input_file = f'{integrated_objects_dir}/240_libraries_concatenated_gene_info.h5ad'
+input_file = f'{integrated_objects_dir}/240_libraries_concatenated_harmony_leiden_filtered_reanalysed.h5ad'
 adata = sc.read(input_file)
 
 # Extract cell type and chromosome specific expression
