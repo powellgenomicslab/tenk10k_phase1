@@ -22,4 +22,4 @@ Thes are plots summarising the common and rare sc-eQTL discovery overall (across
 
 The [eQTL overview README](eqtl_summary_figures/README.md) contains more detail.
 
-## Fig. 3 cell type specificity?
+## [eQTL cell type specificity (Fig. 3)](celltype_specific_eqtl_figures)
