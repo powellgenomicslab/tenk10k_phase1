@@ -16,4 +16,8 @@ Thes are plots summarising the scRNA-seq data overall (across all sequencing lib
 
 The [scRNA-seq data overview README](overview_figures/README.md) contains more detail.
 
+## [eQTL summary](eqtl_summary_figures)
 
+Thes are plots summarising the common and rare sc-eQTL discovery overall (across all cell types and both variant categories) and will constitute panels for Figure 2 and accompanying supplementary figures.
+
+The [eQTL overview README](eqtl_summary_figures/README.md) contains more detail.
