@@ -20,3 +20,8 @@
   * total counts
   * % ambient
   * % MT
+
+# References
+
+1. [OneK1K paper](https://www.science.org/doi/10.1126/science.abf3041)
+2. 
