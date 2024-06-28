@@ -65,5 +65,5 @@ Repo for analyses of the pilot phase of TenK10K (scRNA-seq processing only for n
 
 Batches with scRNA-seq but awaiting WGS:
 * 11th batch: May 1st, 2024 (```240501```): 18 sequencing libraries (), ? unique individuals. (2 Multiome)
-* 12th batch: June 24th, 2024 (```240524```) 27 sequencing libraries (), ? unique indivudals  
-* 13th batch: (```240530```) 11 sequencing libraries, (), ? unique indivudals (3 multiome 3 multiome, 4 GEMX, 4 HT)
+* 12th batch: May 24th, 2024 (```240524```) 27 sequencing libraries (), ? unique indivudals  
+* 13th batch: May 30th, 2024 (```240530```) 11 sequencing libraries, (), ? unique indivudals (3 multiome 3 multiome, 4 GEMX, 4 HT)
