@@ -6,7 +6,7 @@ This includes:
 
 * scRNA-seq processing (TO DO put everything in one folder and refer to it here)
 * downstream analysis of eQTLs identified via SAIGE-QTL
-* [manuscript figures](Figures)
+* [manuscript main and suppl figures](plotting_notebooks)
 
 ## Pipeline
 
