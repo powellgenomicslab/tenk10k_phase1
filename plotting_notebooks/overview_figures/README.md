@@ -1,5 +1,11 @@
 # Figure 1
 
+Figure 1 of our [TenK10K phase 1 manuscript](https://docs.google.com/document/d/1ck13c1NWXLolvEuvh-y3a11jsYbBfZOv1aU01U4o8FE/edit#heading=h.ds9fvb3nfr68) aims to summarise the data, including the scRNA-seq data from ~5 million cells across all ~2,000 individuals.
+
+Here, we include scripts and notebooks to generate all plots included in the main figure and all accompanying supplementary figures.
+
+In some cases, we refer to other papers as templates for some of the panels, e.g., the OneK1K paper (Yazar et al, [1]).
+
 ## Main figures
 
 * UMAP plot of all data coloured by cell type 
