@@ -8,11 +8,11 @@ In some cases, we refer to other papers as templates for some of the panels, e.g
 
 ## Main figures
 
-* UMAP plot of all data coloured by cell type 
-* barplot of number of cells per cell type coloured by cell type
+* UMAP plot of all data coloured by cell type (similar to OneK1K's Fig. 1G)
+* barplot of number of cells per cell type coloured by cell type (similar to OneK1K's Fig. 1F)
 * barplot of number of cells per cell type coloured by cell type (log 10 scale)
 * violin plots of number of cells per individual by cell type coloured by cell type
-* histogram of number of cells per individual (across all cell types)
+* histogram of number of cells per individual (across all cell types; similar to OneK1K's Fig. 1C)
 
 ## Supplementary figures
 
