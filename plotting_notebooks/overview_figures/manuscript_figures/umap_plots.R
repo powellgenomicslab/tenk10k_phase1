@@ -156,7 +156,7 @@ teal <- pal_material("teal")(7)[]
 lightgreen <- pal_material("light-green")(5)[2:5]
 lime <- pal_material("lime")(7)[]
 yellow <- pal_material("yellow")(7)[]
-orange <- pal_material("orange")(4)[1:4]
+orange <- pal_material("orange")(7)[]
 brown <- pal_material("brown")(4)[2:4]
 grey <- pal_material("grey")(4)[2:4]
 
@@ -166,8 +166,8 @@ tenk_color_pal <- tribble(
     ## B cells
     "B_intermediate", red[1],
     "B_memory", red[4],
-    "B_naive", orange[1],
-    "Plasmablast", orange[4],
+    "B_naive", orange[4],
+    "Plasmablast", orange[7],
     ## NK cells
     "NK", pink[5],
     "NK_CD56bright", purple[1],
@@ -183,12 +183,12 @@ tenk_color_pal <- tribble(
     "CD4_Proliferating", blue[6],
     "CD4_TCM", lightblue[1],
     "CD4_TEM", lightblue[4],
-    "Treg", lightblue[7],
+    "Treg", lightblue[6],
     #
     "dnT", grey[3],
     "gdT", grey[6],
     "ILC", teal[3],
-    "MAIT", teal[4],
+    "MAIT", teal[5],
     # myeloid
     ## DC
     "pDC", lime[3],
