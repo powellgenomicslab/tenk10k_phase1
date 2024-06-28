@@ -1,6 +1,6 @@
 # Plotting notebooks
 
-Notebooks to reproduce figures generated in the analysis of these data
+Notebooks to reproduce figures generated in the analysis of the TenK10K phase 1 data.
 
 ## [scRNA-seq QC](qc_plots)
 
