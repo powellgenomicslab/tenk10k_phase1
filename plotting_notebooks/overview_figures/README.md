@@ -29,5 +29,5 @@ In some cases, we refer to other papers as templates for some of the panels, e.g
 
 # References
 
-1. [OneK1K paper](https://www.science.org/doi/10.1126/science.abf3041) Single-cell eQTL mapping identifies cell type–specific genetic control of autoimmune disease
+1. [Single-cell eQTL mapping identifies cell type–specific genetic control of autoimmune disease](https://www.science.org/doi/10.1126/science.abf3041) 
 2. 
