@@ -1,6 +1,8 @@
+# Figure 1
+
 ## Main figures
 
-* UMAP plot of all data coloured by cell type
+* UMAP plot of all data coloured by cell type 
 * barplot of number of cells per cell type coloured by cell type
 * barplot of number of cells per cell type coloured by cell type (log 10 scale)
 * violin plots of number of cells per individual by cell type coloured by cell type
@@ -8,6 +10,13 @@
 
 ## Supplementary figures
 
-* QC metrics by cell type (violin plots coloured and grouped by cell type)
+* UMAP plot of all data coloured by various metrics
+  * number of genes
   * total counts
-  * % MT 
+  * % ambient
+  * % MT
+* QC metrics by cell type (violin plots coloured and grouped by cell type)
+  * number of genes
+  * total counts
+  * % ambient
+  * % MT
