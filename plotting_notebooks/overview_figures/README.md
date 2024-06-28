@@ -29,5 +29,10 @@ In some cases, we refer to other papers as templates for some of the panels, e.g
 
 # References
 
-1. [Single-cell eQTL mapping identifies cell type–specific genetic control of autoimmune disease](https://www.science.org/doi/10.1126/science.abf3041) 
-2. 
+1. [Single-cell eQTL mapping identifies cell type–specific genetic control of autoimmune disease](https://www.science.org/doi/10.1126/science.abf3041). Yazar et al, Science 2022. 
+
+# Slides
+
+* [figure panels](https://docs.google.com/presentation/d/1dOiiMZvyDHwfdQoTz-MvdGtoIxzHMube9K8HltcH1cQ/edit#slide=id.g2741262b6b1_0_0)
+* [all figures portrait](https://docs.google.com/presentation/d/1l6BWEUdciT9U015kAJljiWd8AQqL15bhsDbX7e9iorM/edit#slide=id.g28a43f90e91_0_51)
+* [Blake's slide folder](https://drive.google.com/drive/folders/1672Pt3rIHkePCng9D4K813Vi4Y0JYMd0)
