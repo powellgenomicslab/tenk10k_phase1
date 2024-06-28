@@ -1,4 +1,4 @@
-# TenK10K phase1 scRNA-seq processing steps
+# TenK10K phase1 analyses
 
 Repo for analyses of the pilot phase of TenK10K.
 
@@ -8,7 +8,7 @@ This includes:
 * downstream analysis of eQTLs identified via SAIGE-QTL
 * [manuscript main and suppl figures](plotting_notebooks)
 
-## Pipeline
+## scRNA-seq processing pipeline
 
 * Create a file summarising sequencing libraries included in the latest run (by running [this](https://github.com/powellgenomicslab/tenk10k_phase1/blob/main/Demuxafy/preprocessing/prepare_inputs.md#extract-cellranger-libraries))
 * New pool-donor info (for vireo) may not be in the files used [here](https://github.com/powellgenomicslab/tenk10k_phase1/blob/main/Demuxafy/preprocessing/BioHEART_make_pool_sample_lists.R#L3-L6), but they will be in the [shared data tracking spreadsheet](https://docs.google.com/spreadsheets/d/1XcAYd3ssKTfdPquQ3QxtN8Mn18YObpiiuUecQFbz45Q/edit#gid=336263672), so download the updated list from there.
