@@ -7,9 +7,9 @@
 #$ -l tmp_requested=50G
 #$ -l nvgpu=3
 #$ -N cellbender_TenK10K_scRNA
-#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cellbender/logs/cellbender_TenK10K_scRNA_S0169-0170.err
-#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cellbender/logs/cellbender_TenK10K_scRNA_S0169-0170.log
-#$ -t 16-17
+#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cellbender/logs/cellbender_TenK10K_scRNA_240524.err
+#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cellbender/logs/cellbender_TenK10K_scRNA_240524.log
+#$ -t 1-27
 #$ -m ae
 #$ -M b.bowen@garvan.org.au
 
@@ -19,8 +19,13 @@ echo "----------------------------------------------------------------"
 echo " Running CellBender on TenK10K_scRNA samples"
 echo "----------------------------------------------------------------"
 
+# record of previous runs after code refactor 
 # SEQ_DATE="240214" 
-SEQ_DATE="240223" # Date the library was sequenced, corresponding to file names
+# SEQ_DATE="240223" 
+# SEQ_DATE="240501"
+
+# Date the library was sequenced, corresponding to file names. Ensure corresponding sample list is present at cellranger_outs_${SEQ_DATE}.txt 
+SEQ_DATE="240524"
 
 i=${SGE_TASK_ID};
 

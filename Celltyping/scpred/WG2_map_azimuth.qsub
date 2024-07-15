@@ -7,16 +7,21 @@
 #$ -l tmp_requested=80G
 #$ -N azimuth_classify_cells
 #$ -q short.q
-#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/azimuth_TenK10K_scRNA_240223_newseurat.err
-#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/azimuth_TenK10K_scRNA_240223_newseurat.log
-#$ -t 2-17
+#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/azimuth_TenK10K_scRNA_240524_newseurat.err
+#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/logs/azimuth_TenK10K_scRNA_240524_newseurat.log
+#$ -t 1-27
 #$ -m ae
 #$ -M b.bowen@garvan.org.au
 
 SIF=/share/ScratchGeneral/anncuo/tenk10k/data_processing/scpred/cell_classification.sif
 BIND_PATH_DATA=/directflow
 #BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
-SEQ_DATE="240223" # Date the library was sequenced, corresponding to file names
+
+# Date the library was sequenced, corresponding to file names
+
+# SEQ_DATE="240223" 
+#SEQ_DATE="240501"
+SEQ_DATE="240524"
 
 i=${SGE_TASK_ID};
 SAMPLE=$(sed "${i}q;d" /directflow/SCCGGroupShare/projects/${USER}/tenk10k_phase1/data_processing/cellranger_outs_${SEQ_DATE}.txt)

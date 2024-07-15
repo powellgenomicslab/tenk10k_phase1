@@ -6,16 +6,19 @@
 #$ -r yes
 #$ -l mem_requested=80G
 #$ -N scds_demuxafy_TenK10K_scRNA
-#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/scds/logs/scds_TenK10K_scRNA_240223.err
-#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/scds/logs/scds_TenK10K_scRNA_240223.log
-#$ -t 1-19
+#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/scds/logs/scds_TenK10K_scRNA_240501.err
+#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/scds/logs/scds_TenK10K_scRNA_240501.log
+#$ -t 1-16
 #$ -m ae
 #$ -M b.bowen@garvan.org.au
 
 SIF=/share/ScratchGeneral/anncuo/software/Demuxafy.sif
 BIND_PATH_DATA=/directflow
 # BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
-SEQ_DATE="240223" # Date the library was sequenced, corresponding to file names
+# Date the library was sequenced, corresponding to file names
+# SEQ_DATE="240223" 
+# SEQ_DATE="240524" 
+SEQ_DATE="240501" 
 
 i=${SGE_TASK_ID};
 
