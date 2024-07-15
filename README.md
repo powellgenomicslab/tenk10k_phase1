@@ -71,6 +71,6 @@ This includes:
 
 Batches with scRNA-seq but awaiting WGS:
 * 10th batch: Feb 23rd, 2024 (```240223```): 17 sequencing libraries (BioHEART only), 128 unique individuals.
-* 11th batch: May 1st, 2024 (```240501```): 18 sequencing libraries (), ? unique individuals. (2 Multiome)
-* 12th batch: May 24th, 2024 (```240524```) 27 sequencing libraries (), ? unique individuals  
-* 13th batch: May 30th, 2024 (```240530```) 11 sequencing libraries, (), ? unique individuals (3 multiome, 4 GEMX, 4 HT)
+* 11th batch: May 1st, 2024 (```240501```): 18 sequencing libraries (), ? unique individuals. (2 Multiome libraries)
+* 12th batch: May 24th, 2024 (```240524```) 27 sequencing libraries (), 213 unique individuals  
+* 13th batch: May 30th, 2024 (```240530```) 11 sequencing libraries, (), ? unique individuals (3 multiome, 4 GEMX, 4 HT libraries)
