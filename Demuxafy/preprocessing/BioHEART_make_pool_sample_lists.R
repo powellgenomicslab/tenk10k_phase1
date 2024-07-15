@@ -3,38 +3,11 @@ library(data.table)
 library(glue)
 
 # BioHEART donor information (which BioHEART IDs are in which pool)
-# donor_dir <- "/share/ScratchGeneral/anncuo/tenk10k/donor_info/"
-# bh_file <- paste0(donor_dir, "TenK10K_BioHeart_pool_info_v2.csv")
-# bh_df <- read.csv(bh_file)
-
-# # Map between BioHEART (CT) IDs and CPG IDs (from Hope)
-# cpg_map_file <- "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/str_sample-sex-mapping_sample_karyotype_sex_mapping.csv"
-# cpg_map_df <- read.csv(cpg_map_file)
-
-# # Output directory
 bioheart_samples_dir <- "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/samples_in_pools_bioheart/"
-# tenk10k_pools <- unique(bh_df$Pool)
 
 ################################################################
 ################### Most BioHEART pools ########################
 ################################################################
-
-# Loop over pools and create files
-# for (tenk10k_pool in tenk10k_pools){
-#     # CT IDs
-#     sc_samples = bh_df[bh_df$Pool == tenk10k_pool,"Sample.ID"]
-#     # corresponding CPG IDs
-#     cpg_samples = cpg_map_df[cpg_map_df$external_id %in% sc_samples, "s"]
-#     # build dataframe
-#     df = data.frame(sample = cpg_samples)
-#     # save
-#     new_file = paste0(bioheart_samples_dir, tenk10k_pool,".tsv")
-#     colnames(df) <- c()
-#     print(new_file)
-#     fwrite(df, new_file, sep="\t")
-# }
-
-# get_donors_in_libraries("S0056a", bioheart_samples_dir = bioheart_samples_dir)
 
 # if this shows 0 donors in a pool check that the TenK10K_BioHeart_pool_info table has been updated, and check that the column names have not been changed
 get_n_donors_all_pools <- function(pool_list_suffix, pool_list_path, save = FALSE, bioheart_samples_dir) {
@@ -44,20 +17,21 @@ get_n_donors_all_pools <- function(pool_list_suffix, pool_list_path, save = FALS
   # creates a file for each sequencing library showing the donors in that sample pool
   get_donors_in_libraries <- function(sample, bioheart_samples_dir, save) {
     # read in the inputs
-    donor_dir <- "/share/ScratchGeneral/anncuo/tenk10k/donor_info/"
-    bh_file <- paste0(donor_dir, "TenK10K_BioHeart_pool_info_v4.csv")
+    # donor_dir <- "/share/ScratchGeneral/anncuo/tenk10k/donor_info/"
+    # bh_file <- paste0(donor_dir, "TenK10K_BioHeart_pool_info_v4.csv")
+    bh_file <- "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/TenK10K_BioHeart_pool_info_v5.csv"
     bh_df <- read.csv(bh_file)
 
     cpg_map_file <- "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/str_sample-sex-mapping_sample_karyotype_sex_mapping.csv"
     cpg_map_df <- read.csv(cpg_map_file)
 
     # strip off the annotations denoting re-sequenced samples
-    tenk10k_pool <- str_remove(sample, pattern = "_re$|_repeat$|a$|b$")
+    tenk10k_pool <- str_remove(sample, pattern = "_re$|_repeat$|a$|b$|_re1$")
+    print(paste0("Sample: ", sample, " Pool: ", tenk10k_pool))
     # use the tables to determine which donors (CPG ID's) are in each pool
     cpg_samples <- bh_df[bh_df$Pool == tenk10k_pool, "CPG_ID"]
     df <- data.frame(sample = cpg_samples)
     colnames(df) <- c()
-    print(sample)
     print(df)
 
     new_file <- paste0(bioheart_samples_dir, sample, ".tsv") # save to specified directory
@@ -70,7 +44,7 @@ get_n_donors_all_pools <- function(pool_list_suffix, pool_list_path, save = FALS
   get_n_donors_sample <- function(sample) {
     # strip off the annotation denoting where the same sample has been re-sequenced
     # tenk10k_pool_name <- str_remove(sample, pattern = "_re$|_repeat$|a$|b$")
-    donors_in_pool_file <- glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/samples_in_pools_bioheart/{sample}.tsv") # file generated in the above for-loop
+    donors_in_pool_file <- glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/samples_in_pools_bioheart/{sample}.tsv") # file generated in the above function
 
     # get number of rows (donors) that are in each sequencing library
     donors_in_pool <- fread(donors_in_pool_file, header = FALSE) %>%
@@ -113,12 +87,27 @@ get_n_donors_all_pools <- function(pool_list_suffix, pool_list_path, save = FALS
 #   bioheart_samples_dir = bioheart_samples_dir
 # )
 
+# get_n_donors_all_pools(
+#   pool_list_suffix = "possible_sample_swaps",
+#   pool_list_path = "data_processing",
+#   save = TRUE,
+#   bioheart_samples_dir = bioheart_samples_dir
+# )
+
 get_n_donors_all_pools(
-  pool_list_suffix = "possible_sample_swaps",
+  pool_list_suffix = "240501",
   pool_list_path = "data_processing",
   save = TRUE,
   bioheart_samples_dir = bioheart_samples_dir
 )
+
+get_n_donors_all_pools(
+  pool_list_suffix = "240524",
+  pool_list_path = "data_processing",
+  save = TRUE,
+  bioheart_samples_dir = bioheart_samples_dir
+)
+
 
 # for repeat samples just copy files over (S0040_repeat, S0042_repeat, S0083_re, S0088_re, S0094_re, S0103_re)
 

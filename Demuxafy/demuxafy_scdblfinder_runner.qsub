@@ -6,16 +6,20 @@
 #$ -r yes
 #$ -l mem_requested=80G
 #$ -N scdblfinder_demuxafy_TenK10K_scRNA
-#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/scdblfinder/logs/scdblfinder_TenK10K_scRNA_240223.err
-#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/scdblfinder/logs/scdblfinder_TenK10K_scRNA_240223.log
-#$ -t 1-19
+#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/scdblfinder/logs/scdblfinder_TenK10K_scRNA_240501.err
+#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/scdblfinder/logs/scdblfinder_TenK10K_scRNA_240501.log
+#$ -t 1-16
 #$ -m ae
 #$ -M b.bowen@garvan.org.au
 
 SIF=/share/ScratchGeneral/anncuo/software/Demuxafy.sif
 BIND_PATH_DATA=/directflow
 #BIND_PATH_OUTPUT=/directflow
-SEQ_DATE="240223" # Date the library was sequenced, corresponding to file names
+
+# Date the library was sequenced, corresponding to file names
+# SEQ_DATE="240223" 
+# SEQ_DATE="240524" 
+SEQ_DATE="240501" 
 
 i=${SGE_TASK_ID};
 
@@ -30,6 +34,7 @@ echo "Performing scDblFinder doublet detection on sample: ${SAMPLE}, sequenced o
 # COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240112_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix.h5"
 # COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240115_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix.h5"
 # COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240116_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix.h5"
+
 COUNTS="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/${SEQ_DATE}_tenk10k_gencode44/cellranger_outs/${SAMPLE}/cellranger_count/${SAMPLE}/outs/filtered_feature_bc_matrix.h5"
 
 SCDBLFINDER_OUTDIR="/directflow/SCCGGroupShare/projects/${USER}/tenk10k_phase1/data_processing/demuxafy/scdblfinder/output/${SAMPLE}"

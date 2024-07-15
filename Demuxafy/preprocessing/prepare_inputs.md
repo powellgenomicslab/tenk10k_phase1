@@ -17,10 +17,15 @@ ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk1
 ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240119_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_240119.txt
 ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240214_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_240214.txt
 ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240223_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_240223.txt
+ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240501_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_240501.txt
+ls /directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240524_tenk10k_gencode44/cellranger_outs/ > cellranger_outs_240524.txt
+
 ```
 Blake Notes:
 240223 - last 2 pools are multiome (S0212 S0213)
 240319 - all 4 pools are multiome (S0212  S0213  S0214  S0215)
+240501 - 2 multiome (S0214 S0215)
+240530 = 4 pools GEMX, 3 pools multiome, 4 pools HT
 
 ## VCF manipulation
 
