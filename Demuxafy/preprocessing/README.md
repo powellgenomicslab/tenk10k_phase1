@@ -1,4 +1,4 @@
-# Input files recap
+# Input files (for Denuxafy) recap
 
 ## Common inputs (count data from CellRanger)
 
@@ -19,3 +19,13 @@ Vireo requires:
   * use all of the individuals [extracted from the VCF](https://github.com/powellgenomicslab/tenk10k_phase1/blob/main/Demuxafy/preprocessing/prepare_inputs.md#individual-files-directly-from-vcf)
   * or specify the specific ones included in the pool _e.g._, using [this script](TOB_make_pool_sample_lists.R) 
 * it is possible to specify the total **number of individuals** in the pool (even if not in the VCF) using the -N flag, for which we [created number of individual files](TOB_make_pool_number_of_sample_lists.R)
+
+## Info about unusual pools
+
+I use the files creating the donor to pool maps to include information about experimental pools.
+
+* For TOB,
+  * [TOB make pool sample lists](TOB_make_pool_sample_lists.R) also includes maxi pools (e.g. S0021-24a,b)
+  * [TOB make pool number of samples lists](TOB_make_pool_number_of_sample_lists.R) also includes a recap of which TOB pools were processed when and again deals (pretty manually) with maxi pools.
+* For BioHEART, the [BioHEART make pool sample lists](BioHEART_make_pool_sample_lists.R) includes information abut accidental maxipools (S0040-47) and old re-sequenced multiome pools (S0056-59).
+ 
