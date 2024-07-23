@@ -9,6 +9,8 @@ sc.settings.figdir = '/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/
 # filename = sys.argv[1]  # read filename from command line
 filename = '/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries/240_libraries_concatenated_gene_info.h5ad'
 
+### NOTE: # TOOD: REMOVE onek1k ID: 88_88  (TOB1570, CPG309724): this sample has an abnormal distribution cells with vast majority classified as B cells 
+
 def analysis_harmony(filename):
     """ perform normalisation, scaling, feature selection, harmony integration to remove batch effects, and dimensionality reduction on the input scanpy object
         also generates a few UMAP and PCA figures 
