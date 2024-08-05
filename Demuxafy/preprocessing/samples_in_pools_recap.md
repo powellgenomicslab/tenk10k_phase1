@@ -128,14 +128,7 @@ Samples recap: BioHEART only, 27 libraries in total:
 
 * Pools sequenced:
   * S0177
-  * S0185 to S0210 (S0188_re only) 
-
-### 30 / 05 / 2024
-
-Samples recap: BioHEART only, 4 <s>11</s> libraries in total:
-
-* Pools sequenced:
-  * S0216 to S0219
+  * S0185 to S0210 (S0188_re, no S0188) 
 
  ## Data location
 
