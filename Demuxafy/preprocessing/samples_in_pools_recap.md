@@ -66,6 +66,26 @@ Samples recap: mix of TOB and BioHEART, 25 libraries in total:
 
 ### 16 / 01 / 2024
 
+Samples recap: BioHEART only, 17 libraries in total:
+
+* Pools sequenced:
+  * S0068 to S0084
+
 ### 19 / 01 / 2024
 
+no web summaries, do this some other way
+
 ### 14 / 02 / 2024
+
+Samples recap: BioHEART only, 16 libraries in total:
+
+* Individual pools sequenced:  
+  * S0102
+  * S0104
+  * S0146
+  * S0148 to S0153
+* Repeat sequencing of [old multiome pools](https://github.com/powellgenomicslab/tenk10k_phase1/blob/main/Demuxafy/preprocessing/BioHEART_make_pool_sample_lists.R#L198-L200):
+  * S0056a, S0056b
+  * S0057a, S0057b
+  * S0058_re
+  * S0059a, S0059b
