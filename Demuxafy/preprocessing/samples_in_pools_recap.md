@@ -73,7 +73,12 @@ Samples recap: BioHEART only, 17 libraries in total:
 
 ### 19 / 01 / 2024
 
-no web summaries, do this some other way
+Samples recap: BioHEART only, 17 libraries in total:
+
+* Pools sequenced:
+  * S0083_re, S0088_re
+  * S0085 to S0091
+  * S0094 to S0101
 
 ### 14 / 02 / 2024
 
