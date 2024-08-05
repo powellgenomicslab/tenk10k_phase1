@@ -1,5 +1,7 @@
 ## Samples recap
 
+Just to keep a record of which sequencing libraries were sequenced when, re-sequences of batches, and split between TOB and BioHEART.
+
 ### 13 / 10 / 2023    
 
 libraries sequenced on Oct 13th, 2023 (hence the name 231013)
