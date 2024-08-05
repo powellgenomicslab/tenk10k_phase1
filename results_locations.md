@@ -1,10 +1,10 @@
-## Data processing results location
+# Data processing results location
 
 Keeping track of where the results are currently (on Brenner).
 
 The goal is to eventually move everything to a new directory at ```/directflow/SCCGGroupShare/projects/tenk10k_phase1```.
 
-### CellBender results
+## CellBender results
 
   * Anna: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/cellbender_output_smaller_learning_rate/{SAMPLE}/```
   * Blake: ```/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cellbender_output_smaller_learning_rate/{SAMPLE}/```
@@ -28,9 +28,9 @@ Actually used:
 
 TO DO: clarify and zip the rest
 
-#### CellBender scripts
+### Scripts pointing to CellBender results
 
-Scripts that point to those locations:
+Scripts that point to those locations (and therefore need to be changed):
 
 * [CellBender runner](CellBender/cellbender_runner.qsub)
 
