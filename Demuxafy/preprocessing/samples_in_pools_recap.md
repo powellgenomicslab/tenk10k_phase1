@@ -1,6 +1,6 @@
-# Samples recap
+## Samples recap
 
-##  13 / 10 / 2023    
+### 13 / 10 / 2023    
 
 libraries sequenced on Oct 13th, 2023 (hence the name 231013)
 
@@ -12,7 +12,7 @@ Samples recap: all TOB, 64 libraries in total:
   * S0029 is missing completely (was skipped when pooling)
 * All maxi pools are sequenced twice, e.g., S0021-24a, S0021-24b
 
-##  13 / 12 / 2023     
+### 13 / 12 / 2023     
 
 Samples recap: all TOB, 24 libraries in total:
 
@@ -20,7 +20,7 @@ Samples recap: all TOB, 24 libraries in total:
 * All single pools are sequenced three times, e.g., S0008a, S0008b, S0008c
 * No maxi pools are included
 
-##     14 / 12 / 2023     
+### 14 / 12 / 2023     
 
 Samples recap: mix of TOB and BioHEART, 41 libraries in total:
 
@@ -37,27 +37,33 @@ TOB (24 libraries):
 
 BioHEART (17 libraries and pools):
 
-* Pools sequenced
+* Pools sequenced:
   * S0045 to S0053
   * S0060 to S0067
 * All pools are sequenced just once
 
-##     15 / 01 / 2024   
+### 15 / 01 / 2024   
 
 Samples recap: mix of TOB and BioHEART, 25 libraries in total:
 
 TOB (8 libraries):
 
-* Pools sequenced 
+* Pools sequenced: 
   * entirety of S0015 (S0015a, S0015b, S0015c)
   * previously missing sequences of S0014 (S0014b, S0014c), S0016 (S0016a) and S0037 (S0037b, S0037c)
 
 BioHEART (17 libraries and pools):
 
-* Pools sequenced
+* Pools sequenced:
   * S0040 to S0044
   * S0054 to S0056 (+ one maxi pool of S0058+S0059 together)
   * S0135
   * S0138 and S00139
   * S0141 to S0145
 * All pools are sequenced just once
+
+### 16 / 01 / 2024
+
+### 19 / 01 / 2024
+
+### 14 / 02 / 2024
