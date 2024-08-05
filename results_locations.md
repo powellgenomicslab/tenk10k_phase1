@@ -33,6 +33,7 @@ TO DO: clarify and zip the rest
 Scripts that point to those locations (and therefore need to be changed):
 
 * [CellBender runner](CellBender/cellbender_runner.qsub)
+* [Scanpy adding info to AnnData](Scanpy/add_metadata_per_sample_no_norm.py)
 
 ### Demuxafy
 
