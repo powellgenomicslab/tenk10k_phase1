@@ -11,20 +11,20 @@ The goal is to eventually move everything to a new directory at ```/directflow/S
 
 Files in dir:
 
-* cellbender_output_cell_barcodes.csv
-* cellbender_output.log
-* cellbender_output_posterior.h5
-* cellbender_output_filtered.h5
-* cellbender_output_metrics.csv
-* cellbender_output_report.html
-* cellbender_output.h5
-* cellbender_output.pdf
+* ```cellbender_output_cell_barcodes.csv```
+* ```cellbender_output.log```
+* ```cellbender_output_posterior.h5```
+* ```cellbender_output_filtered.h5```
+* ```cellbender_output_metrics.csv```
+* ```cellbender_output_report.html```
+* ```cellbender_output.h5```
+* ```cellbender_output.pdf```
 
 Actually used:
 
-* cellbender_output_cell_barcodes.csv at least used to be used for vireo?
-* cellbender_output_metrics.csv for plotting
-* one of the .h5 files?
+* ```cellbender_output_cell_barcodes.csv``` at least used to be used for vireo?
+* ```cellbender_output_metrics.csv``` for plotting
+* one of the ```.h5``` files?
 
 TO DO: clarify and zip the rest
 
