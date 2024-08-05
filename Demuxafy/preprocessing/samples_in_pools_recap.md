@@ -24,7 +24,7 @@ Samples recap: all TOB, 24 libraries in total:
 
 Samples recap: mix of TOB and BioHEART, 41 libraries in total:
 
-TOB (24 libraries):
+#### TOB (24 libraries):
 
 * Pools sequenced 
   * S0009 to S0014
@@ -35,7 +35,7 @@ TOB (24 libraries):
   * missing here are S0014b, S0014c, S0039c 
 * The maxi pools is sequenced twice, i.e., S0034-37a, S0034-37b
 
-BioHEART (17 libraries and pools):
+#### BioHEART (17 libraries and pools):
 
 * Pools sequenced:
   * S0045 to S0053
@@ -46,13 +46,13 @@ BioHEART (17 libraries and pools):
 
 Samples recap: mix of TOB and BioHEART, 25 libraries in total:
 
-TOB (8 libraries):
+#### TOB (8 libraries):
 
 * Pools sequenced: 
   * entirety of S0015 (S0015a, S0015b, S0015c)
   * previously missing sequences of S0014 (S0014b, S0014c), S0016 (S0016a) and S0037 (S0037b, S0037c)
 
-BioHEART (17 libraries and pools):
+#### BioHEART (17 libraries and pools):
 
 * Pools sequenced:
   * S0040 to S0044
