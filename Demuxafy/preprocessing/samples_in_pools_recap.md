@@ -105,13 +105,6 @@ Samples recap: BioHEART only, 17 or 19 libraries in total:
   * S0167 to S0170
   * S0212, S0213 (these may be multiome?)
  
-### 19 / 03 / 2024
-
-Samples recap: BioHEART only, 4 libraries in total (may all be multiome):
-
-* Pools sequenced:
-  * S0212 to S0215
- 
 ### 01 / 05 / 2024
 
 Samples recap: mix of TOB and BioHEART, 18 libraries in total:
