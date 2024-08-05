@@ -1,4 +1,4 @@
-# Input files (for Denuxafy) recap
+# Input files (for Demuxafy) recap
 
 ## Common inputs (count data from CellRanger)
 
