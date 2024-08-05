@@ -141,3 +141,4 @@ Samples recap: BioHEART only, 4 <s>11</s> libraries in total:
 
 * Data from Michael at: ```/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240530_tenk10k_gencode44/```
 * Then moved by Anne (typically when there is enough space) to: ```/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/```
+* All web summaries are on OneDrive
