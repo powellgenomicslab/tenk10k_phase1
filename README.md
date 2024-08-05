@@ -46,15 +46,7 @@ This includes:
 
 ## Results on Brenner
 
-* CellBender results: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/cellbender_output_smaller_learning_rate/{SAMPLE}/```
-* scds results: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/scds_output/{SAMPLE}/```
-* scDblFinder results: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/scdblfinder_output/{SAMPLE}/```
-* vireo results: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/vireo_output_no_cb/{SAMPLE}/```
-* demuxafy combined results: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/combined_output_scds_scdblfinder_vireo_no_cb/{SAMPLE}/```
-* Consortium WG2 Azimuth results: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/{SAMPLE}/step2_azimuth/```
-* Consortium WG2 hierarchical scPred results: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/{SAMPLE}/step3_hierscpred/```
-* Celltypist results: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/celltypist/```
-* Scanpy / AnnData objects with metadata: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy_objects_w_metadata/```
+[Recap results locations on Brenner](results_locations.md). 
 
 ## Keeping track of samples generated (scRNA-seq)
 
@@ -75,4 +67,4 @@ Batches with scRNA-seq but awaiting WGS:
 * 10th batch: Feb 23rd, 2024 (```240223```): 17 sequencing libraries (BioHEART only), 128 unique individuals.
 * 11th batch: May 1st, 2024 (```240501```): 18 sequencing libraries (2 TOB, 14 BioHEART), 154 unique individuals. (+2 Multiome libraries)
 * 12th batch: May 24th, 2024 (```240524```): 27 sequencing libraries (), 213 unique individuals  
-* 13th batch: May 30th, 2024 (```240530```): 11 sequencing libraries, (), ? unique individuals (3 multiome, 4 GEMX, 4 HT libraries)
+
