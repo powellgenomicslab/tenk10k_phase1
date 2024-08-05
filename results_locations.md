@@ -7,7 +7,7 @@ The goal is to eventually move everything to a new directory at ```/directflow/S
 ## CellBender results
 
   * Anna: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/cellbender_output_smaller_learning_rate/{SAMPLE}/```
-  * Blake: ```/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cellbender_output_smaller_learning_rate/{SAMPLE}/```
+  * Blake: ```/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cellbender/output/smaller_learning_rate/{SAMPLE}/```
 
 Files in dir:
 
