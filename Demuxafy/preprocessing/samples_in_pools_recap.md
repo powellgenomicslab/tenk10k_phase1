@@ -2,7 +2,7 @@
 
 Just to keep a record of which sequencing libraries were sequenced when, re-sequences of batches, and split between TOB and BioHEART.
 
-### 231013 (13 / 10 / 2023)    
+### 13 / 10 / 2023   
 
 libraries sequenced on Oct 13th, 2023 (hence the name 231013)
 
@@ -14,7 +14,7 @@ Samples recap: all TOB, 64 libraries in total:
   * S0029 is missing completely (was skipped when pooling)
 * All maxi pools are sequenced twice, e.g., S0021-24a, S0021-24b
 
-### 231213 (13 / 12 / 2023)     
+### 13 / 12 / 2023     
 
 Samples recap: all TOB, 24 libraries in total:
 
