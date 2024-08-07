@@ -35,39 +35,48 @@ Scripts that point to those locations (and therefore need to be changed):
 * [CellBender runner](CellBender/cellbender_runner.qsub)
 * [Scanpy adding info to AnnData](Scanpy/add_metadata_per_sample_no_norm.py)
 
-### Demuxafy
+## Demuxafy
+### scds results:
 
-* scds results:
- * Anna: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/scds_output/{SAMPLE}/```
- * Blake:
-   
-* scDblFinder results:
- * Anna: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/scdblfinder_output/{SAMPLE}/```
- * Blake:
-* vireo results:
-  * Anna:  ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/vireo_output_no_cb/{SAMPLE}/```
-* demuxafy combined results: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/combined_output_scds_scdblfinder_vireo_no_cb/{SAMPLE}/```
-  * Blake:
+* Anna: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/scds_output/{SAMPLE}/```
+* Blake: ```/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/scds/output/${SAMPLE}```
+### scDblFinder results:
+*  Anna: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/scdblfinder_output/{SAMPLE}/```
+* Blake: ```/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/scdblfinder/output/${SAMPLE}```
 
-### Celltyping
+### vireo results:
+* Anna:  ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/vireo_output_no_cb/{SAMPLE}/```
+* Blake: `/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/vireo_all_samples/output/${SAMPLE}`
+### demuxafy combined results: 
+* Anna:  ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/combined_output_scds_scdblfinder_vireo_no_cb/{SAMPLE}/```
+* Blake: `/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/combine_results/output/combined_output_scds_scdblfinder_vireo_no_cb/${SAMPLE}`
 
-#### scPred
+## Celltyping
 
-* Consortium WG2 Azimuth results:
+### Unfiltered Seurat Objects: 
+* Anna:
+* Blake: `/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/seurat_objects_unfiltered/`
+
+### scPred
+
+#### Consortium WG2 Azimuth results:
  * Anna:  ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/{SAMPLE}/step2_azimuth/```
-  * Blake:
-* Consortium WG2 hierarchical scPred results:
+  * Blake: `/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/${SAMPLE}/step2_azimuth/`
+#### Consortium WG2 hierarchical scPred results:
  * Anna:  ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/{SAMPLE}/step3_hierscpred/```
- * Blake:
-#### Celltypist
+ * Blake: `/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/${SAMPLE}/step3_hierscpred/`
+ 
+### Combined scpred + azimuth results
 
-* Celltypist results:
- * Anna: 
-```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/celltypist/```
- * Blake:
+* Anna: 
+* Blake: `/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/${SAMPLE}"`
+### Celltypist
+
+#### Celltypist results:
+ * Anna: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/celltypist/```
+ * Blake: `/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/celltypist/output/`
 ### Scanpy
 
-* Scanpy / AnnData objects with metadata:
- * Anna: 
- ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy_objects_w_metadata/```
- * Blake:
+#### Scanpy / AnnData objects with metadata:
+ * Anna:  ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy_objects_w_metadata/```
+ * Blake: `/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/scanpy_objects_w_metadata/${SAMPLE}`
