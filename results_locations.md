@@ -45,6 +45,7 @@ Files in dir:
 
 * `scds_doublets_singlets.tsv`
 * `scds_doublet_summary.tsv`
+  
 ### scDblFinder results:
 *  Anna: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/scdblfinder_output/{SAMPLE}/```
 * Blake: ```/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/scdblfinder/output/${SAMPLE}```
@@ -56,7 +57,9 @@ Files in dir:
 ### vireo results:
 * Anna:  ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/vireo_output_no_cb/{SAMPLE}/```
 * Blake: `/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/vireo_all_samples/output/${SAMPLE}`
+  
 Files in dir:
+
 * `cellSNP.base.vcf.gz`
 * `cellSNP.tag.DP.mtx`
 * `donor_subset.vcf`
@@ -70,10 +73,13 @@ Files in dir:
 * `donor_ids.tsv`       
 * `_log.txt`
 * `prop_ambient.tsv`
+  
 ### demuxafy combined results: 
 * Anna:  ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/combined_output_scds_scdblfinder_vireo_no_cb/{SAMPLE}/```
 * Blake: `/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/combine_results/output/combined_output_scds_scdblfinder_vireo_no_cb/${SAMPLE}`
+  
 Files in dir: 
+
 * `combined_results_assignment_summary.tsv`
 * `combined_results_Singlets_upset.pdf`
 * `combined_results_demultiplexing_summary.tsv`
@@ -83,6 +89,7 @@ Files in dir:
 * `combined_results_Singlets_upset_donor_assignment.pdf `
 * `combined_results_w_combined_assignments.tsv`
 * `combined_results_Singlets_upset_droplet_type.pdf`
+  
 ## Celltyping
 
 ### Unfiltered Seurat Objects: 
@@ -93,33 +100,48 @@ Files in dir:
 
 #### Consortium WG2 Azimuth results:
  * Anna:  ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/{SAMPLE}/step2_azimuth/```
-  * Blake: `/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/${SAMPLE}/step2_azimuth/`
-  Files in dir:
+ * Blake: `/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/${SAMPLE}/step2_azimuth/`
+    
+Files in dir:
+
   * `azimuth.RDS`
   * `azimuth_ref_spca.png`
   * `azimuth_ref_umap.png`
+    
 #### Consortium WG2 hierarchical scPred results:
+
  * Anna:  ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scpred/{SAMPLE}/step3_hierscpred/```
  * Blake: `/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/${SAMPLE}/step3_hierscpred/`
+   
 Files in dir:
+
 * hier_scpred.RDS
+  
 ### Combined scpred + azimuth results
 
 * Anna: 
 * Blake: `/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scpred/${SAMPLE}"`
+  
 Files in dir: 
+
 * `combined_metadata.csv`
+  
 ### Celltypist
 
 #### Celltypist results:
  * Anna: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/celltypist/```
  * Blake: `/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/celltypist/output/`
+   
 files in dir:
+
 * `${SAMPLE}_celltypist_predicted.h5`
+  
 ### Scanpy
 
 #### Scanpy / AnnData objects with metadata:
  * Anna:  ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/scanpy_objects_w_metadata/```
  * Blake: `/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/scanpy_objects_w_metadata/${SAMPLE}`
-Files in dir: 
+   
+Files in dir:
+
 * `${SAMPLE}_w_metadata_donor_info.h5ad`
