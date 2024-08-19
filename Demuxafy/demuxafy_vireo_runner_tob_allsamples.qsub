@@ -1,0 +1,74 @@
+#!/bin/bash
+#$ -S /bin/bash
+#$ -q long.q
+#$ -cwd
+#$ -V
+#$ -r yes
+#$ -l mem_requested=150G
+#$ -l tmp_requested=100G
+#$ -N tob_vireo_all_samples_no_cb_demuxafy_TenK10K_scRNA
+#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/vireo_all_samples/logs/vireo_TenK10K_scRNA_bioheart_allsamples_no_cb_possible_repeats.err
+#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/vireo_all_samples/logs/vireo_TenK10K_scRNA_bioheart_allsamples_no_cb_possible_repeats.log
+#$ -t 1-6
+#$ -m ae
+#$ -M b.bowen@garvan.org.au
+
+SIF=/share/ScratchGeneral/anncuo/software/Demuxafy.sif
+BIND_PATH_DATA=/directflow
+BIND_PATH_SCRATCHGENERAL=/share/ScratchGeneral/
+SEQ_DATE="possible_repeated_samples"
+
+PARAMS="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/libraries_nsamples_${SEQ_DATE}.txt" 
+
+SAMPLE=`head -n $SGE_TASK_ID $PARAMS | tail -n 1 | awk '{print $1}'`
+N_EXPECTED_DONORS=`head -n $SGE_TASK_ID $PARAMS | tail -n 1 | awk '{print $2}'`
+
+echo $(date)
+
+echo "Performing vireo demultiplexing + doublet detection on sample: ${SAMPLE}, with ${N_EXPECTED_DONORS} expected donors"
+
+BAM=/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/${SAMPLE}/outs/possorted_genome_bam.bam
+BARCODES=/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/${SAMPLE}/outs/filtered_feature_bc_matrix/barcodes.tsv.gz
+
+VIREO_OUTDIR=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/vireo_all_samples/output/${SAMPLE}
+# VCF=/share/ScratchGeneral/anncuo/tenk10k/data_processing/genotypes/imputed_hg38_R2_0.3_MAF0.05_exons_sorted_chr.vcf.gz
+VCF=/directflow/SCCGGroupShare/projects/DrewNeavin/Demultiplex_Benchmark/data/ONEK1K/Imputed/Merged_MAF0.05.dose_GeneFiltered_hg38_nochr_NoAdditionalchr.vcf.gz
+# all individuals in Bioheart
+# INDS=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/all_drews_ids_tob.txt
+INDS=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/all_tob_iid_fid.txt # generated with: bcftools query -l /directflow/SCCGGroupShare/projects/DrewNeavin/Demultiplex_Benchmark/data/ONEK1K/Imputed/Merged_MAF0.05.dose_GeneFiltered_hg38_nochr_NoAdditionalchr.vcf.gz > /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/all_tob_iid_fid.txt
+FIELD=GT
+# sample-specific logs
+LOG=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/vireo_all_samples/logs/sample_logs/vireo_all_samples${SAMPLE}_task${SGE_TASK_ID}.log
+
+mkdir -p ${VIREO_OUTDIR}
+
+# Count number of alleles using cellSNP-lite
+singularity exec --bind ${BIND_PATH_DATA} \
+                --bind ${BIND_PATH_SCRATCHGENERAL} \
+               ${SIF} cellsnp-lite \
+               -s ${BAM} -b ${BARCODES} \
+               -O ${VIREO_OUTDIR} \
+               -R ${VCF} \
+               -p 20 \
+               --minMAF 0.1 \
+               --minCOUNT 20 \
+               --gzip &>> ${LOG}
+
+echo ${date} &>> ${LOG}
+
+# Filter SNPs identified by cellSNP-lite
+singularity exec --bind ${BIND_PATH_DATA} \
+                --bind ${BIND_PATH_SCRATCHGENERAL} \
+                $SIF bcftools view $VCF -R ${VIREO_OUTDIR}/cellSNP.base.vcf.gz -S ${INDS} -Ov -o ${VIREO_OUTDIR}/donor_subset.vcf &>> ${LOG}
+
+echo ${date} &>> ${LOG}
+
+# Demultiplex using vireo
+singularity exec --bind ${BIND_PATH_DATA} \
+                ${SIF} vireo \
+                -c ${VIREO_OUTDIR} \
+                -d ${VIREO_OUTDIR}/donor_subset.vcf \
+                -o ${VIREO_OUTDIR} \
+                -t ${FIELD} \
+                -N ${N_EXPECTED_DONORS} \
+                --callAmbientRNAs &>> ${LOG}
