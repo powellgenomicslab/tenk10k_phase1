@@ -115,7 +115,7 @@ Files in dir:
    
 Files in dir:
 
-* hier_scpred.RDS
+* `hier_scpred.RDS`
   
 ### Combined scpred + azimuth results
 
