@@ -40,12 +40,15 @@ Scripts that point to those locations (and therefore need to be changed):
 
 * Anna: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/scds_output/{SAMPLE}/```
 * Blake: ```/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/scds/output/${SAMPLE}```
-Files in dir: 
+  
+Files in dir:
+
 * `scds_doublets_singlets.tsv`
 * `scds_doublet_summary.tsv`
 ### scDblFinder results:
 *  Anna: ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/scdblfinder_output/{SAMPLE}/```
 * Blake: ```/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/scdblfinder/output/${SAMPLE}```
+  
 Files in dir:
 * `scDblFinder_doublets_singlets.tsv` 
 * `scDblFinder_doublet_summary.tsv`
