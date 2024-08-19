@@ -3,7 +3,6 @@ library(ggsci)
 
 # This script can be sourced to get colour palettes, functions, and plot themes for consistent styling etc. for tenk10k studies
 
-
 # ⬇️ Data getters ----
 
 # use this to read in the latest metadata csv
@@ -12,9 +11,58 @@ library(ggsci)
 get_latest_metadata <- function(
     # update these when the object path changes
     csv = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries/240_libraries_cell_metadata_subset_filtered_reanalysed.csv") {
+    # add in the clean cell type names for plotting
     metadata <- read_csv(csv) %>%
         rename("barcode" = 1) %>%
-        mutate(cell_type = str_replace_all(wg2_scpred_prediction, "_", " "))
+        mutate(
+            cell_type = str_replace_all(wg2_scpred_prediction, "_", " "),
+            major_cell_type = case_when(
+                wg2_scpred_prediction %in% c(
+                    "B_intermediate",
+                    "B_memory",
+                    "B_naive",
+                    "Plasmablast"
+                ) ~ "B",
+                wg2_scpred_prediction %in% c(
+                    "NK",
+                    "NK_CD56bright",
+                    "NK_Proliferating"
+                ) ~ "NK",
+                wg2_scpred_prediction %in% c(
+                    "CD8_Naive",
+                    "CD8_Proliferating",
+                    "CD8_TCM",
+                    "CD8_TEM"
+                ) ~ "CD8 T",
+                wg2_scpred_prediction %in% c(
+                    "CD4_CTL",
+                    "CD4_Naive",
+                    "CD4_Proliferating",
+                    "CD4_TCM",
+                    "CD4_TEM",
+                    "Treg"
+                ) ~ "CD4 T",
+                wg2_scpred_prediction %in% c(
+                    "dnT",
+                    "gdT",
+                    "ILC",
+                    "MAIT"
+                ) ~ "Unconventional T",
+                wg2_scpred_prediction %in% c(
+                    "pDC",
+                    "cDC1",
+                    "cDC2",
+                    "ASDC"
+                ) ~ "Dendritic",
+                wg2_scpred_prediction %in% c(
+                    "CD14_Mono",
+                    "CD16_Mono"
+                ) ~ "Monocyte",
+                wg2_scpred_prediction %in% c(
+                    "HSPC"
+                ) ~ "Other"
+            ) %>% fct_relevel(c("B", "NK", "CD8 T", "CD4 T", "Unconventional T", "Dendritic", "Monocyte", "Other"))
+        )
     return(metadata)
 }
 
@@ -29,70 +77,120 @@ get_latest_umap <- function(
 # 🌈 colour palettes ----
 
 # generate nested colors with material theme
-red <- pal_material("red")(5)[2:5]
-purple <- pal_material("purple")(4)[2:4]
-pink <- pal_material("pink")(7)
-deeppurple <- pal_material("deep-purple")(7)
-indigo <- pal_material("indigo")(7)[]
-blue <- pal_material("blue")(7)[]
-lightblue <- pal_material("light-blue")(7)
-teal <- pal_material("teal")(7)[]
-lightgreen <- pal_material("light-green")(5)[2:5]
-lime <- pal_material("lime")(7)[]
-yellow <- pal_material("yellow")(7)[]
-orange <- pal_material("orange")(7)[]
-brown <- pal_material("brown")(4)[2:4]
-grey <- pal_material("grey")(4)[2:4]
+red <- pal_material("red")(10)
+purple <- pal_material("purple")(10)
+pink <- pal_material("pink")(10)
+deeppurple <- pal_material("deep-purple")(10)
+indigo <- pal_material("indigo")(10)
+blue <- pal_material("blue")(10)
+lightblue <- pal_material("light-blue")(10)
+teal <- pal_material("teal")(10)
+green <- pal_material("green")(10)
+lime <- pal_material("lime")(10)
+yellow <- pal_material("yellow")(10)
+orange <- pal_material("orange")(10)
+brown <- pal_material("brown")(10)
+grey <- pal_material("grey")(10)
 
 tenk_color_pal <- tribble(
     ~wg2_scpred_prediction, ~color,
     # Lymphoid
-    ## B cells
-    "B_intermediate", red[1],
-    "B_memory", red[4],
-    "B_naive", orange[4],
-    "Plasmablast", orange[7],
-    ## NK cells
-    "NK", pink[5],
-    "NK_CD56bright", purple[1],
-    "NK_Proliferating", purple[3],
-    # CD8 T cells
-    "CD8_Naive", deeppurple[3],
-    "CD8_Proliferating", deeppurple[6],
-    "CD8_TCM", indigo[4],
-    "CD8_TEM", indigo[7],
     # CD4 T cells
-    "CD4_CTL", blue[2],
-    "CD4_Naive", blue[4],
-    "CD4_Proliferating", blue[6],
-    "CD4_TCM", lightblue[1],
-    "CD4_TEM", lightblue[4],
-    "Treg", lightblue[6],
-    #
-    "dnT", grey[3],
-    "gdT", grey[6],
-    "ILC", teal[3],
-    "MAIT", teal[5],
-    # myeloid
-    ## DC
-    "pDC", lime[3],
-    "cDC1", lime[7],
-    "cDC2", lightgreen[3],
-    "ASDC", lightgreen[4],
+    "CD4_TCM", blue[10],
+    "CD4_Naive", blue[8],
+    "CD4_TEM", blue[6],
+    "CD4_CTL", blue[4],
+    "Treg", blue[3],
+    "CD4_Proliferating", blue[2],
+    # CD8 T cells
+    "CD8_TEM", deeppurple[10],
+    "CD8_Naive", deeppurple[7],
+    "CD8_TCM", deeppurple[5],
+    "CD8_Proliferating", deeppurple[2],
+    ## NK cells
+    "NK", pink[9],
+    "NK_CD56bright", pink[6],
+    "NK_Proliferating", pink[3],
+    ## B cells
+    "B_naive", yellow[10],
+    "B_intermediate", yellow[8],
+    "B_memory", yellow[6],
+    "Plasmablast", yellow[4],
+    # Unconventional T
+    "gdT", lime[10],
+    "MAIT", lime[8],
+    "dnT", lime[6],
+    "ILC", lime[4],
+
     ## Monocyte
-    "CD14_Mono", yellow[2],
-    "CD16_Mono", yellow[6],
-    #
-    "HSPC", brown[3],
+    # myeloid
+    "CD14_Mono", green[8],
+    "CD16_Mono", green[4],
+    ## DC
+    "cDC2", brown[8],
+    "pDC", brown[6],
+    "cDC1", brown[4],
+    "ASDC", brown[2],
+    # Other
+    "HSPC", grey[5],
     #
     # "Platelet", brown[1],
     # "Eryth", brown[2],
     #
     # "Doublet", grey[2],
 ) %>%
-    mutate(cell_type = str_replace_all(wg2_scpred_prediction, "_", " "))
+    mutate(
+        cell_type = str_replace_all(wg2_scpred_prediction, "_", " "),
+        major_cell_type = case_when(
+            wg2_scpred_prediction %in% c(
+                "B_intermediate",
+                "B_memory",
+                "B_naive",
+                "Plasmablast"
+            ) ~ "B",
+            wg2_scpred_prediction %in% c(
+                "NK",
+                "NK_CD56bright",
+                "NK_Proliferating"
+            ) ~ "NK",
+            wg2_scpred_prediction %in% c(
+                "CD8_Naive",
+                "CD8_Proliferating",
+                "CD8_TCM",
+                "CD8_TEM"
+            ) ~ "CD8 T",
+            wg2_scpred_prediction %in% c(
+                "CD4_CTL",
+                "CD4_Naive",
+                "CD4_Proliferating",
+                "CD4_TCM",
+                "CD4_TEM",
+                "Treg"
+            ) ~ "CD4 T",
+            wg2_scpred_prediction %in% c(
+                "dnT",
+                "gdT",
+                "ILC",
+                "MAIT"
+            ) ~ "Unconventional T",
+            wg2_scpred_prediction %in% c(
+                "pDC",
+                "cDC1",
+                "cDC2",
+                "ASDC"
+            ) ~ "Dendritic",
+            wg2_scpred_prediction %in% c(
+                "CD14_Mono",
+                "CD16_Mono"
+            ) ~ "Monocyte",
+            wg2_scpred_prediction %in% c(
+                "HSPC"
+            ) ~ "Other"
+        ) %>% fct_relevel(c("B", "NK", "CD8 T", "CD4 T", "Unconventional T", "Dendritic", "Monocyte", "Other"))
+    )
 
-# ggplot themes ----
+
+# ⚙️ ggplot themes ----
 
 # define a ggplot theme that we can re-use across all the plots for consistent styling
 # work in progress
