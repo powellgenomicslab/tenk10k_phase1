@@ -34,18 +34,50 @@ donor_pools_tob <- read_csv(donor_pools_tob_file) %>%
     mutate(tob_cohort = TRUE) %>%
     mutate(onek1k_cohort = TRUE)
 
+donor_pools_tob %>% filter(tob_id %in% c("TOB-01003", "TOB-01002"))
+
 # Onek1k metadata
 sqlite.driver <- dbDriver("SQLite")
 db <- dbConnect(sqlite.driver, dbname = onek1k_file_name)
 tob_id_mapping <- dbReadTable(db, "RECRUITED_DONORS") %>%
     tibble() %>%
     janitor::clean_names() %>%
-    select(patient_id, tob_id) %>%
-    distinct()
+    select(patient_id, tob_id, notes, iid) %>%
+    mutate(
+        notes = if_else(notes == "NA", NA, notes),
+        tob_id = if_else(tob_id == "NA", NA, tob_id)
+    ) %>%
+    distinct() %>%
+    drop_na(tob_id)
+
+tob_id_mapping %>% filter(tob_id %in% c("TOB-01003", "TOB-01002"))
+
+# tob_id_mapping[tob_id_mapping$tob_id %in% tob_id_mapping$tob_id[duplicated(tob_id_mapping$tob_id)], ] %>% arrange(patient_id)
+
+# NOTE: FID column - there are a lot of samples that have 2 FIDs ~ 16 donors
+
+# tob_id_mapping_old <- dbReadTable(db, "RECRUITED_DONORS") %>%
+#     tibble() %>%
+#     janitor::clean_names() %>%
+#     select(patient_id, tob_id) %>%
+#     distinct()
 
 # join the TOB/onek1k data
 donor_pools_tob <- donor_pools_tob %>%
-    left_join(tob_id_mapping, by = "tob_id")
+    left_join(tob_id_mapping, by = c("tob_id")) %>%
+    mutate(notes = coalesce(notes.x, notes.y)) %>%
+    select(-notes.x, -notes.y) %>%
+    group_by(tob_id, tenk10k_pool) %>%
+    filter(!(n() > 1 & is.na(notes))) %>% # remove the duplicate ID's where NOTES field is missing
+    ungroup()
+
+donor_pools_tob %>% filter(tob_id %in% c("TOB-01003", "TOB-01002"))
+
+# donor_pools_tob %>%
+#     filter(is.na(patient_id)) %>%
+#     print(n = 100)
+
+# donor_pools_tob[donor_pools_tob$tob_id %in% donor_pools_tob$tob_id[duplicated(donor_pools_tob$tob_id)], ] %>% arrange(tob_id, tenk10k_pool)
 
 # NOTES:
 # 1. Full join BH pool info with TOB/CPG mappings: includes BH samples even if they don't currently have CPG-ids
@@ -56,22 +88,38 @@ master_table <- cpg_mapping %>%
     left_join(donor_pools_tob, by = c("external_id" = "patient_id")) %>%
     mutate(notes = coalesce(notes.x, notes.y)) %>%
     select(-notes.x, -notes.y) %>%
-    # full join so that samples without CPG_ids are included (while waiting for WGS)
+    # # full join so that samples without CPG_ids are included (while waiting for WGS)
     full_join(donor_pools_bioheart, by = c("external_id" = "bioheart_id")) %>%
     mutate(notes = coalesce(notes.x, notes.y)) %>%
     select(-notes.x, -notes.y) %>%
     mutate(tenk10k_pool = coalesce(tenk10k_pool, bioheart_pool)) %>%
-    select(cpg_id, external_id, tob_id, tenk10k_pool, tob_cohort, bioheart_cohort, notes)
+    select(cpg_id, external_id, tob_id, tenk10k_pool, tob_cohort, bioheart_cohort, notes) %>%
+    group_by(cpg_id, external_id, tob_id, tenk10k_pool, tob_cohort, bioheart_cohort) %>%
+    filter(!(n() > 1 & is.na(notes))) %>% # remove the duplicate ID's where NOTES field is missing 
+    ungroup()
 
 master_table %>%
     write_csv("data_processing/tenk10k_donor_pool_info.csv")
 
 # check ID duplication:
-# duplicated_ids <- master_table %>%
-#     filter(duplicated(external_id)) %>%
-#     select(external_id) %>%
-#     distinct() %>%
-#     pull(external_id)
-# master_table %>%
-#     filter(external_id %in% duplicated_ids) %>%
-#     print(n = 100)
+duplicated_ids <- master_table %>%
+    filter(duplicated(external_id)) %>%
+    select(external_id) %>%
+    distinct() %>%
+    pull(external_id)
+master_table %>%
+    filter(external_id %in% duplicated_ids) %>%
+    print(n = 100)
+
+# check ID duplication:
+duplicated_ids_tob_id <- master_table %>%
+    filter(duplicated(tob_id)) %>%
+    select(tob_id) %>%
+    drop_na() %>% 
+    distinct() %>%
+    pull(tob_id)
+master_table %>%
+    filter(tob_id %in% duplicated_ids_tob_id) %>%
+    print(n = 100)
+
+master_table %>% filter(external_id %in% c("TOB1003", "TOB1002"))

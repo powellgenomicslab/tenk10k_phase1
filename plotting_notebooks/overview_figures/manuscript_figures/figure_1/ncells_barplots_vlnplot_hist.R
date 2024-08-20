@@ -21,17 +21,24 @@ plot_data <- cell_metadata %>%
 # set plot width, height, and dpi to be consistent across all the figures
 
 width <- 5
-height = 3
-dpi = 400
+height <- 3
+dpi <- 400
 
 # plotting functions go here
 
 # 📊 make the plots ----
 
-cell_type_order <- levels(fct_infreq(plot_data$cell_type))
+# get the plot order for cell types - applied to all plots.
+# ordering by cell type frequency within each major cell type
+cell_type_order <- cell_metadata %>%
+    mutate(major_cell_type = fct_infreq(major_cell_type)) %>% 
+    group_by(major_cell_type) %>%
+    mutate(cell_type = fct_infreq(cell_type)) %>%
+    pull(cell_type) %>%
+    levels()
 
 barplot_ncells_per_celltype <- plot_data %>%
-    ggplot(aes(x = fct_infreq(cell_type), fill = cell_type)) +
+    ggplot(aes(x = fct_relevel(cell_type, cell_type_order), fill = cell_type)) +
     geom_bar() +
     labs(x = "Cell type", y = "Cells") +
     scale_fill_manual(values = setNames(tenk_color_pal$color, tenk_color_pal$cell_type)) +
@@ -46,7 +53,7 @@ barplot_ncells_per_celltype %>%
     )
 
 barplot_ncells_per_celltype_log10 <- plot_data %>%
-    ggplot(aes(x = fct_infreq(cell_type), fill = cell_type)) +
+    ggplot(aes(x = fct_relevel(cell_type, cell_type_order), fill = cell_type)) +
     geom_bar() +
     labs(x = "Cell type", y = bquote("Cells "(log[10]))) +
     scale_fill_manual(values = setNames(tenk_color_pal$color, tenk_color_pal$cell_type)) +
@@ -113,3 +120,4 @@ combined_plots %>%
         filename = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/plotting_notebooks/overview_figures/manuscript_figures/figure_1/figures/fig1_bar_vln_combined.png",
         width = width + 1, height = height * 4, dpi = dpi
     )
+
