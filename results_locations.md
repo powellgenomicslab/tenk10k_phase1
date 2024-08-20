@@ -56,7 +56,7 @@ Files in dir:
 
 ### vireo results:
 * Anna:  ```/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/demuxafy/vireo_output_no_cb/{SAMPLE}/```
-* Blake: `/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/vireo_all_samples/output/${SAMPLE}`
+* Blake: `/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/vireo/output/`
   
 Files in dir:
 
