@@ -4,10 +4,12 @@ import re
 
 adata = sc.read('/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries_concatenated_gene_info_harmony_umap_notsne.h5ad')
 
-# TODO: remove these columns somewhere earlier in the pipeline 
+# TODO: [done] remove these columns somewhere earlier in the pipeline 
 # it seems like they are getting duplicated when the anndata object are concatenated, we get one of each qc column for each pool resulting in +960 columns
-columns_to_drop = [col for col in adata.var.columns if re.match(r'(n_cells_by_counts-\d+|mean_counts-\d+|pct_dropout_by_counts-\d+|total_counts-\d+)', col)]
-adata.var.drop(columns=columns_to_drop, inplace=True)
+# columns_to_drop = [col for col in adata.var.columns if re.match(r'(n_cells_by_counts-\d+|mean_counts-\d+|pct_dropout_by_counts-\d+|total_counts-\d+)', col)]
+# adata.var.drop(columns=columns_to_drop, inplace=True)
+
+# TODO: run this per-library, before qc, output to csv and read in the results in the scanpy combiner script. 
 
 # cell cycle gene list from Tirosh et al 2015, downloaded from https://raw.githubusercontent.com/scverse/scanpy_usage/master/180209_cell_cycle/data/regev_lab_cell_cycle_genes.txt
 cell_cycle_genes = [x.strip() for x in open('/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cell_cycle/regev_lab_cell_cycle_genes.txt')]
