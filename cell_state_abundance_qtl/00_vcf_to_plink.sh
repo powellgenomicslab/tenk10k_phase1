@@ -11,8 +11,12 @@
 #$ -m ae
 #$ -M b.bowen@garvan.org.au
 
+# note - for some reason I can't get bcftools to install properly with R in the same environment 
+# originally run with bcftools=1.9
+# need to create separate conda env with bcftools potentially to rerun this...
+
 . /home/${USER}/micromamba/etc/profile.d/micromamba.sh
-micromamba activate gena-env
+micromamba activate mastectomy-env
 
 cd ${TMPDIR}
 

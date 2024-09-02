@@ -5,6 +5,7 @@ import pandas as pd
 import multianndata as mad
 import cna
 import scanpy as sc
+import scanpy.external as sce
 
 outdir = (
     "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl"
@@ -16,9 +17,15 @@ print("Running PCA...")
 sc.pp.pca(madata)
 print("PCA finished!")
 
+sce.pp.harmony_integrate(madata, "sequencing_library")
+madata.obsm["X_pca"] = madata.obsm[
+    "X_pca_harmony"
+]  # replace original PCA with harmony pca
+
 print("Generating nearest-neighbour graph...")
 sc.pp.neighbors(madata)
 print("Neighbourhood graph generation finished!")
+
 print("Running UMAP ...")
 sc.tl.umap(madata)
 print("UMAP finished!")
