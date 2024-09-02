@@ -4,7 +4,7 @@ library(ggsci)
 library(RColorBrewer)
 library(data.table)
 
-source("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/plotting_notebooks/overview_figures/manuscript_figures/tenk_data_vis_utils.R")
+source("plotting_notebooks/overview_figures/manuscript_figures/tenk_data_vis_utils.R")
 
 # 📗 Read in the data ----
 

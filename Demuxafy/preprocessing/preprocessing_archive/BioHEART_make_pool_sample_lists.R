@@ -124,6 +124,11 @@ get_n_donors_all_pools(
 # find full explanation by Ellie at: https://docs.google.com/document/d/117F_3-dmLEsvgJr_6dRsZhg7lVZ8nSgduRLpajDBwCk/edit
 
 # First, define the new expected list of donors for the maxi pools:
+bh_file <- "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/TenK10K_BioHeart_pool_info_v5.csv"
+bh_df <- read.csv(bh_file)
+
+cpg_map_file <- "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/str_sample-sex-mapping_sample_karyotype_sex_mapping.csv"
+cpg_map_df <- read.csv(cpg_map_file)
 
 #### S0040 + S0044
 tenk10k_pools <- c("S0040", "S0044")
