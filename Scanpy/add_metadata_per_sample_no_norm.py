@@ -9,11 +9,14 @@ import matplotlib.pyplot as plt
 
 from cellbender.remove_background.downstream import anndata_from_h5
 
+# TODO:
+# [] add in cell cycle phases csv info to scanpy objects (/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cell_cycle/per_library_phases/)
+
 # index provided, running one sequencing library at a time
 i = int(sys.argv[1])
 # seq_date = str(sys.argv[2]) # sequencing date is 2nd argument ?
 
-# CellRanger files 
+# CellRanger files
 
 # 64 samples from 231013
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231013_tenk10k_gencode44/cellranger_outs/"
@@ -34,12 +37,12 @@ i = int(sys.argv[1])
 # 16 samples from 240214
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240214_tenk10k_gencode44/cellranger_outs/"
 
-# Cellranger outs moved to here: 
+# Cellranger outs moved to here:
 cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
 
 # get cellranger outputs
 source_data_location = 'old' # set to 'old' or 'new' to read from blake / annna's directory structure
-                             # set to new for 240214 onwards
+# set to new for 240214 onwards
 # seq_date = '240214' # if running on 'new' data also specify the seq_date
 
 # source_data_location = 'old'
@@ -158,14 +161,14 @@ demuxafy_df = demuxafy_df[demuxafy_df.index.isin(cells_cellranger)]
 # add this info to the obs as well
 adata.obs = pd.concat([adata.obs,demuxafy_df], axis=1)
 
-# filter data to cells that are singlets and assigned to an individual 
+# filter data to cells that are singlets and assigned to an individual
 adata = adata[~adata.obs['MajoritySinglet_Individual_Assignment'].isin(["unassigned","doublet"])]
 adata = adata[adata.obs['MajoritySinglet_Individual_Assignment'].notna()]
 
 # preprocessing & QC plotting
 adata.var_names_make_unique()
 sc.pp.filter_cells(adata, min_genes=200)
-# calculate mitochondrial, ribosomal and hemoglobin gene expression 
+# calculate mitochondrial, ribosomal and hemoglobin gene expression
 adata.var['mt'] = adata.var_names.str.startswith('MT-')
 adata.var['ribo'] = adata.var_names.str.startswith(('RPS', 'RPL'))
 adata.var['hb'] = adata.var_names.str.contains(('^HB[^(P)]'))
@@ -180,7 +183,7 @@ plt.savefig(output_dir+"figures/"+sample+"_tot_counts_pct_mt.pdf")
 sc.pl.scatter(adata, x='total_counts', y='n_genes_by_counts')
 plt.savefig(output_dir+"figures/"+sample+"_tot_counts_tot_genes.pdf")
 
-# TODO: Calculate MADs and filter each pool based on these instead: 
+# TODO: Calculate MADs and filter each pool based on these instead:
 
 adata = adata[adata.obs.n_genes_by_counts < 6000, :]
 adata = adata[adata.obs.pct_counts_mt < 20, :]
@@ -235,7 +238,7 @@ adata.obs.index = [donor for donor in adata.obs["new_cell_name"]]
 adata = adata[adata.obs['individual'].notna()]
 adata = adata[adata.obs['wg2_scpred_prediction'].notna()]
 
-# remove data for participants who withdrew consent 
+# remove data for participants who withdrew consent
 adata=adata[~adata.obs['cpg_id'].isin(['CT_557', 'CT_1545', 'CT_888'])]
 
 
@@ -246,5 +249,3 @@ adata.var.drop(columns=columns_to_drop, inplace=True)
 
 # save
 adata.write(output_filename)
-
-
