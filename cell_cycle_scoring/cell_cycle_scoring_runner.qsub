@@ -1,0 +1,22 @@
+#!/bin/bash
+#$ -S /bin/bash
+#$ -cwd
+#$ -V
+#$ -r yes
+#$ -l mem_requested=80G
+#$ -l tmp_requested=40G
+#$ -N cell_cycle_scanpy 
+#$ -q short.q
+#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cell_cycle/per_library_phases/logs/cell_cycle_scoring.err
+#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cell_cycle/per_library_phases/logs/cell_cycle_scoring.log
+#$ -t 1-257
+#$ -m ae
+#$ -M b.bowen@garvan.org.au
+
+# 257 samples  
+
+PY_PATH="/directflow/SCCGGroupShare/projects/blabow/.conda/envs/cellregmap_notebook_bb/bin"
+PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/cell_cycle_scoring/cell_cycle_scoring.py"
+
+# Do the main job
+${PY_PATH}/python ${PYSCRIPT} ${SGE_TASK_ID}
