@@ -6,8 +6,6 @@ import pandas as pd
 
 from cellbender.remove_background.downstream import anndata_from_h5
 
-# adata = sc.read('/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries_concatenated_gene_info_harmony_umap_notsne.h5ad')
-
 # TODO:
 # [] run this for all libraries
 # [] read in the results in the scanpy combiner script adding them to each object and the combined final scanpy object
@@ -22,7 +20,7 @@ i = int(sys.argv[1])
 cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
 
 # output
-output_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cell_cycle/per_library_phases"
+output_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cell_cycle/per_library_phases/output"
 
 samples = glob.glob(cellranger_dir + "S*")
 sample = samples[i - 1]  # mismatch in index between bash and python
@@ -72,8 +70,6 @@ print(f"Running cell cycle scoring with:\ns_genes:\n{s_genes}\ng2m_genes:\n{g2m_
 
 # cell cycle scoring
 sc.tl.score_genes_cell_cycle(adata, s_genes=s_genes, g2m_genes=g2m_genes)
-# remove batch from cell index (handling cases of a hyphen in the sample name)
-adata.obs.index = [re.sub(r"-[0-9]+$", "", cell) for cell in adata.obs.index]
 
 # write output csv
 adata.obs[["S_score", "G2M_score", "phase"]].to_csv(
