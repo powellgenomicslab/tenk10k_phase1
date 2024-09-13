@@ -3,7 +3,7 @@
 #$ -cwd
 #$ -V
 #$ -r yes
-#$ -l mem_requested=800G
+#$ -l mem_requested=1000G
 #$ -l tmp_requested=40G
 #$ -N harmony_umap
 #$ -q long.q
@@ -18,7 +18,10 @@ PY_PATH="/directflow/SCCGGroupShare/projects/blabow/.conda/envs/cellregmap_noteb
 # PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/harmony_umap.py"
 
 # second pass harmony + UMAP (after manual filtering of low-quality clusters)
-PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/rerun_harmony_umap.py"
+# PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/rerun_harmony_umap.py"
+
+# umap npcs testing / umap n hvgs testing 
+PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/run_umap_different_pcs.py"
 
 cd ${TMPDIR}
 # Run python script
