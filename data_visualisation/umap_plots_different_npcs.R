@@ -4,47 +4,7 @@ library(patchwork)
 
 source("plotting_notebooks/overview_figures/manuscript_figures/tenk_data_vis_utils.R")
 
-# get the predicted cell type data
-cell_metadata <- get_latest_metadata() %>%
-    select(barcode, cell_type) %>%
-    mutate(cell_type = factor(cell_type, levels = tenk_color_pal$cell_type))
-
-# get the current UMAP (50 PCs)
-umap_coords_50_pcs <- get_latest_umap() %>%
-    rename(
-        "UMAP_1_50_PCs" = UMAP1,
-        "UMAP_2_50_PCs" = UMAP2,
-    )
-
-umap_coords_list <- list()
-umap_coords_list[["UMAP_50_PCs"]] <- umap_coords_50_pcs
-
-pc_list <- seq(10, 45, 5)
-# pc_list <- c(15)
-
-# get the UMAP generated with different number of PCs
-# TODO: add in 45 PC's when it's ready
-for (n_pcs in pc_list) {
-    umap_1_col_name <- glue("UMAP_1_{n_pcs}_PCs")
-    umap_2_col_name <- glue("UMAP_2_{n_pcs}_PCs")
-
-    umap_coords <- read_csv(glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries/umap_coords_{n_pcs}_pcs.csv")) %>%
-        dplyr::rename(
-            !!umap_1_col_name := UMAP1,
-            !!umap_2_col_name := UMAP2,
-            barcode = 1
-        )
-
-    item_name <- glue("UMAP_{n_pcs}_PCs")
-    umap_coords_list[[item_name]] <- umap_coords
-}
-
-# join together each UMAP with the cell types data
-plot_data <- umap_coords_list %>%
-    reduce(left_join, by = "barcode") %>%
-    left_join(cell_metadata, by = "barcode")
-
-# plotting functions
+# ⚙️ plotting functions ----
 
 square.ratio <- function(x) {
     range2 <- function(x) {
@@ -108,6 +68,50 @@ ggUMAPplot <- function(data,
     return(new.plot)
 }
 
+# UMAP with different number of principal components ----
+
+# get the predicted cell type data
+cell_metadata <- get_latest_metadata() %>%
+    select(barcode, cell_type) %>%
+    mutate(cell_type = factor(cell_type, levels = tenk_color_pal$cell_type))
+
+# get the current UMAP (50 PCs)
+umap_coords_50_pcs <- get_latest_umap() %>%
+    rename(
+        "UMAP_1_50_PCs" = UMAP1,
+        "UMAP_2_50_PCs" = UMAP2,
+    )
+
+umap_coords_list <- list()
+umap_coords_list[["UMAP_50_PCs"]] <- umap_coords_50_pcs
+
+pc_list <- seq(10, 45, 5)
+pc_list <- c(30)
+
+# get the UMAP generated with different number of PCs
+# TODO: add in 45 PC's when it's ready
+for (n_pcs in pc_list) {
+    umap_1_col_name <- glue("UMAP_1_{n_pcs}_PCs")
+    umap_2_col_name <- glue("UMAP_2_{n_pcs}_PCs")
+
+    umap_coords <- read_csv(glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries/umap_coords_{n_pcs}_pcs.csv")) %>%
+        dplyr::rename(
+            !!umap_1_col_name := UMAP1,
+            !!umap_2_col_name := UMAP2,
+            barcode = 1
+        )
+
+    item_name <- glue("UMAP_{n_pcs}_PCs")
+    umap_coords_list[[item_name]] <- umap_coords
+}
+
+# join together each UMAP with the cell types data
+plot_data <- umap_coords_list %>%
+    reduce(left_join, by = "barcode") %>%
+    left_join(cell_metadata, by = "barcode")
+
+# individual plot for 30 PC's
+
 cell_types_plot <- plot_data %>%
     ggUMAPplot(umap_col_names = c("UMAP_1_30_PCs", "UMAP_2_30_PCs"), group.by = "cell_type", colorpal = setNames(tenk_color_pal$color, tenk_color_pal$cell_type), plot.title = NA)
 
@@ -145,3 +149,98 @@ combined_umaps %>%
         width = 18, height = 12,
         dpi = 500,
     )
+
+# UMAP with different number of HVG ----
+
+hvg_list <- seq(500, 3000, 500)
+
+umap_coords_list <- list()
+
+for (n_hvgs in hvg_list) {
+    umap_1_col_name <- glue("UMAP_1_{n_hvgs}_HVGs")
+    umap_2_col_name <- glue("UMAP_2_{n_hvgs}_HVGs")
+
+    umap_coords <- read_csv(glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries/umap_coords_{n_hvgs}_hvg.csv")) %>%
+        dplyr::rename(
+            !!umap_1_col_name := UMAP1,
+            !!umap_2_col_name := UMAP2,
+            barcode = 1
+        )
+
+    item_name <- glue("UMAP_{n_hvgs}_HVGs")
+    umap_coords_list[[item_name]] <- umap_coords
+}
+
+plot_data <- umap_coords_list %>%
+    reduce(left_join, by = "barcode") %>%
+    left_join(cell_metadata, by = "barcode")
+
+plot_list <- list()
+for (n_hvgs in hvg_list) {
+    cell_types_plot <- plot_data %>%
+        ggUMAPplot(
+            umap_col_names = c(glue("UMAP_1_{n_hvgs}_HVGs"), glue("UMAP_2_{n_hvgs}_HVGs")),
+            group.by = "cell_type", colorpal = setNames(tenk_color_pal$color, tenk_color_pal$cell_type), plot.title = glue("{n_hvgs} highly variable genes")
+        )
+
+    cell_types_plot %>%
+        ggsave(
+            filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/figures/umap_wg2_cell_types_{n_hvgs}_hvgs.png"),
+            width = 9, height = 5,
+            dpi = 500,
+        )
+
+    plot_list[[as.character(n_hvgs)]] <- cell_types_plot
+}
+
+combined_umaps <- wrap_plots(plot_list) +
+    plot_layout(guides = "collect", ncol = 3)
+
+combined_umaps %>%
+    ggsave(
+        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/figures/umap_wg2_cell_types_different_hvgs_combined.png"),
+        width = 18, height = 12,
+        dpi = 500,
+    )
+
+# UMAP for specific cohort and combined cohort - note these are the only ones that have been run with the outlier cell type composition samples removed. 
+
+cohort_list <- c("BioHEART", "TOB", "combined")[1]
+umap_coords_list <- list()
+
+for (cohort in cohort_list) {
+    umap_1_col_name <- glue("UMAP_1_3000_HVGs_30_PCs_{cohort}_only")
+    umap_2_col_name <- glue("UMAP_2_3000_HVGs_30_PCs_{cohort}_only")
+
+    umap_coords <- read_csv(glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries/umap_coords_30_pcs_3000_hvg_{cohort}_only_outliers_removed.csv")) %>%
+        dplyr::rename(
+            !!umap_1_col_name := UMAP1,
+            !!umap_2_col_name := UMAP2,
+            barcode = 1
+        )
+
+    item_name <- glue("UMAP_{cohort}_cohort")
+    umap_coords_list[[item_name]] <- umap_coords
+}
+
+plot_data <- umap_coords_list %>%
+    reduce(left_join, by = "barcode") %>%
+    left_join(cell_metadata, by = "barcode")
+
+plot_list <- list()
+for (cohort in cohort_list) {
+    cell_types_plot <- plot_data %>%
+        ggUMAPplot(
+            umap_col_names = c(glue("UMAP_1_3000_HVGs_30_PCs_{cohort}_only"), glue("UMAP_2_3000_HVGs_30_PCs_{cohort}_only")),
+            group.by = "cell_type", colorpal = setNames(tenk_color_pal$color, tenk_color_pal$cell_type), plot.title = glue("{cohort} cohort")
+        )
+
+    cell_types_plot %>%
+        ggsave(
+            filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/figures/umap_wg2_cell_types_30_pcs_3000_hvg_{cohort}_only_outtliers_removed.png"),
+            width = 9, height = 5,
+            dpi = 500,
+        )
+
+    plot_list[[as.character(cohort)]] <- cell_types_plot
+}
