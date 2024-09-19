@@ -9,7 +9,7 @@
 #$ -q short.q
 #$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/logs/add_metadata_TenK10K_scRNA_all_batches.err
 #$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/logs/add_metadata_TenK10K_scRNA_all_batches.log
-#$ -t 1-257
+#$ -t 16-16
 #$ -m ae
 #$ -M b.bowen@garvan.org.au
 

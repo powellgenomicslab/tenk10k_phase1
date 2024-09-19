@@ -27,4 +27,9 @@ cd ${TMPDIR}
 # Run python script
 echo "${PY_PATH}/python ${PYSCRIPT}"
 
-${PY_PATH}/python ${PYSCRIPT}
+# ${PY_PATH}/python ${PYSCRIPT} 500
+# ${PY_PATH}/python ${PYSCRIPT} 1000
+# ${PY_PATH}/python ${PYSCRIPT} 1500
+# ${PY_PATH}/python ${PYSCRIPT} 2000
+# ${PY_PATH}/python ${PYSCRIPT} 2500
+${PY_PATH}/python ${PYSCRIPT} 
