@@ -72,7 +72,7 @@ ggUMAPplot <- function(data,
 
 # get the predicted cell type data
 cell_metadata <- get_latest_metadata() %>%
-    select(barcode, cell_type) %>%
+    select(barcode, cell_type, cohort) %>%
     mutate(cell_type = factor(cell_type, levels = tenk_color_pal$cell_type))
 
 # get the current UMAP (50 PCs)
@@ -203,14 +203,15 @@ combined_umaps %>%
         dpi = 500,
     )
 
-# UMAP for specific cohort and combined cohort - note these are the only ones that have been run with the outlier cell type composition samples removed. 
+# UMAP for specific cohort and combined cohort - note these are the only ones that have been run with the outlier cell type composition samples removed ----
 
-cohort_list <- c("BioHEART", "TOB", "combined")[1]
+cohort_list <- c("BioHEART", "TOB")
 umap_coords_list <- list()
 
+# get plot data for each cohort 
 for (cohort in cohort_list) {
-    umap_1_col_name <- glue("UMAP_1_3000_HVGs_30_PCs_{cohort}_only")
-    umap_2_col_name <- glue("UMAP_2_3000_HVGs_30_PCs_{cohort}_only")
+    umap_1_col_name <- glue("UMAP_1_3000_HVGs_30_PCs_{cohort}")
+    umap_2_col_name <- glue("UMAP_2_3000_HVGs_30_PCs_{cohort}")
 
     umap_coords <- read_csv(glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries/umap_coords_30_pcs_3000_hvg_{cohort}_only_outliers_removed.csv")) %>%
         dplyr::rename(
@@ -222,25 +223,50 @@ for (cohort in cohort_list) {
     item_name <- glue("UMAP_{cohort}_cohort")
     umap_coords_list[[item_name]] <- umap_coords
 }
+# manually add in the combined cohort (file name doesnt work with for-loop above). This version has the outlier samples removed 
+umap_coords_list[["UMAP_combined_cohort"]] <- read_csv(glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries/umap_coords_30_pcs_3000_hvg_outliers_removed.csv")) %>%
+    dplyr::rename(
+        "UMAP_1_3000_HVGs_30_PCs_combined" := UMAP1,
+        "UMAP_2_3000_HVGs_30_PCs_combined" := UMAP2,
+        barcode = 1
+    )
 
 plot_data <- umap_coords_list %>%
-    reduce(left_join, by = "barcode") %>%
+    reduce(full_join, by = "barcode") %>%
     left_join(cell_metadata, by = "barcode")
 
 plot_list <- list()
-for (cohort in cohort_list) {
+for (cohort in c(cohort_list, "combined")) {
     cell_types_plot <- plot_data %>%
         ggUMAPplot(
-            umap_col_names = c(glue("UMAP_1_3000_HVGs_30_PCs_{cohort}_only"), glue("UMAP_2_3000_HVGs_30_PCs_{cohort}_only")),
+            umap_col_names = c(glue("UMAP_1_3000_HVGs_30_PCs_{cohort}"), glue("UMAP_2_3000_HVGs_30_PCs_{cohort}")),
             group.by = "cell_type", colorpal = setNames(tenk_color_pal$color, tenk_color_pal$cell_type), plot.title = glue("{cohort} cohort")
         )
 
     cell_types_plot %>%
         ggsave(
-            filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/figures/umap_wg2_cell_types_30_pcs_3000_hvg_{cohort}_only_outtliers_removed.png"),
+            filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/figures/umap_wg2_cell_types_30_pcs_3000_hvg_{cohort}_outliers_removed.png"),
             width = 9, height = 5,
             dpi = 500,
         )
 
     plot_list[[as.character(cohort)]] <- cell_types_plot
 }
+
+plot_list[["umap_combined_cohort_colors"]] <-  plot_data %>%
+        ggUMAPplot(
+            umap_col_names = c(glue("UMAP_1_3000_HVGs_30_PCs_combined"), glue("UMAP_2_3000_HVGs_30_PCs_combined")),
+            group.by = "cohort", colorpal = c("#E41A1C", "#377EB8"), plot.title = glue("{cohort} cohort")
+        )
+
+
+# make the combined plot 
+combined_umaps <- wrap_plots(plot_list) +
+    plot_layout(guides = "collect", ncol = 2)
+
+combined_umaps %>%
+    ggsave(
+        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/figures/umap_wg2_cell_types_separate_cohorts_outliers_removed_combined.png"),
+        width = 18, height = 12,
+        dpi = 500,
+    )
