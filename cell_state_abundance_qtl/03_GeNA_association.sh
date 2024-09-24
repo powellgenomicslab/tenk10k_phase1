@@ -30,12 +30,13 @@ cd /directflow/SCCGGroupShare/projects/blabow/software/GeNA
 # [] get sample-level PC's (either take avg of harmony PC's per-sample OR do PCA on the pseudobulk expression matrix...) 
 
 # NOTE: removed sex as covariate for testing if the NA value is what's causing the error, it ran OK when I removed sex
-            # therefore probably was erroring because of
+            # therefore probably was erroring because of missing sex
 
 #    -c 'age,geno_PC1,geno_PC2,geno_PC3,geno_PC4,geno_PC5,geno_PC6,geno_PC7,geno_PC8,geno_PC9,geno_PC10,geno_PC11,geno_PC12,geno_PC13,geno_PC14,geno_PC15,geno_PC16'
 
 # TODO:
-#   [] figure out how to add the batch correction, given the many-to-many relationship between batches and samples (the same sample is present in multiple seq libraries...) 
+#   Currently not possible to use batch correction in GeNA
+#   [x] figure out how to add the batch correction, given the many-to-many relationship between batches and samples (the same sample is present in multiple seq libraries...) 
 #       * look at GeNA-applied github for potential answers, or ask author
 
 # USAGE:

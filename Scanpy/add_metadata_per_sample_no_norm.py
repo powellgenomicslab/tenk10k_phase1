@@ -42,10 +42,10 @@ cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/pro
 
 # get cellranger outputs
 source_data_location = (
-    "old"  # set to 'old' or 'new' to read from blake / annna's directory structure
+    "new"  # set to 'old' or 'new' to read from blake / annna's directory structure
 )
 # set to new for 240214 onwards
-# seq_date = '240214' # if running on 'new' data also specify the seq_date
+seq_date = '240214' # if running on 'new' data also specify the seq_date
 
 # source_data_location = 'old'
 
@@ -283,9 +283,22 @@ adata.obs.index = [donor for donor in adata.obs["new_cell_name"]]
 adata = adata[adata.obs["individual"].notna()]
 adata = adata[adata.obs["wg2_scpred_prediction"].notna()]
 
-# remove data for participants who withdrew consent
-adata = adata[~adata.obs["cpg_id"].isin(["CT_557", "CT_1545", "CT_888"])]
-
+# remove data for participants who withdrew consent: "CT_557", "CT_1545", "CT_888"
+adata = adata[~adata.obs["ct_id"].isin(["CT_557", "CT_1545", "CT_888"])]
+# remove data for participants excluded with abnormal cell type composition (very high proportion of b intermediate)
+adata = adata[
+    ~adata.obs["cpg_id"].isin(
+        [
+            "CPG309724",
+            "CPG310938",
+            "CPG312025",
+            "CPG315986",
+            "CPG247973",
+            "CPG249177",
+            "CPG251793",
+        ]
+    )
+]
 
 # remove the gene-level QC columns as these get duplicated when concatenating the scanpy objects
 # Removing these columns from var as they get duplicated when we combine the objects
