@@ -44,6 +44,10 @@ This includes:
 * batch correction / integration using [Harmony](https://portals.broadinstitute.org/harmony/) 
 * cell typing using [scPred](https://github.com/powellgenomicslab/scPred), [Azimuth](https://satijalab.github.io/azimuth/index.html), and [CellTypist](https://www.celltypist.org/)
 
+## Processing pipeline data flow diagram
+
+![singlecell pipeline data flow](https://github.com/user-attachments/assets/ce9ca4cd-ae02-41e3-a597-056181a7d4c2)
+
 ## Results on Brenner
 
 [Recap results locations on Brenner](results_locations.md). 
