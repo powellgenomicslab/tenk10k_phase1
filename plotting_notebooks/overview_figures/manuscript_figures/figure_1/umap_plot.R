@@ -1,5 +1,4 @@
 library(tidyverse)
-library(glue)
 library(ggsci)
 library(RColorBrewer)
 library(data.table)

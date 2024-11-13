@@ -192,6 +192,8 @@ tenk_color_pal <- tribble(
         ) %>% fct_relevel(c("B", "NK", "CD8 T", "CD4 T", "Unconventional T", "Dendritic", "Monocyte", "Other"))
     )
 
+tenk_color_pal %>%
+    write_tsv("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/plotting_notebooks/overview_figures/manuscript_figures/colour_palette_table.tsv")
 
 # ⚙️ ggplot themes ----
 

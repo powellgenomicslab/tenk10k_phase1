@@ -45,7 +45,7 @@ source_data_location = (
     "new"  # set to 'old' or 'new' to read from blake / annna's directory structure
 )
 # set to new for 240214 onwards
-seq_date = '240214' # if running on 'new' data also specify the seq_date
+seq_date = "240214"  # if running on 'new' data also specify the seq_date
 
 # source_data_location = 'old'
 
@@ -226,12 +226,9 @@ adata.obs["new_cell_name"] = [
 adata.obs["sequencing_library"] = sample.replace("-", "_")
 adata.obs["individual"] = adata.obs["MajoritySinglet_Individual_Assignment"]
 
-# add samples ID to donors that are just added by vireo to make them unique
 donor_regex = re.compile(r"donor[0-9]+")
-adata.obs["individual"] = [
-    f"{i}_{sample}" if re.match(donor_regex, str(i)) else i
-    for i in adata.obs["individual"]
-]
+# remove donors that were not able to be assigned by vireo due to missing genotype data
+adata = adata[~adata.obs["individual"].str.contains(donor_regex, regex=True, na=False)]
 
 # add cohort info
 seqlib_cohort_map_file = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/sequencing_library_to_cohort_map.csv"
