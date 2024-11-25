@@ -4,11 +4,10 @@ import re
 import scanpy as sc
 import pandas as pd
 
-from cellbender.remove_background.downstream import anndata_from_h5
 
 # TODO:
-# [] run this for all libraries
-# [] read in the results in the scanpy combiner script adding them to each object and the combined final scanpy object
+# [x] run this for all libraries
+# [x] read in the results in the scanpy combiner script adding them to each object and the combined final scanpy object
 # [x] use annotation to convert ensg to gene symbols?
 # [x] run using all genes
 # [x] output to csv and
@@ -17,7 +16,10 @@ from cellbender.remove_background.downstream import anndata_from_h5
 i = int(sys.argv[1])
 
 # input
-cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
+# cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/" # for "old" samples
+
+seq_date = "240501"  # for "new" samples not yet moved to the above cellranger_dir
+cellranger_dir = f"/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/{seq_date}_tenk10k_gencode44/cellranger_outs/"
 
 # output
 output_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cell_cycle/per_library_phases/output"
@@ -27,7 +29,8 @@ sample = samples[i - 1]  # mismatch in index between bash and python
 sample = sample.replace(cellranger_dir, "")
 
 # create anndata object for one library
-filtered_matrix = f"{cellranger_dir}/{sample}/outs/filtered_feature_bc_matrix.h5"
+filtered_matrix = f"{cellranger_dir}/{sample}/cellranger_count/{sample}/outs/filtered_feature_bc_matrix.h5"  # use this new old data location
+# filtered_matrix = f"{cellranger_dir}/{sample}/outs/filtered_feature_bc_matrix.h5" # use this for old data location
 
 print(f"reading in filtered matrix {filtered_matrix}...")
 
@@ -35,7 +38,7 @@ adata = sc.read_10x_h5(filtered_matrix)
 
 print("filtering cells...")
 
-# I think I wont do any gene filtering to be consistent with what Anna did with the seurat objects - use all cells and all genes
+# I wont do any gene filtering to be consistent with what Anna did with the seurat objects - use all cells and all genes
 # cell cycle gene list from Tirosh et al 2015, downloaded from https://raw.githubusercontent.com/scverse/scanpy_usage/master/180209_cell_cycle/data/regev_lab_cell_cycle_genes.txt
 cell_cycle_genes = [
     x.strip()
@@ -58,7 +61,7 @@ adata.var = pd.concat([adata.var, gene_info_df], axis=1)
 
 
 # split into s, g2m phase genes, and convert to ENSG id's
-# NOTE: only scoring 9 s genes and 6 g2m genes as only these are included in the 3343 highly variable genes...
+# now using all genes in each gene set; first 42 correspond to s phase genes
 s_genes = adata.var["gene_ids"][adata.var["gene_name"].isin(cell_cycle_genes[:43])]
 g2m_genes = adata.var["gene_ids"][adata.var["gene_name"].isin(cell_cycle_genes[43:])]
 
