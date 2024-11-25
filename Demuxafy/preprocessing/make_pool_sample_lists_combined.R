@@ -32,10 +32,17 @@ get_n_donors_all_pools <- function(pool_list_suffix, pool_list_path, save = FALS
         # read in the master pool info sheet
         tenk10k_all_pool_info <- fread("data_processing/tenk10k_donor_pool_info.csv") %>%
             select(external_id, cpg_id, tenk10k_pool)
-
+        
+        # for debugging 
+        tenk10k_all_pool_info %>%
+            filter(tenk10k_pool == {{ tenk10k_pool }}) %>%
+            print()
+        
+        # get all cpg ids in the pool (may not be cpg ids for all scRNA-seq donors)
         donors_in_pool <- tenk10k_all_pool_info %>%
             filter(tenk10k_pool == {{ tenk10k_pool }}) %>%
-            select(external_id)
+            select(cpg_id) %>%
+            filter(!is.na(cpg_id))
 
         colnames(donors_in_pool) <- c()
         print(donors_in_pool)
@@ -44,31 +51,29 @@ get_n_donors_all_pools <- function(pool_list_suffix, pool_list_path, save = FALS
         if (save) {
             fwrite(donors_in_pool, new_file, sep = "\t") # create a file with the correct sequencing library name
         } else {
-            return(donors_in_pool)
+            print(donors_in_pool)
         }
-    }
 
-    # this function gets the number of donors for a given pool
-    get_n_donors_pool <- function(pool) {
-        donors_in_pool_file <- glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/samples_in_pools_combined/{pool}.tsv") # file generated in the above function
-
-        # get number of rows (donors) that are in each sequencing library
-        donors_in_pool <- fread(donors_in_pool_file, header = FALSE) %>%
+        # get number of external ID's (donors) that are in each sequencing library
+        n_donors_in_pool <- tenk10k_all_pool_info %>%
+            filter(tenk10k_pool == {{ tenk10k_pool }}) %>%
+            select(external_id) %>%
             nrow()
-        return(data.frame(pool = pool, donors_in_pool = donors_in_pool))
+
+        return(data.frame(pool = pool, donors_in_pool = n_donors_in_pool))
     }
 
     # for each sample/sequencing library/pool:
     output <- all_samples_in_pool %>%
         pull(V1) %>% # 1. creates file containing the donors in each sequencig library
-        purrr::walk(\(x) get_donors_in_libraries(
+        purrr::map(\(x) get_donors_in_libraries(
             pool = x,
             pools_dir = pools_dir,
             save = save
         )) %>% # 2. counts how many donors there are and saves a table with total n donors for each of the sequencing libraries
-        purrr::map(
-            \(x) get_n_donors_pool(pool = x)
-        ) %>%
+        # purrr::map(
+        #     \(x) get_n_donors_pool(pool = x)
+        # ) %>%
         list_rbind() # make a df with donor numbers for all the samples contained in the cellranger outs
 
     if (save) {
@@ -81,32 +86,39 @@ get_n_donors_all_pools <- function(pool_list_suffix, pool_list_path, save = FALS
 
 
 # PREVIOUS RUNS:
+get_n_donors_all_pools(
+    pool_list_suffix = "240501",
+    pool_list_path = "data_processing",
+    save = TRUE,
+    pools_dir = pools_dir
+)
+get_n_donors_all_pools(
+    pool_list_suffix = "240524",
+    pool_list_path = "data_processing",
+    save = TRUE,
+    pools_dir = pools_dir
+)
+get_n_donors_all_pools(
+    pool_list_suffix = "240223",
+    pool_list_path = "data_processing",
+    save = TRUE,
+    pools_dir = pools_dir
+)
 # get_n_donors_all_pools(
-#     pool_list_suffix = "240501",
+#     pool_list_suffix = "231213",
 #     pool_list_path = "data_processing",
 #     save = TRUE,
 #     pools_dir = pools_dir
 # )
 # get_n_donors_all_pools(
-#     pool_list_suffix = "240524",
+#     pool_list_suffix = "231214",
 #     pool_list_path = "data_processing",
 #     save = TRUE,
 #     pools_dir = pools_dir
 # )
 
-get_n_donors_all_pools(
-    pool_list_suffix = "231213",
-    pool_list_path = "data_processing",
-    save = TRUE,
-    pools_dir = pools_dir
-)
-get_n_donors_all_pools(
-    pool_list_suffix = "231214",
-    pool_list_path = "data_processing",
-    save = TRUE,
-    pools_dir = pools_dir
-)
-# NOTE: ^ script does not account for the accidental maxi-pools S0034-37a and S0034-37b, need to manually create these? see /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Demuxafy/preprocessing/TOB_make_pool_sample_lists.R
+
+# NOTE: ^ script does not account for the accidental (or intentional) maxi-pools S0034-37a and S0034-37b, need to manually create these? see /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Demuxafy/preprocessing/TOB_make_pool_sample_lists.R
 
 
 #### Run this function to get all the samples in pools for the older batches ----
