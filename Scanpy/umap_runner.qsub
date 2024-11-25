@@ -3,7 +3,7 @@
 #$ -cwd
 #$ -V
 #$ -r yes
-#$ -l mem_requested=1000G
+#$ -l mem_requested=1500G
 #$ -l tmp_requested=40G
 #$ -N harmony_umap
 #$ -q long.q
@@ -15,13 +15,13 @@
 PY_PATH="/directflow/SCCGGroupShare/projects/blabow/.conda/envs/cellregmap_notebook_bb/bin"
 
 # first pass harmony + UMAP
-# PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/harmony_umap.py"
+PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/harmony_umap.py"
 
 # second pass harmony + UMAP (after manual filtering of low-quality clusters)
 # PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/rerun_harmony_umap.py"
 
 # umap npcs testing / umap n hvgs testing 
-PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/run_umap_different_pcs.py"
+# PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/run_umap_different_pcs.py"
 
 cd ${TMPDIR}
 # Run python script
@@ -32,4 +32,4 @@ echo "${PY_PATH}/python ${PYSCRIPT}"
 # ${PY_PATH}/python ${PYSCRIPT} 1500
 # ${PY_PATH}/python ${PYSCRIPT} 2000
 # ${PY_PATH}/python ${PYSCRIPT} 2500
-${PY_PATH}/python ${PYSCRIPT} 
+${PY_PATH}/python ${PYSCRIPT}

@@ -6,11 +6,16 @@
 #$ -r yes
 #$ -l mem_requested=80G
 #$ -N combiner_demuxafy_TenK10K_scRNA
-#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/combine_results/logs/comb_TenK10K_scRNA_vireo_S0045_S0046_240214_no_cb.err
-#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/combine_results/logs/comb_TenK10K_scRNA_vireo_S0045_S0046_240214_no_cb.log
-#$ -t 1-16
+#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/combine_results/logs/comb_TenK10K_scRNA_vireo_240501_no_cb.err
+#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/combine_results/logs/comb_TenK10K_scRNA_vireo_240501_no_cb.log
+#$ -t 1-17
 #$ -m ae
 #$ -M b.bowen@garvan.org.au
+
+# record of prev runs: 
+SEQ_DATE="240223" 
+# SEQ_DATE="240524"
+# SEQ_DATE="240501" # NOTE: first 2 are TOB samples; rest bioheart
 
 SIF=/share/ScratchGeneral/anncuo/software/Demuxafy.sif
 BIND_PATH_DATA=/directflow
@@ -18,7 +23,7 @@ BIND_PATH_DATA=/directflow
 
 i=${SGE_TASK_ID};
 
-SAMPLE=$(sed "${i}q;d" /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cellranger_outs_240214.txt)
+SAMPLE=$(sed "${i}q;d" /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cellranger_outs_${SEQ_DATE}.txt)
 
 echo "Combining all doublet detection results for sample: $SAMPLE"
 

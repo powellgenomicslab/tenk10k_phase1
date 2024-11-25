@@ -7,8 +7,8 @@
 #$ -l mem_requested=150G
 #$ -l tmp_requested=100G
 #$ -N bioheart_vireo_no_cb_demuxafy_TenK10K_scRNA
-#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/vireo/logs/vireo_TenK10K_scRNA_bioheart_240214_no_cb.err
-#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/vireo/logs/vireo_TenK10K_scRNA_bioheart_240214_no_cb.log
+#$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/vireo/logs/vireo_TenK10K_scRNA_bioheart_240524_no_cb.err
+#$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/vireo/logs/vireo_TenK10K_scRNA_bioheart_240524_no_cb.log
 #$ -t 1-17
 #$ -m ae
 #$ -M b.bowen@garvan.org.au
@@ -16,9 +16,13 @@
 SIF=/share/ScratchGeneral/anncuo/software/Demuxafy.sif
 BIND_PATH_DATA=/directflow
 # BIND_PATH_OUTPUT=/share/ScratchGeneral/anncuo
-# SEQ_DATE="240214"
-SEQ_DATE="240214"
 
+SEQ_DATE="240223" # Previously ran first 4 pools using the 240-freeze VCF, as we had cpg ID's for these available, pools 5-17 run with new VCF 
+# SEQ_DATE="240501" # NOTE: first are 2 TOB samples; ran these with the other script (demuxafy_vireo_tob_no_cellbender.qsub)
+# SEQ_DATE="240524"
+
+# RECORD OF PREVIOUS RUNS:
+# SEQ_DATE="240214"
 # PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples_231214_bioheart.txt"
 # PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples_240108_bioheart.txt"
 # PARAMS="/share/ScratchGeneral/anncuo/tenk10k/data_processing/libraries_nsamples_240112_bioheart.txt" # has seq libraries + number of individuals you expect (specific per seq batch)
@@ -35,16 +39,17 @@ N_EXPECTED_DONORS=`head -n $SGE_TASK_ID $PARAMS | tail -n 1 | awk '{print $2}'`
 now=$(date)
 echo "$now"
 
-echo "Performing vireo demultiplexing + doublet detection on sample: ${SAMPLE}, with ${N_EXPECTED_DONORS} expected donors"
 
 # BAM="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231214_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/possorted_genome_bam.bam"
 # BARCODES=/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/231214_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix/barcodes.tsv.gz
 # BAM="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240108_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/possorted_genome_bam.bam"
 # BARCODES=/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240108_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix/barcodes.tsv.gz
 
+#  old BAM location
 # BAM="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/${SEQ_DATE}_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/possorted_genome_bam.bam"
 # BARCODES="/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/${SEQ_DATE}_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix/barcodes.tsv.gz"
 
+# new BAM location
 BAM=/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/${SAMPLE}/outs/possorted_genome_bam.bam
 BARCODES=/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/${SAMPLE}/outs/filtered_feature_bc_matrix/barcodes.tsv.gz
 
@@ -57,28 +62,42 @@ BARCODES=/directflow/SCCGGroupShare/projects/data/experimental_data/projects/Ten
 # BARCODES=/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240119_tenk10k_gencode44/cellranger_outs/$SAMPLE/cellranger_count/$SAMPLE/outs/filtered_feature_bc_matrix/barcodes.tsv.gz
 
 VIREO_OUTDIR="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/vireo/output/${SAMPLE}"
-VCF=/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/genotypes/bioheart/demux_vcf_common_variants.vcf.bgz
-INDS=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/samples_in_pools_bioheart/${SAMPLE}.tsv # list of individuals (specific per sample) 
+# VCF=/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/genotypes/bioheart/demux_vcf_common_variants.vcf.bgz # OLD 240 library freeze version
+
+# VCF=/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/genotypes/vcfs_from_cpg/bioheart_367new_oct2024_demux_vcf_common_variants.vcf.bgz # 367 new bioheart samples from the final phase 1 freeze 
+VCF=/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/genotypes/vcfs_from_cpg/tob_bioheart_combined_nov2024_demux_vcf_common_variants.vcf.bgz
+# INDS=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/samples_in_pools_bioheart/${SAMPLE}.tsv # list of individuals (specific per sample) , CPG ID's (bioheart)
+INDS=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/samples_in_pools_combined/${SAMPLE}.tsv 
 FIELD="GT" 
 # sample-specific logs 
 LOG="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/demuxafy/vireo/logs/sample_logs/vireo_${SAMPLE}_task${SGE_TASK_ID}.log"
 
 mkdir -p ${VIREO_OUTDIR}
 
-# Count number of alleles using cellSNP-lite
-singularity exec --bind $BIND_PATH_DATA \
-               $SIF cellsnp-lite \
-               -s $BAM -b $BARCODES \
-               -O $VIREO_OUTDIR \
-               -R $VCF \
-               -p 20 \
-               --minMAF 0.1 \
-               --minCOUNT 20 \
-               --gzip &>> ${LOG}
+# check if output exists
+if [ -f "${VIREO_OUTDIR}/summary.tsv" ]; then
 
-# Filter SNPs identified by cellSNP-lite
+    echo "Vireo output file for ${SAMPLE} already exists!"
+    exit 1 
+
+fi 
+
+echo "Performing vireo demultiplexing + doublet detection on sample: ${SAMPLE}, with ${N_EXPECTED_DONORS} expected donors"
+
+# Count number of alleles using cellSNP-lite
+# singularity exec --bind $BIND_PATH_DATA \
+#                $SIF cellsnp-lite \
+#                -s $BAM -b $BARCODES \
+#                -O $VIREO_OUTDIR \
+#                -R $VCF \
+#                -p 20 \
+#                --minMAF 0.1 \
+#                --minCOUNT 20 \
+#                --gzip &>> ${LOG}
+
+# Filter SNPs identified by cellSNP-lite, also filter for individuals that are in the pool 
 singularity exec --bind $BIND_PATH_DATA \
-                $SIF bcftools view $VCF -R $VIREO_OUTDIR/cellSNP.base.vcf.gz -S $INDS -Ov -o $VIREO_OUTDIR/donor_subset.vcf &>> ${LOG}
+                $SIF bcftools view $VCF --force-samples -R $VIREO_OUTDIR/cellSNP.base.vcf.gz -S $INDS -Ov -o $VIREO_OUTDIR/donor_subset.vcf &>> ${LOG}
 
 # Demultiplex using vireo
 singularity exec --bind $BIND_PATH_DATA \

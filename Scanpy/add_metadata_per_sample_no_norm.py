@@ -37,17 +37,29 @@ i = int(sys.argv[1])
 # 16 samples from 240214
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240214_tenk10k_gencode44/cellranger_outs/"
 
-# Cellranger outs moved to here:
-cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
 
-# get cellranger outputs
+# set to new for 240214 onwards; note these may get moved in the future
 source_data_location = (
     "new"  # set to 'old' or 'new' to read from blake / annna's directory structure
 )
-# set to new for 240214 onwards
-seq_date = "240214"  # if running on 'new' data also specify the seq_date
 
-# source_data_location = 'old'
+# source_data_location = "old"
+
+# if running on 'new' data also specify the seq_date
+
+# seq_date = "240223"
+
+# get cellranger outputs
+# cellranger_dir = f"/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/{seq_date}_tenk10k_gencode44/cellranger_outs/"
+# older cellranger outs moved to here:
+cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
+
+
+# record of previous runs:
+seq_date = "240214"
+# seq_date = "240501"  # NOTE: first 2 are TOB samples; rest bioheart
+# seq_date = "240524"
+
 
 if source_data_location == "new":
 
@@ -114,7 +126,12 @@ output_filename = output_dir + sample + "_w_metadata_donor_info.h5ad"
 # Load Cellranger counts
 # filtered_matrix = cellranger_dir+sample+"/outs/filtered_feature_bc_matrix.h5"
 # filtered_matrix = cellranger_dir+sample+"/cellranger_count/"+sample+"/outs/filtered_feature_bc_matrix.h5"
+
 filtered_matrix = f"{cellranger_dir}/{sample}/outs/filtered_feature_bc_matrix.h5"
+
+if not os.path.exists(filtered_matrix):
+    filtered_matrix = f"{cellranger_dir}/{sample}/cellranger_count/{sample}/outs/filtered_feature_bc_matrix.h5"  # use this location if data not moved yet
+
 adata = sc.read_10x_h5(filtered_matrix)
 
 # Load Cellbender file
@@ -231,7 +248,7 @@ donor_regex = re.compile(r"donor[0-9]+")
 adata = adata[~adata.obs["individual"].str.contains(donor_regex, regex=True, na=False)]
 
 # add cohort info
-seqlib_cohort_map_file = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/sequencing_library_to_cohort_map.csv"
+seqlib_cohort_map_file = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/sequencing_library_to_cohort_map_300_libs.csv"
 seqlib_cohort_map_df = pd.read_csv(seqlib_cohort_map_file)
 cohort = seqlib_cohort_map_df[seqlib_cohort_map_df["sequencing_library"] == sample][
     "cohort"
@@ -267,12 +284,18 @@ if cohort == "TOB":
     adata.obs["individual"] = adata.obs["cpg_id"]
 
 if cohort == "BioHEART":
-    cpg_map_file = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/str_sample-sex-mapping_sample_karyotype_sex_mapping.csv"
-    cpg_map_df = pd.read_csv(cpg_map_file)
-    cpg_map_df.columns = ["individual", "ct_id", "sex_karyotype"]
-    cpg_map_df.drop(columns=["sex_karyotype"], inplace=True)
+    # cpg_map_file = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/str_sample-sex-mapping_sample_karyotype_sex_mapping.csv"
+    # cpg_map_df = pd.read_csv(cpg_map_file)
+    # cpg_map_df.columns = ["individual", "ct_id", "sex_karyotype"]
+    # cpg_map_df.drop(columns=["sex_karyotype"], inplace=True)
+
+    cpg_map_file = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/metadata/bioheart_ct_ids_to_cpg_ids_20241113_n1419.csv"
+    cpg_map_df = pd.read_csv(cpg_map_file, index_col=0)
+    cpg_map_df.columns = ["ct_id", "individual"]
+
     adata.obs = adata.obs.merge(cpg_map_df, on="individual", how="left")
     adata.obs["cpg_id"] = adata.obs["individual"]
+
 
 adata.obs.index = [donor for donor in adata.obs["new_cell_name"]]
 
@@ -281,7 +304,9 @@ adata = adata[adata.obs["individual"].notna()]
 adata = adata[adata.obs["wg2_scpred_prediction"].notna()]
 
 # remove data for participants who withdrew consent: "CT_557", "CT_1545", "CT_888"
-adata = adata[~adata.obs["ct_id"].isin(["CT_557", "CT_1545", "CT_888"])]
+if cohort == "BioHEART":
+    adata = adata[~adata.obs["ct_id"].isin(["CT_557", "CT_1545", "CT_888"])]
+
 # remove data for participants excluded with abnormal cell type composition (very high proportion of b intermediate)
 adata = adata[
     ~adata.obs["cpg_id"].isin(
