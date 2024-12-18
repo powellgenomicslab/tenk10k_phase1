@@ -13,6 +13,10 @@
 #$ -m ae
 #$ -M b.bowen@garvan.org.au
 
+# TODO:
+# Use the raw scanpy object (pre-clustering, removal of low seq depth cluster)
+# can then remove list of low seq-depth barcodes, make one per cell type 
+
 PY_PATH="/share/ScratchGeneral/anncuo/jupyter/conda_notebooks/envs/cellregmap_notebook/bin/"
 PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/prepare_pheno.py"
 CELL_TYPES_FILE="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/unique_cell_types_wg2_scpred.txt"

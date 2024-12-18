@@ -37,17 +37,29 @@ i = int(sys.argv[1])
 # 16 samples from 240214
 # cellranger_dir = "/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/240214_tenk10k_gencode44/cellranger_outs/"
 
-# Cellranger outs moved to here:
-cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
+
+# set to new for 240214 onwards; note these may get moved in the future
+source_data_location = "new"  # set to 'old' or 'new' to read from blake / annna's directory structure  # submit number of jobs = number of files in the cellranger dir
+
+# source_data_location = "old"
+
+# if running on 'new' data also specify the seq_date
+
+# seq_date = "240223"
+# seq_date = "240501"  # NOTE: first 2 are TOB samples; rest bioheart
+# record of previous runs:
+seq_date = "240214"
+# seq_date = "240524"
 
 # get cellranger outputs
-source_data_location = (
-    "new"  # set to 'old' or 'new' to read from blake / annna's directory structure
-)
-# set to new for 240214 onwards
-seq_date = '240214' # if running on 'new' data also specify the seq_date
+# cellranger_dir = f"/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/{seq_date}_tenk10k_gencode44/cellranger_outs/"
+# older cellranger outs moved to here:
+cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
 
-# source_data_location = 'old'
+print(cellranger_dir)
+
+
+# print(seq_date)
 
 if source_data_location == "new":
 
@@ -114,7 +126,12 @@ output_filename = output_dir + sample + "_w_metadata_donor_info.h5ad"
 # Load Cellranger counts
 # filtered_matrix = cellranger_dir+sample+"/outs/filtered_feature_bc_matrix.h5"
 # filtered_matrix = cellranger_dir+sample+"/cellranger_count/"+sample+"/outs/filtered_feature_bc_matrix.h5"
+
 filtered_matrix = f"{cellranger_dir}/{sample}/outs/filtered_feature_bc_matrix.h5"
+
+if not os.path.exists(filtered_matrix):
+    filtered_matrix = f"{cellranger_dir}/{sample}/cellranger_count/{sample}/outs/filtered_feature_bc_matrix.h5"  # use this location if data not moved yet
+
 adata = sc.read_10x_h5(filtered_matrix)
 
 # Load Cellbender file
@@ -189,7 +206,7 @@ adata = adata[adata.obs["MajoritySinglet_Individual_Assignment"].notna()]
 
 # preprocessing & QC plotting
 adata.var_names_make_unique()
-sc.pp.filter_cells(adata, min_genes=200)
+# sc.pp.filter_cells(adata, min_genes=200)
 # calculate mitochondrial, ribosomal and hemoglobin gene expression
 adata.var["mt"] = adata.var_names.str.startswith("MT-")
 adata.var["ribo"] = adata.var_names.str.startswith(("RPS", "RPL"))
@@ -212,10 +229,8 @@ plt.savefig(output_dir + "figures/" + sample + "_tot_counts_pct_mt.pdf")
 sc.pl.scatter(adata, x="total_counts", y="n_genes_by_counts")
 plt.savefig(output_dir + "figures/" + sample + "_tot_counts_tot_genes.pdf")
 
-# TODO: Calculate MADs and filter each pool based on these instead:
-
-adata = adata[adata.obs.n_genes_by_counts < 6000, :]
-adata = adata[adata.obs.pct_counts_mt < 20, :]
+# adata = adata[adata.obs.n_genes_by_counts > 1000, :]
+# adata = adata[adata.obs.pct_counts_mt < 20, :]
 
 
 # add cell, individual and sequencing library id pre-merging
@@ -226,15 +241,12 @@ adata.obs["new_cell_name"] = [
 adata.obs["sequencing_library"] = sample.replace("-", "_")
 adata.obs["individual"] = adata.obs["MajoritySinglet_Individual_Assignment"]
 
-# add samples ID to donors that are just added by vireo to make them unique
 donor_regex = re.compile(r"donor[0-9]+")
-adata.obs["individual"] = [
-    f"{i}_{sample}" if re.match(donor_regex, str(i)) else i
-    for i in adata.obs["individual"]
-]
+# remove donors that were not able to be assigned by vireo due to missing genotype data
+adata = adata[~adata.obs["individual"].str.contains(donor_regex, regex=True, na=False)]
 
 # add cohort info
-seqlib_cohort_map_file = "/share/ScratchGeneral/anncuo/tenk10k/data_processing/sequencing_library_to_cohort_map.csv"
+seqlib_cohort_map_file = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/sequencing_library_to_cohort_map_300_libs.csv"
 seqlib_cohort_map_df = pd.read_csv(seqlib_cohort_map_file)
 cohort = seqlib_cohort_map_df[seqlib_cohort_map_df["sequencing_library"] == sample][
     "cohort"
@@ -270,12 +282,18 @@ if cohort == "TOB":
     adata.obs["individual"] = adata.obs["cpg_id"]
 
 if cohort == "BioHEART":
-    cpg_map_file = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/str_sample-sex-mapping_sample_karyotype_sex_mapping.csv"
-    cpg_map_df = pd.read_csv(cpg_map_file)
-    cpg_map_df.columns = ["individual", "ct_id", "sex_karyotype"]
-    cpg_map_df.drop(columns=["sex_karyotype"], inplace=True)
+    # cpg_map_file = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/str_sample-sex-mapping_sample_karyotype_sex_mapping.csv"
+    # cpg_map_df = pd.read_csv(cpg_map_file)
+    # cpg_map_df.columns = ["individual", "ct_id", "sex_karyotype"]
+    # cpg_map_df.drop(columns=["sex_karyotype"], inplace=True)
+
+    cpg_map_file = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/metadata/bioheart_ct_ids_to_cpg_ids_20241113_n1419.csv"
+    cpg_map_df = pd.read_csv(cpg_map_file, index_col=0)
+    cpg_map_df.columns = ["ct_id", "individual"]
+
     adata.obs = adata.obs.merge(cpg_map_df, on="individual", how="left")
     adata.obs["cpg_id"] = adata.obs["individual"]
+
 
 adata.obs.index = [donor for donor in adata.obs["new_cell_name"]]
 
@@ -284,11 +302,13 @@ adata = adata[adata.obs["individual"].notna()]
 adata = adata[adata.obs["wg2_scpred_prediction"].notna()]
 
 # remove data for participants who withdrew consent: "CT_557", "CT_1545", "CT_888"
-adata = adata[~adata.obs["ct_id"].isin(["CT_557", "CT_1545", "CT_888"])]
-# remove data for participants excluded with abnormal cell type composition (very high proportion of b intermediate)
+if cohort == "BioHEART":
+    adata = adata[~adata.obs["ct_id"].isin(["CT_557", "CT_1545", "CT_888"])]
+
+# remove data for donors with abnormal cell type composition
 adata = adata[
     ~adata.obs["cpg_id"].isin(
-        [
+        [  # (very high proportion of b intermediate)
             "CPG309724",
             "CPG310938",
             "CPG312025",
@@ -296,9 +316,22 @@ adata = adata[
             "CPG247973",
             "CPG249177",
             "CPG251793",
+            # abnormal cell type distribution (other)
+            "CPG252494",
+            "CPG254169",
+            "CPG254318",
+            "CPG255760",
+            "CPG249904",
         ]
     )
 ]
+
+# remove data for donors that failed WGS QC
+wgs_qc_fails = pd.read_csv(
+    "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/saige-qtl_tenk10k-genome-2-3-eur_all_samples_to_drop.csv"
+)
+
+adata = adata[~adata.obs["cpg_id"].isin(wgs_qc_fails["s"])]
 
 # remove the gene-level QC columns as these get duplicated when concatenating the scanpy objects
 # Removing these columns from var as they get duplicated when we combine the objects

@@ -31,7 +31,7 @@ dpi <- 400
 # get the plot order for cell types - applied to all plots.
 # ordering by cell type frequency within each major cell type
 cell_type_order <- cell_metadata %>%
-    mutate(major_cell_type = fct_infreq(major_cell_type)) %>% 
+    mutate(major_cell_type = fct_infreq(major_cell_type)) %>%
     group_by(major_cell_type) %>%
     mutate(cell_type = fct_infreq(cell_type)) %>%
     pull(cell_type) %>%
@@ -120,4 +120,3 @@ combined_plots %>%
         filename = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/plotting_notebooks/overview_figures/manuscript_figures/figure_1/figures/fig1_bar_vln_combined.png",
         width = width + 1, height = height * 4, dpi = dpi
     )
-
