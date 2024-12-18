@@ -6,7 +6,7 @@
 #$ -l mem_requested=500G
 #$ -l tmp_requested=40G
 #$ -N prepare_ct_covs
-#$ -q short.q
+#$ -q long.q
 #$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/logs/prepare_ct_covs.err
 #$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/logs/prepare_ct_covs.log
 #$ -t 1-28

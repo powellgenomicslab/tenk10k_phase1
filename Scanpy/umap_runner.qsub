@@ -12,6 +12,8 @@
 #$ -m ae
 #$ -M b.bowen@garvan.org.au
 
+# usually use 1500G 
+
 PY_PATH="/directflow/SCCGGroupShare/projects/blabow/.conda/envs/cellregmap_notebook_bb/bin"
 
 # first pass harmony + UMAP
@@ -22,6 +24,10 @@ PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/harmo
 
 # umap npcs testing / umap n hvgs testing 
 # PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/run_umap_different_pcs.py"
+
+# script to get metadata while I wait for UMAP to run
+# PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/Scanpy/save_combined_filtered_metadata.py"
+
 
 cd ${TMPDIR}
 # Run python script

@@ -6,10 +6,12 @@ library(ggsci)
 library(RColorBrewer)
 library(data.table)
 library(patchwork)
+library(Seurat)
+library(scales)
 
 source("plotting_notebooks/overview_figures/manuscript_figures/tenk_data_vis_utils.R")
 
-data_type <- "unfiltered"
+data_type <- "filtered_min1000genes"
 
 # 📗 Read in the data ----
 
@@ -20,7 +22,7 @@ data_type <- "unfiltered"
 # cell_cycle_metadata <- read_csv("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cell_cycle/240_libraries_cellcyle_phase.csv") %>%
 #     rename("barcode" = 1)
 
-cell_metadata <- read_csv(glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/300_libraries_cell_metadata_subset_{data_type}.csv")) %>%
+cell_metadata <- read_csv(glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/300_libraries_cell_metadata_{data_type}.csv")) %>%
     rename("barcode" = 1)
 
 cell_metadata <- cell_metadata %>%
@@ -87,21 +89,31 @@ cell_metadata <- cell_metadata %>%
 umap_coords <- read_csv(glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/300_libraries_harmony_umap_coords_{data_type}.csv")) %>%
     rename("barcode" = 1)
 
-plot_data <- umap_coords %>%
-    left_join(cell_metadata) %>%
-    # left_join(cell_cycle_metadata) %>%
-    rename("UMAP 1" = UMAP1, "UMAP 2" = UMAP2)
-
-
 # read in and combine cell cycle phase data
 
 cell_cycle_csv_list <- list.files("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cell_cycle/per_library_phases/output", pattern = "_cell_cycle_scoring.csv", full.names = TRUE)
 
+pattern <- ".*/(S\\d+[-\\w]*)_cell_cycle_scoring\\.csv"
+
+# Extract sample names
+# sample_names <- str_match(cell_cycle_csv_list, pattern)[,2]
+
 cell_cycle_data <- cell_cycle_csv_list %>%
     map(\(file) {
-        read_csv(file = file)
+        read_csv(file = file) %>%
+            mutate(sequencing_library = str_match(file, pattern)[, 2]) %>%
+            return()
     }) %>%
-    list_rbind()
+    list_rbind() %>%
+    mutate(barcode = paste0(`...1` %>% str_remove(pattern = "-[0-9]+"), "_", sequencing_library)) %>%
+    select(-`...1`, -sequencing_library)
+
+
+plot_data <- umap_coords %>%
+    left_join(cell_metadata) %>%
+    left_join(cell_cycle_data, by = "barcode") %>%
+    rename("UMAP 1" = UMAP1, "UMAP 2" = UMAP2) %>%
+    mutate(cell_type = factor(cell_type, levels = tenk_color_pal$cell_type))
 
 # ⚙️ Functions ----
 
@@ -184,8 +196,8 @@ ggUMAPplot <- function(data,
             legend.key.size = unit(5, "mm"),
             panel.grid.minor = element_blank(),
             panel.grid.major = element_blank(),
-            axis.ticks = element_blank(),
-            axis.text = element_blank(),
+            # axis.ticks = element_blank(),
+            # axis.text = element_blank(),
             ...
         ) +
         guides(color = guide_legend(override.aes = list(size = 4, shape = 15)))
@@ -202,19 +214,16 @@ ggUMAPplot <- function(data,
             labs(title = group.by)
     }
 
-    # if (label) {
-    #     Seurat::LabelClusters(new.plot, id = {{group.by}})
-    # }
 
     return(new.plot)
 }
 
-
 # 📊 make the plots ----
 
 # UMAP colored by cell type
-plot_data <- plot_data %>%
-    mutate(cell_type = factor(cell_type, levels = tenk_color_pal$cell_type))
+# %>%
+# mutate(problematic_cd14_mono = if_else(`UMAP 1` > -3 & `UMAP 1` < 0 & `UMAP 2` > 7 & `UMAP 2` < 11 & wg2_scpred_prediction == "CD14_Mono", TRUE, FALSE))
+
 
 cohort_plot <- plot_data %>%
     ggUMAPplot(group.by = "cohort")
@@ -226,6 +235,20 @@ cohort_plot %>%
         dpi = 1300,
     )
 
+# filtered_problematic <- plot_data %>%
+#     filter(`UMAP 1` > -3 & `UMAP 1` < 0 & `UMAP 2` > 7 & `UMAP 2` < 11) %>%
+#     filter(wg2_scpred_prediction == "CD14_Mono")
+
+# cohort_plot <- filtered_problematic %>%
+#     ggUMAPplot(group.by = "cohort")
+
+# cohort_plot %>%
+#     ggsave(
+#         filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/figures/300_libraries_{data_type}_ggumap_cohort_problematic_cluster.png"),
+#         width = 9, height = 5,
+#         dpi = 1300,
+#     )
+
 cell_type_plot <- plot_data %>%
     ggUMAPplot(group.by = "cell_type", colorpal = setNames(tenk_color_pal$color, tenk_color_pal$cell_type))
 
@@ -236,19 +259,71 @@ cell_type_plot %>%
         dpi = 1300,
     )
 
-# Umap colored by ell cycle phase
 
+cell_typist_plot <- plot_data %>%
+    ggUMAPplot(group.by = "celltypist_majority_voting")
+
+cell_typist_plot %>%
+    ggsave(
+        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/figures/300_libraries_{data_type}_ggumap_celltypist_majority_voting.png"),
+        width = 9, height = 5,
+        dpi = 1300,
+    )
+
+# individuals_plot <- filtered_problematic %>%
+#     ggUMAPplot(group.by = "individual")
+
+# individuals_plot %>%
+#     ggsave(
+#         filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/figures/300_libraries_{data_type}_ggumap_individual_filtered_problematic.png"),
+#         width = 9, height = 5,
+#         dpi = 1300,
+#     )
+
+# problematic_libs <- paste0("S0", 167:210)
+
+# plot_data <- plot_data %>%
+#     mutate(problematic_library = if_else(sequencing_library %in% problematic_libs, "Outlier library", "Not outlier library"))
+
+# only_cd14_mono_problematic_libraries <- plot_data %>%
+#     filter(wg2_scpred_prediction == "CD14_Mono") %>%
+#     filter(problematic_library == "Outlier library")
+
+# only_cd14_mono_problematic_libraries %>%
+#     group_by(individual, problematic_cd14_mono) %>%
+#     count() %>%
+#     pivot_wider(names_from = problematic_cd14_mono, values_from = n) %>%
+#     filter(`TRUE` > `FALSE`) %>%
+#     pull(individual)
+
+# table(only_cd14_mono_new_pools$problematic_cd14_mono, only_cd14_mono_new_pools$individual)
+
+# problematic_by_indiv_bar <- only_cd14_mono_problematic_libraries %>%
+#     ggplot(aes(x = individual, groups = problematic_cd14_mono, fill = problematic_cd14_mono)) +
+#     facet_wrap(~sequencing_library, nrow = 1, scales = "free_x") +
+#     geom_bar() +
+#     labs(title = "CD14 Mono") +
+#     theme_classic() +
+#     theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
+# problematic_by_indiv_bar %>%
+#     ggsave(
+#         filename = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/figures/300_libraries_filtered_bar_seq_lib_problematic_cluster.png",
+#         width = 25, height = 5
+#     )
+
+# Umap colored by ell cycle phase
 # plot_data %>%
 #     ggUMAPplot(group.by = "phase") %>%
 #     ggsave(
-#         filename = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/figures/300_libraries_{data_type}_ggumap_cell_cycle_phase.png",
+#         filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/figures/300_libraries_{data_type}_ggumap_cell_cycle_phase.png"),
 #         width = 9, height = 5,
 #         dpi = 1300
 #     )
 
-# Quality metric feature plots
+# Quality metric feature plots ----
 # quality_metrics <- c("n_genes_by_counts", "total_counts", "pct_counts_mt", "S_score", "G2M_score")
-quality_metrics <- c("n_genes_by_counts", "total_counts", "pct_counts_mt")
+quality_metrics <- c("n_genes_by_counts", "total_counts", "pct_counts_mt", "pct_counts_ribo", "cellbender_background_fraction")
 
 quality_metrics %>%
     purrr::walk(\(metric) ggFeaturePlot(
@@ -259,16 +334,26 @@ quality_metrics %>%
         path = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/figures/")
     ))
 
+cell_cycle_metrics <- c("S_score", "G2M_score")
+
+summary(plot_data$S_score)
+summary(plot_data$G2M_score)
+
+plot_list <- cell_cycle_metrics %>%
+    purrr::map(\(metric) ggFeaturePlot(
+        data = plot_data,
+        feature = metric,
+        size = 0.1,
+        save = FALSE
+    ))
+
+plot_list %>%
+    patchwork::wrap_plots(ncol = 2) %>%
+    ggsave(filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/figures/300_libraries_{data_type}_cell_cycle_phase_scores.png"), width = 15, height = 5)
 
 # Violin plots ----
 
-# TODO: violin plot function
-
-# ggViolin <- function(data) {
-
-# }
-
-# make violin plots for each cell type / qc metric
+# make violin plots for each cell type / qc mWetric
 
 n_genes_by_counts_by_cell_types <- plot_data %>%
     pivot_longer(cols = {{ quality_metrics }}, names_to = "qc_metric", values_to = "qc_metric_value") %>%
@@ -287,9 +372,9 @@ n_genes_by_counts_by_cell_types <- plot_data %>%
 
 n_genes_by_counts_by_cell_types %>%
     ggsave(
-        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/figures/ggVln_n_genes_by_counts_by_cell_types_300_libs.png"),
+        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/figures/300_libraries_{data_type}_ggVln_qc_by_cell_typess.png"),
         width = 14,
-        height = 7,
+        height = 14,
         dpi = 300
     )
 
@@ -302,12 +387,134 @@ n_genes_by_counts_by_cell_types %>%
 #     summarise(total_barcodes = n()) %>%
 #     write_csv("240_lib_all_individuals_ncells.csv")
 
-seq_lib_plot <- plot_data %>%
-    ggUMAPplot(group.by = "sequencing_library")
+# seq_lib_plot <- filtered_problematic %>%
+#     ggUMAPplot(group.by = "sequencing_library")
 
-seq_lib_plot %>%
+# seq_lib_plot %>%
+#     ggsave(
+#         filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/figures/300_libraries_{data_type}_ggumap_seq_lib_problematic_cluster.png"),
+#         width = 15, height = 5,
+#         dpi = 1300,
+#     )
+
+# problematic_bar <- filtered_problematic %>%
+#     filter(cell_type %in% c("CD14 Mono", "pDC")) %>%
+#     ggplot(aes(x = sequencing_library)) +
+#     geom_bar() +
+#     facet_wrap(~cell_type, ncol = 1) +
+#     theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
+# problematic_bar %>%
+#     ggsave(
+#         filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/figures/300_libraries_{data_type}_bar_seq_lib_problematic_cluster.png"),
+#         width = 15, height = 10,
+#         dpi = 1300,
+#     )
+
+# problematic_libs <- paste0("S0", 167:210)
+
+# plot_data <- plot_data %>%
+#     mutate(problematic_library = if_else(sequencing_library %in% problematic_libs, "Outlier library", "Not outlier library"))
+
+# problematic_only_umap <- plot_data %>%
+#     filter(problematic_library == "Outlier library") %>%
+#     ggUMAPplot(group.by = "cell_type", colorpal = setNames(tenk_color_pal$color, tenk_color_pal$cell_type))
+
+# problematic_only_umap %>%
+#     ggsave(
+#         filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/figures/300_libraries_{data_type}_ggumap_cell_type_problematic_libraries_only.png"),
+#         width = 10, height = 5,
+#         dpi = 1300,
+#     )
+
+# no_problematic_umap <- plot_data %>%
+#     filter(problematic_library != "Outlier library") %>%
+#     ggUMAPplot(group.by = "cell_type", colorpal = setNames(tenk_color_pal$color, tenk_color_pal$cell_type))
+
+# no_problematic_umap %>%
+#     ggsave(
+#         filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/figures/300_libraries_{data_type}_ggumap_cell_type_no_problematic.png"),
+#         width = 10, height = 5,
+#         dpi = 1300,
+#     )
+
+# plot_data %>%
+#     filter(sequencing_library == "S0041") %>%
+#     pull(cpg_id) %>%
+#     unique()
+
+
+
+cell_cycle_umap <- ggplot(plot_data) +
+    geom_point(
+        mapping = aes(
+            x = `UMAP 1`,
+            y = `UMAP 2`,
+            colour = phase,
+        ),
+        size = 0.1,
+        stroke = 0,
+        alpha = 0.2
+    ) +
+    theme_tenk10k() +
+    theme(
+        aspect.ratio = 1,
+        legend.position = "right",
+        legend.title = element_blank(),
+        legend.text.align = 0,
+        legend.key.size = unit(5, "mm"),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_blank(),
+        axis.ticks = element_blank(),
+        axis.text = element_blank()
+    ) +
+    guides(color = guide_legend(override.aes = list(size = 4, shape = 15))) +
+    scale_color_manual(values = c("G1" = "lightgrey", "G2M" = "yellow", "S" = "red"), drop = T) +
+    facet_wrap(~phase)
+
+# Umap colored by ell cycle phase
+cell_cycle_umap %>%
     ggsave(
-        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/figures/300_libraries_{data_type}_ggumap_seq_lib.png"),
-        width = 10, height = 5,
-        dpi = 1300,
+        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/figures/300_libraries_{data_type}_ggumap_cell_cycle_phase_modified.png"),
+        width = 9, height = 5,
+        dpi = 1300
     )
+
+# only_cd14_mono_problematic_libraries %>%
+#     group_by(ct_id, problematic_cd14_mono) %>%
+#     count() %>%
+#     pivot_wider(names_from = problematic_cd14_mono, values_from = n) %>%
+#     mutate(fraction = `TRUE` / (`FALSE` + `TRUE`)) %>%
+#     filter(fraction > 0.8) %>%
+#     arrange(desc(fraction)) %>%
+#     select(ct_id) %>%
+#     print(n = 100)
+
+
+# highfraction_ind <- c(
+#     "CPG508077",
+#     "CPG499004",
+#     "CPG498931",
+#     "CPG500686",
+#     "CPG498949",
+#     "CPG501205",
+#     "CPG500553",
+#     "CPG500777",
+#     "CPG499046",
+#     "CPG499038",
+#     "CPG501619",
+#     "CPG498972",
+#     "CPG498956",
+#     "CPG499210",
+#     "CPG508051",
+#     "CPG498998",
+#     "CPG499012",
+#     "CPG500579",
+#     "CPG499780",
+#     "CPG501007"
+# )
+
+# only_cd14_mono_problematic_libraries %>%
+#     filter(individual %in% highfraction_ind) %>%
+#     select(ct_id) %>%
+#     distinct()

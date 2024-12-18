@@ -15,7 +15,7 @@ if not os.path.exists(output_dir):
 
 # Specify which files this script will generate
 # CSV for expression covariates (principal components after Harmony correction)
-pcs_out_file = f"{output_dir}/{celltype}_expression_pcs.csv"
+pcs_out_file = f"{output_dir}/{celltype}_expression_pcs_no_harmony_with_regression.csv"
 # if os.path.exists(pcs_out_file):
 #   sys.exit("File already exists!")
 
@@ -33,16 +33,29 @@ sc.pp.log1p(adata_ct)
 sc.pp.highly_variable_genes(adata_ct, min_mean=0.0125, max_mean=3, min_disp=0.5)
 # adata_ct.raw = adata_ct # unnecessary step
 adata_ct = adata_ct[:, adata_ct.var.highly_variable]
+
+## save the PCA covariates without Harmmony
 sc.pp.regress_out(adata_ct, ["total_counts", "pct_counts_mt"])
 sc.pp.scale(adata_ct, max_value=10)
-
-# integration
 sc.tl.pca(adata_ct, svd_solver="arpack")
-sce.pp.harmony_integrate(adata_ct, "sequencing_library")
-df_harmony_pcs = pd.DataFrame(adata_ct.obsm["X_pca_harmony"])
+df_raw_pcs = pd.DataFrame(adata_ct.obsm["X_pca"])
 # remove batch automatically added at the end by integration
-df_harmony_pcs.index = [re.sub(r"-[0-9]+$", "", cell) for cell in adata_ct.obs.index]
-df_harmony_pcs.columns = [f"harmony_PC{i+1}" for i in df_harmony_pcs.columns]
+df_raw_pcs.index = [re.sub(r"-[0-9]+$", "", cell) for cell in adata_ct.obs.index]
+df_raw_pcs.columns = [f"PC{i+1}" for i in df_raw_pcs.columns]
 
-# save PCs
-df_harmony_pcs.to_csv(pcs_out_file)
+df_raw_pcs.to_csv(pcs_out_file)
+###
+
+# sc.pp.regress_out(adata_ct, ["total_counts", "pct_counts_mt"])
+# sc.pp.scale(adata_ct, max_value=10)
+
+# # integration
+# sc.tl.pca(adata_ct, svd_solver="arpack")
+# sce.pp.harmony_integrate(adata_ct, "sequencing_library")
+# df_harmony_pcs = pd.DataFrame(adata_ct.obsm["X_pca_harmony"])
+# # remove batch automatically added at the end by integration
+# df_harmony_pcs.index = [re.sub(r"-[0-9]+$", "", cell) for cell in adata_ct.obs.index]
+# df_harmony_pcs.columns = [f"harmony_PC{i+1}" for i in df_harmony_pcs.columns]
+
+# # save PCs
+# df_harmony_pcs.to_csv(pcs_out_file)

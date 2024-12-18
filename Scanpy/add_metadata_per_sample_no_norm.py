@@ -39,27 +39,27 @@ i = int(sys.argv[1])
 
 
 # set to new for 240214 onwards; note these may get moved in the future
-source_data_location = (
-    "new"  # set to 'old' or 'new' to read from blake / annna's directory structure
-)
+source_data_location = "new"  # set to 'old' or 'new' to read from blake / annna's directory structure  # submit number of jobs = number of files in the cellranger dir
 
 # source_data_location = "old"
 
 # if running on 'new' data also specify the seq_date
 
 # seq_date = "240223"
+# seq_date = "240501"  # NOTE: first 2 are TOB samples; rest bioheart
+# record of previous runs:
+seq_date = "240214"
+# seq_date = "240524"
 
 # get cellranger outputs
 # cellranger_dir = f"/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/{seq_date}_tenk10k_gencode44/cellranger_outs/"
 # older cellranger outs moved to here:
 cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
 
+print(cellranger_dir)
 
-# record of previous runs:
-seq_date = "240214"
-# seq_date = "240501"  # NOTE: first 2 are TOB samples; rest bioheart
-# seq_date = "240524"
 
+# print(seq_date)
 
 if source_data_location == "new":
 
@@ -206,7 +206,7 @@ adata = adata[adata.obs["MajoritySinglet_Individual_Assignment"].notna()]
 
 # preprocessing & QC plotting
 adata.var_names_make_unique()
-sc.pp.filter_cells(adata, min_genes=200)
+# sc.pp.filter_cells(adata, min_genes=200)
 # calculate mitochondrial, ribosomal and hemoglobin gene expression
 adata.var["mt"] = adata.var_names.str.startswith("MT-")
 adata.var["ribo"] = adata.var_names.str.startswith(("RPS", "RPL"))
@@ -229,10 +229,8 @@ plt.savefig(output_dir + "figures/" + sample + "_tot_counts_pct_mt.pdf")
 sc.pl.scatter(adata, x="total_counts", y="n_genes_by_counts")
 plt.savefig(output_dir + "figures/" + sample + "_tot_counts_tot_genes.pdf")
 
-# TODO: Calculate MADs and filter each pool based on these instead:
-
-adata = adata[adata.obs.n_genes_by_counts < 6000, :]
-adata = adata[adata.obs.pct_counts_mt < 20, :]
+# adata = adata[adata.obs.n_genes_by_counts > 1000, :]
+# adata = adata[adata.obs.pct_counts_mt < 20, :]
 
 
 # add cell, individual and sequencing library id pre-merging
@@ -307,10 +305,10 @@ adata = adata[adata.obs["wg2_scpred_prediction"].notna()]
 if cohort == "BioHEART":
     adata = adata[~adata.obs["ct_id"].isin(["CT_557", "CT_1545", "CT_888"])]
 
-# remove data for participants excluded with abnormal cell type composition (very high proportion of b intermediate)
+# remove data for donors with abnormal cell type composition
 adata = adata[
     ~adata.obs["cpg_id"].isin(
-        [
+        [  # (very high proportion of b intermediate)
             "CPG309724",
             "CPG310938",
             "CPG312025",
@@ -318,9 +316,22 @@ adata = adata[
             "CPG247973",
             "CPG249177",
             "CPG251793",
+            # abnormal cell type distribution (other)
+            "CPG252494",
+            "CPG254169",
+            "CPG254318",
+            "CPG255760",
+            "CPG249904",
         ]
     )
 ]
+
+# remove data for donors that failed WGS QC
+wgs_qc_fails = pd.read_csv(
+    "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/saige-qtl_tenk10k-genome-2-3-eur_all_samples_to_drop.csv"
+)
+
+adata = adata[~adata.obs["cpg_id"].isin(wgs_qc_fails["s"])]
 
 # remove the gene-level QC columns as these get duplicated when concatenating the scanpy objects
 # Removing these columns from var as they get duplicated when we combine the objects
