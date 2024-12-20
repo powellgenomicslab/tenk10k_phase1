@@ -9,7 +9,10 @@ import scanpy.external as sce
 out_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/"
 
 # Filtered object directory
-scanpy_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/scanpy_objects_w_metadata/"
+# scanpy_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/scanpy_objects_w_metadata/"
+
+# object directory with all donors
+scanpy_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/scanpy_objects_w_metadata/all_donors/"
 
 # extract all files
 scanpy_files = glob.glob(scanpy_dir + "S*")
@@ -55,7 +58,7 @@ adata = adata[
 ]
 
 # Apply qc thresholds to remove low quality cells
-print("number of cells pre-QC:")
+print("number of cells pre-QC, pre-donor filtering:")
 print(adata.obs.shape[1])
 print(adata.obs.columns)
 
@@ -68,19 +71,68 @@ adata = adata[
 ]
 
 
-print("number of cells post-QC:")
+print("number of cells post-QC: before donor-filtering")
 print(adata.obs.shape[1])
 
+# get a subset of the metadata for UMAP QC plots
+adata.obs.to_csv(
+    "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/300_libraries_cell_metadata_filtered_min1000genes_all_donors.csv"
+)
+
+# write
+out_file = f"{out_dir}300_libraries/300_libraries_concatenated_filtered_all_donors.h5ad"
+adata.write(out_file)
+
+# DONOR-level QC:
+
 # Remove any donors that have fewer than 100 cells after all previous QC is applied
+# after applying this filter, 298 libraries remain. S0155 and S0156
 donor_cell_counts = adata.obs["cpg_id"].value_counts()
 donors_keep = donor_cell_counts.index[donor_cell_counts >= 100]
 adata = adata[adata.obs["cpg_id"].isin(donors_keep)]
 
-# get a subset of the metadata for UMAP QC plots
-adata.obs.to_csv(
-    "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/300_libraries_cell_metadata_filtered_min1000genes.csv"
+# remove data for donors with abnormal cell type composition
+adata = adata[
+    ~adata.obs["cpg_id"].isin(
+        [  # (very high proportion of b intermediate)
+            "CPG309724",
+            "CPG310938",
+            "CPG312025",
+            "CPG315986",
+            "CPG247973",
+            "CPG249177",
+            "CPG251793",
+            # abnormal cell type distribution (other)
+            "CPG252494",
+            "CPG254169",
+            "CPG254318",
+            "CPG255760",
+            "CPG249904",
+        ]
+    )
+]
+
+# remove data for donors that failed WGS QC
+wgs_qc_fails = pd.read_csv(
+    "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/saige-qtl_tenk10k-genome-2-3-eur_all_samples_to_drop.csv"
 )
 
-# write
-out_file = f"{out_dir}300_libraries/300_libraries_concatenated_filtered.h5ad"
+adata = adata[~adata.obs["cpg_id"].isin(wgs_qc_fails["s"])]
+
+# Save the donor-filtered object (used in SAIGE eqtl analysis)
+
+# after filtering on n_cells, 298 libraries remain.
+
+# should be a copy of:
+# "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/300_libraries_cell_metadata_filtered_min1000genes.csv"
+adata.obs.to_csv(
+    "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/298_libraries_cell_metadata_filtered_min1000genes.csv"
+)
+
+print("number of cells post-QC: after donor-filtering")
+print(adata.obs.shape[1])
+
+# should be a copy of:
+# 300_libraries/300_libraries_concatenated_filtered.h5ad
+out_file = f"{out_dir}300_libraries/298_libraries_concatenated_filtered.h5ad"
 adata.write(out_file)
