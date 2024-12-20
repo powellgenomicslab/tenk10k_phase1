@@ -9,25 +9,25 @@
 #$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/logs/vcf_to_plink.stderr
 #$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/logs/vcf_to_plink.stdout
 #$ -m ae
+#$ -t 1-22
 #$ -M b.bowen@garvan.org.au
-
-# note - for some reason I can't get bcftools to install properly with R in the same environment 
-# originally run with bcftools=1.9
-# need to create separate conda env with bcftools potentially to rerun this...
 
 . /home/${USER}/micromamba/etc/profile.d/micromamba.sh
 micromamba activate mastectomy-env
 
 cd ${TMPDIR}
 
-IN_VCF=/share/ScratchGeneral/anncuo/tenk10k/data_processing/genotypes/Merged_MAF0.05_hg38_chr.vcf.gz
+i=${SGE_TASK_ID};
+
+IN_VCF=$(ls /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/genotypes/december2024_freeze/chr*_common_variants.vcf.bgz | awk -v task_id=${SGE_TASK_ID} 'NR==task_id')
+
 FILE_BASENAME=$(basename ${IN_VCF})
-PFILE="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/plink/${FILE_BASENAME%.vcf.gz}"
-TMP_VCF=Merged_MAF0.05_R2_0.3_hg38_standard_chr.vcf.gz
+PFILE="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/plink/${FILE_BASENAME%.vcf.bgz}"_standard_chr
+TMP_VCF=${FILE_BASENAME%.vcf.bgz}_standard_chr.vcf.gz
 
 # keep only standard chromosomes
-echo "bcftools view --regions chr{1..22},chrX,chrY,chrM ${IN_VCF} -Oz -o ${TMP_VCF}"
-bcftools view --regions $(printf "chr%s," {1..22})chrX,chrY,chrM ${IN_VCF} -Oz -o ${TMP_VCF}
+echo "bcftools view --regions $(printf "%s," {1..22})X,Y,M ${IN_VCF} -Oz -o ${TMP_VCF}"
+bcftools view --regions $(printf "%s," {1..22})X,Y,M ${IN_VCF} -Oz -o ${TMP_VCF}
 
 # keep only SNPs 
 echo "plink2 --threads 10 --vcf ${TMP_VCF} --make-pgen --allow-extra-chr --snps-only --out ${PFILE}_snps"

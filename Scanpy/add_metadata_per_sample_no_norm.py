@@ -46,15 +46,15 @@ source_data_location = "new"  # set to 'old' or 'new' to read from blake / annna
 # if running on 'new' data also specify the seq_date
 
 # seq_date = "240223"
-# seq_date = "240501"  # NOTE: first 2 are TOB samples; rest bioheart
+seq_date = "240501"
 # record of previous runs:
-seq_date = "240214"
+# seq_date = "240214"
 # seq_date = "240524"
 
 # get cellranger outputs
-# cellranger_dir = f"/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/{seq_date}_tenk10k_gencode44/cellranger_outs/"
+cellranger_dir = f"/directflow/GWCCGPipeline/projects/deliver/GIMR_GWCCG_230201_JOSPOW_10x_Tenk10k/{seq_date}_tenk10k_gencode44/cellranger_outs/"
 # older cellranger outs moved to here:
-cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
+# cellranger_dir = "/directflow/SCCGGroupShare/projects/data/experimental_data/projects/TenK10K/GencodeV44/"
 
 print(cellranger_dir)
 
@@ -115,7 +115,11 @@ elif source_data_location == "old":
 
 
 # Output directory
-output_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/scanpy_objects_w_metadata/"
+# old outdir used for saige-qtl pipeline (with WGS qc fails, odd celltype composition donors removed)
+# output_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/scanpy_objects_w_metadata/"
+
+# output dir with all donors except those that withdrew consent
+output_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/scanpy_objects_w_metadata/all_donors/"
 
 print(f"Combining metadata for {sample}")
 
@@ -229,10 +233,6 @@ plt.savefig(output_dir + "figures/" + sample + "_tot_counts_pct_mt.pdf")
 sc.pl.scatter(adata, x="total_counts", y="n_genes_by_counts")
 plt.savefig(output_dir + "figures/" + sample + "_tot_counts_tot_genes.pdf")
 
-# adata = adata[adata.obs.n_genes_by_counts > 1000, :]
-# adata = adata[adata.obs.pct_counts_mt < 20, :]
-
-
 # add cell, individual and sequencing library id pre-merging
 adata.obs["original_barcode"] = adata.obs.index
 adata.obs["new_cell_name"] = [
@@ -282,10 +282,6 @@ if cohort == "TOB":
     adata.obs["individual"] = adata.obs["cpg_id"]
 
 if cohort == "BioHEART":
-    # cpg_map_file = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/data_processing/str_sample-sex-mapping_sample_karyotype_sex_mapping.csv"
-    # cpg_map_df = pd.read_csv(cpg_map_file)
-    # cpg_map_df.columns = ["individual", "ct_id", "sex_karyotype"]
-    # cpg_map_df.drop(columns=["sex_karyotype"], inplace=True)
 
     cpg_map_file = "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/metadata/bioheart_ct_ids_to_cpg_ids_20241113_n1419.csv"
     cpg_map_df = pd.read_csv(cpg_map_file, index_col=0)
@@ -305,36 +301,8 @@ adata = adata[adata.obs["wg2_scpred_prediction"].notna()]
 if cohort == "BioHEART":
     adata = adata[~adata.obs["ct_id"].isin(["CT_557", "CT_1545", "CT_888"])]
 
-# remove data for donors with abnormal cell type composition
-adata = adata[
-    ~adata.obs["cpg_id"].isin(
-        [  # (very high proportion of b intermediate)
-            "CPG309724",
-            "CPG310938",
-            "CPG312025",
-            "CPG315986",
-            "CPG247973",
-            "CPG249177",
-            "CPG251793",
-            # abnormal cell type distribution (other)
-            "CPG252494",
-            "CPG254169",
-            "CPG254318",
-            "CPG255760",
-            "CPG249904",
-        ]
-    )
-]
-
-# remove data for donors that failed WGS QC
-wgs_qc_fails = pd.read_csv(
-    "/directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/saige-qtl_tenk10k-genome-2-3-eur_all_samples_to_drop.csv"
-)
-
-adata = adata[~adata.obs["cpg_id"].isin(wgs_qc_fails["s"])]
 
 # remove the gene-level QC columns as these get duplicated when concatenating the scanpy objects
-# Removing these columns from var as they get duplicated when we combine the objects
 columns_to_drop = [
     col
     for col in adata.var.columns
