@@ -32,3 +32,5 @@ bcftools view --regions $(printf "chr%s," {1..22})chrX,chrY,chrM ${IN_VCF} -Oz -
 # keep only SNPs 
 echo "plink2 --threads 10 --vcf ${TMP_VCF} --make-pgen --allow-extra-chr --snps-only --out ${PFILE}_snps"
 plink2 --threads 10 --vcf ${TMP_VCF} --make-pgen --allow-extra-chr --snps-only --out ${PFILE}_snps
+
+
