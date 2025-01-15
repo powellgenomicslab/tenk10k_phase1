@@ -1,6 +1,6 @@
 # Figure 1
 
-Figure 1 of our [TenK10K phase 1 manuscript](https://docs.google.com/document/d/1ck13c1NWXLolvEuvh-y3a11jsYbBfZOv1aU01U4o8FE/edit#heading=h.ds9fvb3nfr68) aims to summarise the data, including the scRNA-seq data from ~5 million cells across all ~2,000 individuals.
+Figure 1 of our [TenK10K phase 1 manuscript](https://docs.google.com/document/d/1ck13c1NWXLolvEuvh-y3a11jsYbBfZOv1aU01U4o8FE/edit#heading=h.ds9fvb3nfr68) aims to summarise the data, including the scRNA-seq data from >5 million cells across 1,925 individuals.
 
 Here, we include scripts and notebooks to generate all plots included in the main figure and all accompanying supplementary figures.
 
@@ -33,6 +33,5 @@ In some cases, we refer to other papers as templates for some of the panels, e.g
 
 # Slides
 
-* [figure panels](https://docs.google.com/presentation/d/1dOiiMZvyDHwfdQoTz-MvdGtoIxzHMube9K8HltcH1cQ/edit#slide=id.g2741262b6b1_0_0)
-* [all figures portrait](https://docs.google.com/presentation/d/1l6BWEUdciT9U015kAJljiWd8AQqL15bhsDbX7e9iorM/edit#slide=id.g28a43f90e91_0_51)
+* [figures](https://docs.google.com/presentation/d/1MVnrd6D5XqpwR9zyDupyxhrSgLluW3IZqQlehjK4yrM/edit?pli=1#slide=id.g3286a2e960a_0_12)
 * [Blake's slide folder](https://drive.google.com/drive/folders/1672Pt3rIHkePCng9D4K813Vi4Y0JYMd0)
