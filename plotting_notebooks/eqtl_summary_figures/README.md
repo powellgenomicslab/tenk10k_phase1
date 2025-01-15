@@ -6,13 +6,19 @@ Here, we include scripts and notebooks to generate all plots included in the mai
 
 In some cases, we refer to other papers as templates for some of the panels, e.g., the [OneK1K paper](https://www.science.org/doi/10.1126/science.abf3041) [1].
 
-## Main figures
+## Main figure
 
-* 
+* Manhattan plots for all cell types, coloured by cell type, common variants
+* Manhattan plots for all cell types, coloured by cell type, rare variants
+* QQ plots coloured by cell type (incl permutations)
+* effect size (beta) by frequency
+* common variant eQTL count up, by location wrt eGene
 
 ## Supplementary figures
 
-* 
+* All Manhattan plots, one per cell type, common variants
+* All Manhattan plots, one per cell type, rare variants
+* Number of eGenes by number of cells available for every cell type, common + rare variants
 
 # References
 
@@ -20,5 +26,4 @@ In some cases, we refer to other papers as templates for some of the panels, e.g
 
 # Slides
 
-* [figure panels](https://docs.google.com/presentation/d/1dOiiMZvyDHwfdQoTz-MvdGtoIxzHMube9K8HltcH1cQ/edit#slide=id.g2741262b6b1_0_0)
-* [all figures portrait](https://docs.google.com/presentation/d/1l6BWEUdciT9U015kAJljiWd8AQqL15bhsDbX7e9iorM/edit#slide=id.g28a43f90e91_0_51)
+* [figures](https://docs.google.com/presentation/d/1MVnrd6D5XqpwR9zyDupyxhrSgLluW3IZqQlehjK4yrM/edit?pli=1#slide=id.g3286a2e960a_0_12)
