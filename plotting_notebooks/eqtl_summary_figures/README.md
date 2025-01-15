@@ -13,7 +13,7 @@ Here, we include scripts and notebooks to generate all plots included in the mai
 
 ## Supplementary figures
 
-* All Manhattan plots, one per cell type, common variants
+* All Manhattan plots, one per cell type, common variants ✅
 * All Manhattan plots, one per cell type, rare variants
 * Number of eGenes by number of cells available for every cell type, common + rare variants
 
