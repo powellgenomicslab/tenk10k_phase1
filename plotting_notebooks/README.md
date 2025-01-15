@@ -23,3 +23,11 @@ Thes are plots summarising the common and rare sc-eQTL discovery overall (across
 The [eQTL overview README](eqtl_summary_figures/README.md) contains more detail.
 
 ## [eQTL cell type specificity (Fig. 3)](celltype_specific_eqtl_figures)
+
+## [eQTL-GWAS colocalisation (Fig. 4)](coloc_figures)
+
+## [Rare variant eQTL examples (Fig. 5)](rv_example_figures)
+
+## [Cell state abundance QTLs and cell state dynamic eQTLs (Fig. 6)](cell_state_figures)
+
+
