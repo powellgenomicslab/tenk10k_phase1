@@ -1,10 +1,7 @@
 # Figure 2
 
 Figure 2 of our [TenK10K phase 1 manuscript](https://docs.google.com/document/d/1ck13c1NWXLolvEuvh-y3a11jsYbBfZOv1aU01U4o8FE/edit#heading=h.ds9fvb3nfr68) aims to summarise the sc-eQTL discovery across all 28 cell types.
-
 Here, we include scripts and notebooks to generate all plots included in the main figure and all accompanying supplementary figures.
-
-In some cases, we refer to other papers as templates for some of the panels, e.g., the [OneK1K paper](https://www.science.org/doi/10.1126/science.abf3041) [1].
 
 ## Main figure
 
@@ -19,10 +16,6 @@ In some cases, we refer to other papers as templates for some of the panels, e.g
 * All Manhattan plots, one per cell type, common variants
 * All Manhattan plots, one per cell type, rare variants
 * Number of eGenes by number of cells available for every cell type, common + rare variants
-
-# References
-
-1. [Single-cell eQTL mapping identifies cell type–specific genetic control of autoimmune disease](https://www.science.org/doi/10.1126/science.abf3041). Yazar et al, Science 2022. 
 
 # Slides
 
