@@ -1,6 +1,6 @@
 # Plotting notebooks
 
-Notebooks to reproduce figures generated in the analysis of the TenK10K phase 1 data.
+Notebooks to reproduce figures generated in the analysis of the TenK10K phase 1 data (soon to be Cuomo et al, 2025).
 
 ## [Data overview (Fig. 1)](overview_figures)
 
