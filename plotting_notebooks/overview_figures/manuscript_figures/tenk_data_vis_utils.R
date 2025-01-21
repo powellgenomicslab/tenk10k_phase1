@@ -8,9 +8,14 @@ library(ggsci)
 # use this to read in the latest metadata csv
 # when the path changes, can just change this path so we don't need to update it in every script
 
+# CONSTANTS
+
+LATEST_CSV_PATH = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/298_libraries_cell_metadata_filtered_min1000genes.csv"
+LATEST_UMAP_PATH = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/300_libraries_harmony_umap_coords_filtered_min1000genes.csv"
+
 get_latest_metadata <- function(
     # update these when the object path changes
-    csv = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries/240_libraries_cell_metadata_subset_filtered_reanalysed.csv") {
+    csv = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/298_libraries_cell_metadata_filtered_min1000genes.csv") {
     # add in the clean cell type names for plotting
     metadata <- read_csv(csv) %>%
         rename("barcode" = 1) %>%
@@ -68,7 +73,7 @@ get_latest_metadata <- function(
 
 get_latest_umap <- function(
     # update these when the object path changes
-    csv = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/240_libraries/240_libraries_harmony_umap_coords_filtered_reanalysed.csv") {
+    csv = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/300_libraries_harmony_umap_coords_filtered_min1000genes.csv") {
     metadata <- read_csv(csv) %>%
         rename("barcode" = 1)
     return(metadata)

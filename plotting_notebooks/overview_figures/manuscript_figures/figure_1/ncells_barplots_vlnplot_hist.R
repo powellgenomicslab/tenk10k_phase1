@@ -110,7 +110,7 @@ ncells_per_individual_total_hist %>%
 # combine the panels into a single image
 
 combined_plots <- ncells_per_individual_total_hist +
-    barplot_ncells_per_celltype +
+    # barplot_ncells_per_celltype +
     barplot_ncells_per_celltype_log10 +
     vln_plot_ncells_per_individual_per_celltype +
     plot_layout(ncol = 1, axes = "collect")
@@ -118,5 +118,5 @@ combined_plots <- ncells_per_individual_total_hist +
 combined_plots %>%
     ggsave(
         filename = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/plotting_notebooks/overview_figures/manuscript_figures/figure_1/figures/fig1_bar_vln_combined.png",
-        width = width + 1, height = height * 4, dpi = dpi
+        width = width + 1, height = height * 3, dpi = dpi
     )

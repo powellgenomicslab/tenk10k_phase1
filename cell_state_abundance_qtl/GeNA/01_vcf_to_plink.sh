@@ -17,7 +17,7 @@ micromamba activate mastectomy-env
 
 cd ${TMPDIR}
 
-i=${SGE_TASK_ID};
+i=${SGE_TASK_ID}
 
 IN_VCF=$(ls /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/genotypes/december2024_freeze/chr*_common_variants.vcf.bgz | awk -v task_id=${SGE_TASK_ID} 'NR==task_id')
 
@@ -27,8 +27,19 @@ TMP_VCF=${FILE_BASENAME%.vcf.bgz}_standard_chr.vcf.gz
 
 # keep only standard chromosomes
 echo "bcftools view --regions $(printf "%s," {1..22})X,Y,M ${IN_VCF} -Oz -o ${TMP_VCF}"
-bcftools view --regions $(printf "%s," {1..22})X,Y,M ${IN_VCF} -Oz -o ${TMP_VCF}
+bcftools view --threads 10 --regions $(printf "%s," {1..22})X,Y,M ${IN_VCF} -Oz -o ${TMP_VCF}
 
 # keep only SNPs 
 echo "plink2 --threads 10 --vcf ${TMP_VCF} --make-pgen --allow-extra-chr --snps-only --out ${PFILE}_snps"
-plink2 --threads 10 --vcf ${TMP_VCF} --make-pgen --allow-extra-chr --snps-only --out ${PFILE}_snps
+plink2 --threads 10 --vcf ${TMP_VCF} --make-pgen --allow-extra-chr --snps-only --geno 0.1 --out ${PFILE}_snps
+
+# NOTE: using --geno 0.1 to REMOVE snps with > 10% missing genotypes 
+# This is a TEMPORARY FIX remove it once I can figure out how to properly convert the hail VCFs to plink format 
+# The issue is that hail formats the homozygous reference alleles in a strange way 
+
+# 1	893799	1:893799:A:T
+
+# /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/genotypes/december2024_freeze/chr1_common_variants.vcf.bgz
+
+# bcftools view -r 1:893799 /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/genotypes/december2024_freeze/chr1_common_variants.vcf.bgz | less -S
+# plink2 --pfile /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/plink/chr1_common_variants_standard_chr_snps --snp "1:893799:A:T" --recode A --out temp
