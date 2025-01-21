@@ -10,7 +10,8 @@ sc.settings.set_figure_params(
 sc.settings.figdir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/figures"
 # filename = sys.argv[1]  # read filename from command line
 # filename = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/concatenated_gene_info.h5ad"
-filename = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/300_libraries_concatenated_filtered.h5ad"
+# filename = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/300_libraries_concatenated_filtered.h5ad"
+filename = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/300_libraries/298_libraries_concatenated_filtered.h5ad"
 
 
 def analysis_harmony(filename):
