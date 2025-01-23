@@ -64,6 +64,10 @@ dev.off()
 # results passing genome-wide significance threshold
 sumstats_sig <- sumstats[P < 5e-8, , ][order(P)]
 
+# https://www.nature.com/articles/s41588-024-01909-1#:~:text=Therefore%2C%20we%20consider%20loci%20with%20GeNA%20P%E2%80%89%3C%E2%80%895%E2%80%89%C3%97%E2%80%8910%E2%88%928%20associations%20genome%2Dwide%20significant.
+# GeNA manuscript: "we consider loci with GeNA P < 5 × 10−8 associations genome-wide significant."
+
+
 # save them
 sumstats_sig %>%
     fwrite(
