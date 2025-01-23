@@ -20,5 +20,5 @@ CHR1_BFILE=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_proces
 plink2 --pfile /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/plink/chr1_common_variants_standard_chr_snps \
     --pmerge-list /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/plink/plink_merge_chr.txt \
     --threads 10 \
-    --out /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/plink/merged_common_variants_standard_chr_snps\
+    --out /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/plink/merged_common_variants_standard_chr_geno_0.15 \
 

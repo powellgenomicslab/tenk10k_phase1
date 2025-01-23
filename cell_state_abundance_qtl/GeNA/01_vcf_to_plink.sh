@@ -30,12 +30,17 @@ echo "bcftools view --regions $(printf "%s," {1..22})X,Y,M ${IN_VCF} -Oz -o ${TM
 bcftools view --threads 10 --regions $(printf "%s," {1..22})X,Y,M ${IN_VCF} -Oz -o ${TMP_VCF}
 
 # keep only SNPs 
-echo "plink2 --threads 10 --vcf ${TMP_VCF} --make-pgen --allow-extra-chr --snps-only --out ${PFILE}_snps"
-plink2 --threads 10 --vcf ${TMP_VCF} --make-pgen --allow-extra-chr --snps-only --geno 0.1 --out ${PFILE}_snps
+echo "plink2 --threads 10 --vcf ${TMP_VCF} --make-pgen --allow-extra-chr --out ${PFILE}_snps"
+plink2 --threads 10 --vcf ${TMP_VCF} --make-pgen --allow-extra-chr --geno 0.15 --out ${PFILE}_snps
 
-# NOTE: using --geno 0.1 to REMOVE snps with > 10% missing genotypes 
-# This is a TEMPORARY FIX remove it once I can figure out how to properly convert the hail VCFs to plink format 
-# The issue is that hail formats the homozygous reference alleles in a strange way 
+# TODO: !! 
+# RENAME FILES ABOVE as they now have both SNPs + indels and are FILTERED ON MISSINGESS
+
+# NOTE: 
+
+# NOTE: using --geno 0.15 to REMOVE snps with > 15% missing genotypes 
+# previously used only snps --snps-only 
+
 
 # 1	893799	1:893799:A:T
 
@@ -43,3 +48,4 @@ plink2 --threads 10 --vcf ${TMP_VCF} --make-pgen --allow-extra-chr --snps-only -
 
 # bcftools view -r 1:893799 /directflow/SCCGGroupShare/projects/anncuo/TenK10K_pilot/tenk10k/genotypes/december2024_freeze/chr1_common_variants.vcf.bgz | less -S
 # plink2 --pfile /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/plink/chr1_common_variants_standard_chr_snps --snp "1:893799:A:T" --recode A --out temp
+

@@ -20,7 +20,9 @@ PYSCRIPT="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/cell_state_a
 
 i=${SGE_TASK_ID};
 CELLTYPE=$(sed "${i}q;d" /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/unique_cell_types_wg2_scpred.txt)
+RESOLUTION="major_cell_types"
+
 LOG="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/logs/${CELLTYPE}_${SGE_TASK_ID}_prep_data.log"
 
 # Do the main job
-${PY_PATH}/python ${PYSCRIPT} ${CELLTYPE} &>> ${LOG}
+${PY_PATH}/python ${PYSCRIPT} ${CELLTYPE} ${RESOLUTION} &>> ${LOG}
