@@ -7,6 +7,7 @@ import scanpy as sc
 import scanpy.external as sce
 
 celltype = sys.argv[1]
+resolution = sys.argv[2]
 
 outdir = (
     "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl"
@@ -16,16 +17,14 @@ outdir = (
 # Run PCA with Harmony to remove batch effects from the PCA components
 # ----
 
-madata = cna.read(f"{outdir}/data/h5/{celltype}_scDataObject.h5ad")
+madata = cna.read(f"{outdir}/data/h5/{resolution}/{celltype}_scDataObject.h5ad")
 print("Running PCA...")
 sc.pp.pca(madata)
 print("PCA finished!")
 
 print("Running Harmony...")
 sce.pp.harmony_integrate(madata, "sequencing_library")
-madata.obsm["X_pca"] = madata.obsm[
-    "X_pca_harmony"
-]  # replace original PCA with harmony pca
+madata.obsm["X_pca"] = madata.obsm["X_pca_harmony"]
 print("Harmony finished!")
 
 # ----
@@ -45,7 +44,9 @@ print("UMAP finished!")
 # ----
 
 print("Defining neighbourhood abundace matrix (NAM) ...")
-cna.tl.nam(madata)
+cna.tl.nam(
+    madata
+)  # note - run by GeNA as well (if not already present in the object) so can remove it here later
 print("NAM finished!")
 print("Saving outputs...")
-madata.write(f"{outdir}/data/h5/{celltype}_scDataObject.dimreduc.h5ad")
+madata.write(f"{outdir}/data/h5/{resolution}/{celltype}_scDataObject.dimreduc.h5ad")

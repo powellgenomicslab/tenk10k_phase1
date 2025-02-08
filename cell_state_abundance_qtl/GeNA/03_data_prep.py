@@ -12,77 +12,37 @@ np.random.seed(0)
 celltype = sys.argv[1]
 resolution = sys.argv[2]
 
-# celltype = "NK"
-# resolution = "major_cell_types"
-
-print(f"Creating MultiAnnData object for {celltype}...")
+celltype = "CD4_T"
+resolution = "major_cell_types"
 
 # constants
 outdir = (
     "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl"
 )
 
+# celltype = "NK"
+# resolution = "major_cell_types"
+
+print(f"Preprocessing anndata for {celltype}...")
+
 # read in the latest tenk cohort
 adata = sc.read(
-    "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/300_libraries_concatenated_filtered.h5ad",
+    f"{outdir}/data/h5/{resolution}/{celltype}_scanpy.h5ad",
     cache=True,
 )
-
-major_cell_type_mapping = {
-    "B_intermediate": "B",
-    "B_memory": "B",
-    "B_naive": "B",
-    "Plasmablast": "B",
-    "NK": "NK",
-    "NK_CD56bright": "NK",
-    "NK_Proliferating": "NK",
-    "CD8_Naive": "CD8_T",
-    "CD8_Proliferating": "CD8_T",
-    "CD8_TCM": "CD8_T",
-    "CD8_TEM": "CD8_T",
-    "CD4_CTL": "CD4_T",
-    "CD4_Naive": "CD4_T",
-    "CD4_Proliferating": "CD4_T",
-    "CD4_TCM": "CD4_T",
-    "CD4_TEM": "CD4_T",
-    "Treg": "CD4_T",
-    "dnT": "Unconventional_T",
-    "gdT": "Unconventional_T",
-    "ILC": "Unconventional_T",
-    "MAIT": "Unconventional_T",
-    "pDC": "Dendritic",
-    "cDC1": "Dendritic",
-    "cDC2": "Dendritic",
-    "ASDC": "Dendritic",
-    "CD14_Mono": "Monocyte",
-    "CD16_Mono": "Monocyte",
-    "HSPC": "Other",
-}
-
-# subset by major cell type
-adata.obs["major_cell_type"] = [
-    major_cell_type_mapping[ct] for ct in adata.obs["wg2_scpred_prediction"]
-]
-
-# subset to only target cell type
-adata = adata[adata.obs["major_cell_type"] == celltype]
-
-# -----------------------------------------
-# Normalise // Log transform // select HVG
-# -----------------------------------------
 
 sc.pp.normalize_total(adata, target_sum=1e4)
 sc.pp.log1p(adata)
 sc.pp.highly_variable_genes(adata, min_mean=0.0125, max_mean=3, min_disp=0.5)
-# adata_ct.raw = adata_ct # unnecessary step
 adata_ct = adata[:, adata.var.highly_variable]
-
-## save the PCA covariates without Harmmony
 sc.pp.regress_out(adata, ["total_counts", "pct_counts_mt"])
 sc.pp.scale(adata, max_value=10)
 
 print("Cell type-specific adata:")
 print(adata)
+
+# overwrite h5ad
+adata.write(f"{outdir}/data/h5/{resolution}/{celltype}_scanpy.h5ad")
 
 # ----------------------
 # get the cell metadata
@@ -122,6 +82,8 @@ print("Sample metadata:")
 print(sample_meta.head(3))
 # for missing sex, use 0
 sample_meta["sex"] = sample_meta["sex"].fillna(0)
+
+print(f"Creating MultiAnnData object for {celltype}...")
 
 madata = mad.MultiAnnData(X=cells_x_genes, obs=cell_meta, sampleid="id")
 # Add all covariate information to d.samplem

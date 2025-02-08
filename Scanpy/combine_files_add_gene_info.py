@@ -132,7 +132,7 @@ adata.obs.to_csv(
 print("number of cells post-QC: after donor-filtering")
 print(adata.obs.shape[1])
 
-# should be a copy of:
+# NOTE: This is same object as:
 # 300_libraries/300_libraries_concatenated_filtered.h5ad
 out_file = f"{out_dir}300_libraries/298_libraries_concatenated_filtered.h5ad"
 adata.write(out_file)
