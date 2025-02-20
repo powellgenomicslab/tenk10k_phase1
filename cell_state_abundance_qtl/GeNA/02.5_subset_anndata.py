@@ -58,13 +58,20 @@ major_cell_type_mapping = {
     "HSPC": "Other",
 }
 
-# subset by major cell type
+# add major cell type to single cell metadata
+
 adata.obs["major_cell_type"] = [
     major_cell_type_mapping[ct] for ct in adata.obs["wg2_scpred_prediction"]
 ]
 
-# subset to only target cell type
-adata = adata[adata.obs["major_cell_type"] == celltype]
+if resolution == "major_cell_types":
+    # subset to only target cell type
+    adata = adata[adata.obs["major_cell_type"] == celltype]
+
+elif resolution == "minor_cell_types":
+    # subset to only target cell type
+    adata = adata[adata.obs["wg2_scpred_prediction"] == celltype]
+
 # save counts
 adata.layers["counts"] = adata.X.copy()
 adata.write(f"{outdir}/data/h5/{resolution}/{celltype}_scanpy.h5ad")

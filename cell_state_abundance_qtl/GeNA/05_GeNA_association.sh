@@ -24,7 +24,7 @@ LOG=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/cs
 OUTDIR=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/GeNA/${RESOLUTION}
 SCDATA=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/h5/${RESOLUTION}/${CELLTYPE}_scDataObject.dimreduc.pca.h5ad
 GENOTYPES=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/plink/merged_common_variants_standard_chr_geno_0.15
-PERMUTED_GTYPES=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/plink/permuted/merged_common_variants_standard_chr_geno_0.15_singlecell_cohort_perm0
+PERMUTED_GTYPES=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/plink/permuted/merged_common_variants_standard_chr_geno_0.15_singlecell_cohort_perm1
 # conda environment 
 . /home/${USER}/micromamba/etc/profile.d/micromamba.sh
 micromamba activate gena-env
@@ -44,23 +44,23 @@ cd /directflow/SCCGGroupShare/projects/blabow/software/GeNA
 
     # GeNA association: NO expression PC covariates
 
-    # run association 
-    # ./GeNA.sh -s ${SCDATA} \
-    #     -b 'False' \
-    #     -g ${GENOTYPES} \
-    #     -o ${OUTDIR}/${CELLTYPE}/no_expr_pc_covars/ \
-    #     -c 'sex,age,geno_PC1,geno_PC2,geno_PC3,geno_PC4,geno_PC5,geno_PC6,geno_PC7,BioHEART' # covariates 
+    run association 
+    ./GeNA.sh -s ${SCDATA} \
+        -b 'False' \
+        -g ${GENOTYPES} \
+        -o ${OUTDIR}/${CELLTYPE}/no_expr_pc_covars/ \
+        -c 'sex,age,geno_PC1,geno_PC2,geno_PC3,geno_PC4,geno_PC5,geno_PC6,geno_PC7,BioHEART' # covariates 
 
-    # # run association with random genotypes
-    # ./GeNA.sh -s ${SCDATA} \
-    #     -b 'False' \
-    #     -g ${PERMUTED_GTYPES} \
-    #     -o ${OUTDIR}/${CELLTYPE}/no_expr_pc_covars_perm/ \
-    #     -c 'sex,age,geno_PC1,geno_PC2,geno_PC3,geno_PC4,geno_PC5,geno_PC6,geno_PC7,BioHEART' # covariates 
+    # run association with random genotypes
+    ./GeNA.sh -s ${SCDATA} \
+        -b 'False' \
+        -g ${PERMUTED_GTYPES} \
+        -o ${OUTDIR}/${CELLTYPE}/no_expr_pc_covars_perm/ \
+        -c 'sex,age,geno_PC1,geno_PC2,geno_PC3,geno_PC4,geno_PC5,geno_PC6,geno_PC7,BioHEART' # covariates 
 
     # GeNA association: WITH expression PC covariates
 
-    echo "Running GeNA for ${CELLTYPE} - WITH expression PC covars \n"
+    echo "Running GeNA for ${CELLTYPE} - WITH expression PC covars"
     echo ""
 
     # run association 

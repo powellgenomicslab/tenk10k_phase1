@@ -16,8 +16,8 @@
 # Parameters:
 # -----------
 
-# ANALYSIS_NAME="no_expr_pc_covars"
-ANALYSIS_NAME="with_expr_pc_covars"
+ANALYSIS_NAME="no_expr_pc_covars"
+# ANALYSIS_NAME="with_expr_pc_covars"
 RESOLUTION="major_cell_types"
 
 # -----------

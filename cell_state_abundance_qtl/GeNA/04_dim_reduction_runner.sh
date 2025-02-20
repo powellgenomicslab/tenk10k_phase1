@@ -3,13 +3,13 @@
 #$ -cwd
 #$ -V
 #$ -r yes
-#$ -l mem_requested=600G
+#$ -l mem_requested=800G
 #$ -l tmp_requested=40G
 #$ -N GeNA_dimreduc
 #$ -q short.q
 #$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/logs/GeNA_dim_reduction.stderr
 #$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/logs/GeNA_dim_reduction.stdout
-#$ -t 3-3
+#$ -t 4-4
 #$ -m ae
 #$ -M b.bowen@garvan.org.au
 

@@ -9,7 +9,7 @@
 #$ -q short.q
 #$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/logs/GeNA_expr_pcs.stderr
 #$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/logs/GeNA_GeNA_expr_pcs.stdout
-#$ -t 5-8
+#$ -t 1-8
 #$ -m ae
 #$ -M b.bowen@garvan.org.au
 

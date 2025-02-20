@@ -3,13 +3,13 @@
 #$ -cwd
 #$ -V
 #$ -r yes
-#$ -l mem_requested=1500G
+#$ -l mem_requested=1000G
 #$ -l tmp_requested=40G
 #$ -N GeNA_prep_data
 #$ -q long.q
 #$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/logs/GeNA_prep_data.stderr
 #$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/logs/GeNA_prep_data.stdout
-#$ -t 4-4
+#$ -t 1-8
 #$ -m ae
 #$ -M b.bowen@garvan.org.au
 
@@ -24,5 +24,5 @@ RESOLUTION="major_cell_types"
 
 LOG="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/logs/${RESOLUTION}_${CELLTYPE}_${SGE_TASK_ID}_prep_data.log"
 
-${PY_PATH}/python ${PYSCRIPT} ${CELLTYPE} ${RESOLUTION} &>> ${LOG}
+${PY_PATH}/python ${PYSCRIPT} ${CELLTYPE} ${RESOLUTION} &> ${LOG}
 

@@ -12,29 +12,27 @@ np.random.seed(0)
 celltype = sys.argv[1]
 resolution = sys.argv[2]
 
-celltype = "CD4_T"
-resolution = "major_cell_types"
+# celltype = "Other"
+# resolution = "major_cell_types"
 
 # constants
 outdir = (
     "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl"
 )
 
-# celltype = "NK"
-# resolution = "major_cell_types"
-
 print(f"Preprocessing anndata for {celltype}...")
 
 # read in the latest tenk cohort
+# had to split previous steps to different script due to memory issues
 adata = sc.read(
     f"{outdir}/data/h5/{resolution}/{celltype}_scanpy.h5ad",
     cache=True,
 )
-
+# adata.X = adata.layers["counts"].copy()  # so that it doesn't error on a re-run
 sc.pp.normalize_total(adata, target_sum=1e4)
 sc.pp.log1p(adata)
 sc.pp.highly_variable_genes(adata, min_mean=0.0125, max_mean=3, min_disp=0.5)
-adata_ct = adata[:, adata.var.highly_variable]
+adata = adata[:, adata.var.highly_variable]
 sc.pp.regress_out(adata, ["total_counts", "pct_counts_mt"])
 sc.pp.scale(adata, max_value=10)
 
@@ -42,6 +40,7 @@ print("Cell type-specific adata:")
 print(adata)
 
 # overwrite h5ad
+# rerun previous script before rerunning above steps otherwise it will error
 adata.write(f"{outdir}/data/h5/{resolution}/{celltype}_scanpy.h5ad")
 
 # ----------------------
@@ -49,7 +48,7 @@ adata.write(f"{outdir}/data/h5/{resolution}/{celltype}_scanpy.h5ad")
 # ----------------------
 
 cell_meta = (
-    adata.obs[["cpg_id", "sequencing_library"]]
+    adata.obs[["cpg_id", "sequencing_library", "cohort", "wg2_scpred_prediction"]]
     .set_index(adata.obs.index)
     .rename(columns={"cpg_id": "id"})
 )
