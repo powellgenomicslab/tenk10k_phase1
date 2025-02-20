@@ -16,30 +16,15 @@
 micromamba activate mastectomy-env
 
 OUTDIR=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/plink/permuted
-
-SAMPLE_META="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/saige-qtl_tenk10k-genome-2-3-eur_input_files_241210_covariates_sex_age_geno_pcs_shuffled_ids_tob_bioheart.csv"
-
+PERM_MAPPING=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/sample_ids_vcf_with_perm_ids.txt
 PFILE_MERGED="/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/plink/merged_common_variants_standard_chr_geno_0.15"
 
-# 1. create list of samples to keep, these are the samples in both the single cell and wgs cohort
-# awk -F, 'NR > 1 {print $1}' ${SAMPLE_META} > ${OUTDIR}/samples_keep.txt
+# 1. create mapping between real and permuted ID's 
+awk -F, 'NR > 1 {OFS="\t"; print $1, $2}' ${PERM_MAPPING} > ${OUTDIR}/perm1_map.txt
 
-# 2. create mapping between real and permuted ID's 
-awk -F, 'NR > 1 {OFS="\t"; print $1, $20}' ${SAMPLE_META} > ${OUTDIR}/perm0_map.txt
-
-# 3. Filter plink to only include the sc cohort samples 
-# plink2 --pfile ${PFILE_MERGED}\
-#     --keep ${OUTDIR}/samples_keep.txt \
-#     --make-pgen \
-#     --out ${TMPDIR}/merged_common_variants_standard_chr_geno_0.15_subset \
-#     --threads 4
-
-# PFILE_SUBSET=${TMPDIR}/merged_common_variants_standard_chr_geno_0.15_subset
-
-
-# 4. Reheader the plink file using the permuted ID's 
+# 2. Reheader the plink file using the permuted ID's 
 plink2 --pfile ${PFILE_MERGED} \
-    --update-ids ${OUTDIR}/perm0_map.txt \
+    --update-ids ${OUTDIR}/perm1_map.txt \
     --make-pgen \
-    --out ${OUTDIR}/merged_common_variants_standard_chr_geno_0.15_singlecell_cohort_perm0 \
+    --out ${OUTDIR}/merged_common_variants_standard_chr_geno_0.15_singlecell_cohort_perm1 \
     --threads 4
