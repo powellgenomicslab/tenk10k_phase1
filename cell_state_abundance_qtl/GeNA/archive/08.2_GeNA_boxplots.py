@@ -12,7 +12,7 @@ from matplotlib import pyplot as plt
 sys.path.append(
     "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/cell_state_abundance_qtl/GeNA"
 )
-import pgen  # pgen reader functions from tensorQTL
+import cell_state_abundance_qtl.GeNA.archive.pgen as pgen  # pgen reader functions from tensorQTL
 
 np.random.seed(0)
 

@@ -14,7 +14,7 @@ covs = sys.argv[4]
 
 # resolution = "major_cell_types"
 # analysis_name = "no_expr_pc_covars"
-# celltype = "Dendritic"
+# celltype = "NK"
 # covs = "sex,age,geno_PC1,geno_PC2,geno_PC3,geno_PC4,geno_PC5,geno_PC6,geno_PC7,BioHEART"
 
 # input files
@@ -53,6 +53,8 @@ madata.samplem = madata.samplem.join(genotypes_lead_snps, how="left")
 
 # Store neighborhood-level phenotype for each SNP
 npheno = pd.DataFrame({})
+# store correlation between top variable genes and each neighborhood-level phenotype
+all_var_gene_corrs = pd.DataFrame({}, index=madata.var.index)
 
 # copy uns
 uns = madata.uns.copy()
@@ -85,9 +87,18 @@ for variant in gena_sumstats_lead_snps["ID"].tolist():
     madata.samplem = madata.samplem.join(spheno, how="left")
     npheno[f"npheno_{variant}"] = res.ncorrs
 
+    # calculate correlation between neighborhood phenotypes and variable gene expression
+    vargene_cor = []
+    for i_gene in np.arange(madata.var.shape[0]):
+        vargene_cor.append(np.corrcoef(madata.X[res.kept, i_gene], res.ncorrs)[0, 1])
+    all_var_gene_corrs.loc[:, f"npheno_{variant}"] = vargene_cor
+
+
 # add neighbourhood level phenotypes to the scanpy object
 npheno.index = madata.obs.index
 madata.obs = madata.obs.join(npheno, how="left")
+# add correllations to scanpy
+madata.var = madata.var.join(all_var_gene_corrs)
 
 # export sample and neighborhood level phenotypes with metadata
 madata.samplem.to_csv(
@@ -95,6 +106,9 @@ madata.samplem.to_csv(
 )
 madata.obs.to_csv(
     f"/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/multianndata/{resolution}/{analysis_name}/{celltype}_neighbourhood_pheno.csv"
+)
+madata.var.to_csv(
+    f"/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/multianndata/{resolution}/{analysis_name}/{celltype}_vargene_corrs.csv"
 )
 
 # export the maultianndata object with phenotypes

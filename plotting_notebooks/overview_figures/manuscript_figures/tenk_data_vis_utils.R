@@ -10,8 +10,8 @@ library(ggsci)
 
 # CONSTANTS
 
-LATEST_CSV_PATH = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/298_libraries_cell_metadata_filtered_min1000genes.csv"
-LATEST_UMAP_PATH = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/300_libraries_harmony_umap_coords_filtered_min1000genes.csv"
+LATEST_CSV_PATH <- "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/298_libraries_cell_metadata_filtered_min1000genes.csv"
+LATEST_UMAP_PATH <- "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/300_libraries_harmony_umap_coords_filtered_min1000genes.csv"
 
 get_latest_metadata <- function(
     # update these when the object path changes

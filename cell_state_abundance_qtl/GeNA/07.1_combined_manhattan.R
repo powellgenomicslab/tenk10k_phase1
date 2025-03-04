@@ -1,5 +1,4 @@
 library(tidyverse)
-library(qqman)
 library(data.table)
 library(glue)
 library(scattermore)
@@ -32,7 +31,7 @@ read_afreq <- function(afreq_path) {
 }
 afreq_path <- "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/plink/merged_common_variants_standard_chr_geno_0.15.afreq"
 afreq <- read_afreq(afreq_path = afreq_path) %>%
-    select(ID, ALT_FREQS)
+    dplyr::select(ID, ALT_FREQS)
 
 # GeNA GWAS summary statistics
 read_summstats <- function(celltype, analysis_name, resolution) {
@@ -65,11 +64,11 @@ sumstats_all_ct[
 # table(sumstats_all_ct$P < 0.0001)
 
 sumstats_all_ct_sig <- sumstats_all_ct %>%
-    filter(P < 0.001)
+    dplyr::filter(P < 0.001)
 
 # keep only 10% of data points with P below 0.001
 sumstats_all_ct_notsig <- sumstats_all_ct %>%
-    filter(P >= 0.001) %>%
+    dplyr::filter(P >= 0.001) %>%
     group_by(`#CHROM`) %>%
     slice_sample(prop = 0.1)
 
@@ -82,7 +81,7 @@ plot_data <- sumstats_subset %>%
     summarise(chr_len = as.numeric(max(POS))) %>%
     # Calculate cumulative position of each chromosome
     mutate(tot = cumsum(chr_len) - chr_len) %>%
-    select(-chr_len) %>%
+    dplyr::select(-chr_len) %>%
     # Add this info to the initial dataset
     left_join(sumstats_subset, ., by = c("CHROM" = "CHROM")) %>%
     # Add a cumulative position of each SNP
@@ -97,46 +96,52 @@ log10P <- expression(paste("-log"[10], plain(P)))
 
 # test <- plot_data %>% slice_head(n=10000)
 
-width <- 10
-height <- 6
+width <- 8
+height <- 3
+px <- 350
+ptsize <- 9.2
 
-all_ct_manhattan <- ggplot( data = plot_data, aes(x = BPcum, y = neg_log10_P)) +
+all_ct_manhattan <- ggplot(data = plot_data, aes(x = BPcum, y = neg_log10_P)) +
     # Show all points
     geom_scattermore(
-        data = plot_data %>% filter(P >= 5e-8),
-        aes(color = as.factor(CHROM)), pointsize = 9.2, pixels = c(300 * width, 300 * height),
-         show.legend = FALSE
+        data = plot_data %>% dplyr::filter(P >= 5e-8),
+        aes(color = as.factor(CHROM)), pointsize = ptsize, pixels = c(px * width, px * height),
+        show.legend = FALSE
     ) +
     # geom_point(aes(color = as.factor(CHROM)), size = 1) +
     scale_color_manual(values = rep(c("grey", "lightgrey"), 22)) +
     new_scale_color() +
-    # highlight significant loci 
+    # highlight significant loci
     geom_scattermore(
-        data = plot_data %>% filter(P < 5e-8),
-        aes(color = celltype), pointsize = 9.2, pixels = c(300 * width, 300 * height)
+        data = plot_data %>% dplyr::filter(P < 5e-8),
+        aes(color = celltype), pointsize = ptsize, pixels = c(px * width, px * height)
     ) +
     scale_colour_manual(values = setNames(unique(tenk_color_pal$color_major_cell_type), unique(tenk_color_pal$major_cell_type))) +
     # custom X axis:
-    scale_x_continuous(label = axisdf$CHROM, breaks = axisdf$center, expand = expansion(mult = .02)) +
+    scale_x_continuous(label = axisdf$CHROM, breaks = axisdf$center, expand = expansion(mult = .02), guide = guide_axis(check.overlap = TRUE)) +
     scale_y_continuous(expand = expansion(mult = c(0, .1))) + # remove space between plot area and x axis
     geom_hline(yintercept = -log10(5e-8), linetype = 2) +
+    labs(
+        y = log10P,
+        x = "Chromosome"
+    ) +
+    guides(color = guide_legend("Major cell type", override.aes = list(size = 6, shape = 15)), fill = "none") +
     # Custom the theme:
     theme_classic() +
     theme(
         # legend.position = "none",
         panel.border = element_blank(),
         panel.grid.major.x = element_blank(),
-        panel.grid.minor.x = element_blank()
-    ) +
-    labs(
-        y = log10P,
-        x = "Chromosome"
-    ) + 
-    guides(color = guide_legend("Major cell type"), fill = "none")
+        panel.grid.minor.x = element_blank(),
+    )
 
 
 all_ct_manhattan %>% ggsave(
     filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/{resolution}/combined_plots/combined_manhattan.png"),
-     width = width, height = height
+    width = width, height = height
 )
 
+all_ct_manhattan %>% ggsave(
+    filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/{resolution}/combined_plots/combined_manhattan.pdf"),
+    width = width, height = height
+)
