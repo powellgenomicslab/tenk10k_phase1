@@ -14,8 +14,8 @@ ensDb_v110 <- an[["AH113665"]]
 # ----
 analysis_name <- "no_expr_pc_covars"
 resolution <- "major_cell_types"
-celltype <- "NK"
-# celltype <- "Monocyte"
+# celltype <- "NK"
+celltype <- "Monocyte"
 # celltype <- "B"
 # celltype <- "Dendritic"
 # celltype <- "CD4_T"

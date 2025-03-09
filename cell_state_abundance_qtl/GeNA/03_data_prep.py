@@ -28,6 +28,46 @@ adata = sc.read(
     f"{outdir}/data/h5/{resolution}/{celltype}_scanpy.h5ad",
     cache=True,
 )
+
+if celltype == "ALL":
+    major_cell_type_mapping = {
+        "B_intermediate": "B",
+        "B_memory": "B",
+        "B_naive": "B",
+        "Plasmablast": "B",
+        "NK": "NK",
+        "NK_CD56bright": "NK",
+        "NK_Proliferating": "NK",
+        "CD8_Naive": "CD8_T",
+        "CD8_Proliferating": "CD8_T",
+        "CD8_TCM": "CD8_T",
+        "CD8_TEM": "CD8_T",
+        "CD4_CTL": "CD4_T",
+        "CD4_Naive": "CD4_T",
+        "CD4_Proliferating": "CD4_T",
+        "CD4_TCM": "CD4_T",
+        "CD4_TEM": "CD4_T",
+        "Treg": "CD4_T",
+        "dnT": "Unconventional_T",
+        "gdT": "Unconventional_T",
+        "ILC": "Unconventional_T",
+        "MAIT": "Unconventional_T",
+        "pDC": "Dendritic",
+        "cDC1": "Dendritic",
+        "cDC2": "Dendritic",
+        "ASDC": "Dendritic",
+        "CD14_Mono": "Monocyte",
+        "CD16_Mono": "Monocyte",
+        "HSPC": "Other",
+    }
+
+    # add major cell type to single cell metadata
+
+    adata.obs["major_cell_type"] = [
+        major_cell_type_mapping[ct] for ct in adata.obs["wg2_scpred_prediction"]
+    ]
+
+
 # adata.X = adata.layers["counts"].copy()  # so that it doesn't error on a re-run
 sc.pp.normalize_total(adata, target_sum=1e4)
 sc.pp.log1p(adata)

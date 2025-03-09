@@ -9,7 +9,7 @@
 #$ -q short.q
 #$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/logs/GeNA_dim_reduction.stderr
 #$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/logs/GeNA_dim_reduction.stdout
-#$ -t 4-4
+#$ -t 9-9
 #$ -m ae
 #$ -M b.bowen@garvan.org.au
 

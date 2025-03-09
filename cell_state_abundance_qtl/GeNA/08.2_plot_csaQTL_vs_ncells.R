@@ -10,6 +10,7 @@ analysis_name <- "no_expr_pc_covars"
 resolution <- "major_cell_types"
 
 celltypes <- read_lines("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/major_cell_types.txt")
+celltypes <- celltypes[celltypes != "ALL"]
 
 # GeNA GWAS summary statistics
 read_summstats <- function(celltype, analysis_name, resolution) {
@@ -29,6 +30,12 @@ sumstats_all_ct <- celltypes %>%
 sumstats_all_ct[, celltype := factor(str_replace(celltype, pattern = "_", replacement = " "), levels = unique(tenk_color_pal$major_cell_type)), ]
 
 sumstats_all_ct_sig_summary <- sumstats_all_ct[P < 5e-8, .N, by = celltype]
+
+# save combined file for lead snps
+sumstats_all_ct %>% fwrite("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/combined/major_cell_types/summstats_all_lead_csaqtl.csv")
+
+# number of unique csaQTL loci (number of unique lead SNPs)
+sumstats_all_ct$ID %>% n_distinct()
 
 metadata <- get_latest_metadata()
 
@@ -57,3 +64,18 @@ ncells_by_nsnps_plot %>%
 
 ncells_nsnps_per_ct %>%
     write_csv(glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/combined/{resolution}/ncells_n_lead_snps_per_ct_{analysis_name}.csv"))
+
+lead_csaqtl_bar <- ncells_nsnps_per_ct %>%
+    ggplot(aes(y = `Number of significant csaQTLs`, x = celltype, colour = celltype, fill = celltype)) +
+    geom_bar(stat = "identity") +
+    theme_classic() +
+    # scale_x_continuous(labels = label_comma()) +
+    scale_y_continuous(labels = label_comma()) +
+    scale_colour_manual(values = setNames(unique(tenk_color_pal$color_major_cell_type), unique(tenk_color_pal$major_cell_type))) +
+    scale_fill_manual(values = setNames(unique(tenk_color_pal$color_major_cell_type), unique(tenk_color_pal$major_cell_type))) +
+    theme(aspect.ratio = 0.5) +
+    labs(x = "Cell type") +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
+
+lead_csaqtl_bar %>%
+    ggsave(filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/{resolution}/combined_plots/n_lead_snps_per_ct_bar_{analysis_name}.png"), width = 8, height = 4)

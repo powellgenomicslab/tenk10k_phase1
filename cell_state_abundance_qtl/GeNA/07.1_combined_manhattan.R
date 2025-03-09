@@ -12,6 +12,7 @@ resolution <- "major_cell_types"
 
 # celltypes <- read_lines("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/unique_cell_types_wg2_scpred.txt")
 celltypes <- read_lines("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/major_cell_types.txt")
+celltypes <- celltypes[celltypes != "ALL"]
 
 # Get the minor allele frequencies
 read_afreq <- function(afreq_path) {
@@ -96,16 +97,24 @@ log10P <- expression(paste("-log"[10], plain(P)))
 
 # test <- plot_data %>% slice_head(n=10000)
 
-width <- 8
-height <- 3
-px <- 350
-ptsize <- 9.2
+# for single combined plot
+# width <- 8
+# height <- 3
+# px <- 350
+# ptsize <- 9.2
+
+# for split plot
+# width <- 12
+# height <- 14
+px <- 1250
+ptsize <- 7.7
+aspect_ratio <- 0.25
 
 all_ct_manhattan <- ggplot(data = plot_data, aes(x = BPcum, y = neg_log10_P)) +
     # Show all points
     geom_scattermore(
         data = plot_data %>% dplyr::filter(P >= 5e-8),
-        aes(color = as.factor(CHROM)), pointsize = ptsize, pixels = c(px * width, px * height),
+        aes(color = as.factor(CHROM)), pointsize = ptsize, pixels = c(px, px * aspect_ratio),
         show.legend = FALSE
     ) +
     # geom_point(aes(color = as.factor(CHROM)), size = 1) +
@@ -114,7 +123,7 @@ all_ct_manhattan <- ggplot(data = plot_data, aes(x = BPcum, y = neg_log10_P)) +
     # highlight significant loci
     geom_scattermore(
         data = plot_data %>% dplyr::filter(P < 5e-8),
-        aes(color = celltype), pointsize = ptsize, pixels = c(px * width, px * height)
+        aes(color = celltype), pointsize = ptsize, pixels = c(px, px * aspect_ratio)
     ) +
     scale_colour_manual(values = setNames(unique(tenk_color_pal$color_major_cell_type), unique(tenk_color_pal$major_cell_type))) +
     # custom X axis:
@@ -130,18 +139,99 @@ all_ct_manhattan <- ggplot(data = plot_data, aes(x = BPcum, y = neg_log10_P)) +
     theme_classic() +
     theme(
         # legend.position = "none",
-        panel.border = element_blank(),
+        aspect.ratio = aspect_ratio,
+        # panel.border = element_blank(),
+        strip.background = element_rect(fill = NA, color = NA),
+        # strip.background = element_blank(),
+        # strip.text = element_blank(),
         panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
+        element_blank()
     )
 
 
-all_ct_manhattan %>% ggsave(
-    filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/{resolution}/combined_plots/combined_manhattan.png"),
-    width = width, height = height
+# all_ct_manhattan %>% ggsave(
+#     filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/{resolution}/combined_plots/combined_manhattan.png"),
+#     width = 8, height = 3
+# )
+
+# all_ct_manhattan %>% ggsave(
+#     filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/{resolution}/combined_plots/combined_manhattan.pdf"),
+#     width = 8, height = 3
+# )
+
+
+ct_split_manhattan <- all_ct_manhattan +
+    facet_wrap(~celltype, ncol = 2)
+
+ct_split_manhattan %>% ggsave(
+    filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/{resolution}/combined_plots/split_combined_manhattan.pdf"),
+    width = 10, height = 8,
 )
 
-all_ct_manhattan %>% ggsave(
-    filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/{resolution}/combined_plots/combined_manhattan.pdf"),
-    width = width, height = height
+# make new column that can be used to colour by chromosome and cell type
+plot_data <- plot_data %>%
+    mutate(ct_chr = paste0(celltype, "_", CHROM))
+
+chr_pal <- tenk_color_pal %>%
+    select(major_cell_type, color_major_cell_type_light, color_major_cell_type_light2) %>%
+    # pivot_longer(cols = -major_cell_type, names_to = "dark_or_light", values_to = "chr_cols") %>%
+    distinct()
+
+# Make colour palette for non-significant loci, with alternating light-dark for chromosomes
+colorvec <- c()
+# gross but it works
+for (ct in tenk_color_pal$major_cell_type) {
+    for (chr in 1:22) {
+        if (chr %% 2 == 0) {
+            colorvec[glue("{ct}_{chr}")] <- chr_pal[chr_pal$major_cell_type == ct, "color_major_cell_type_light"]
+        } else {
+            colorvec[glue("{ct}_{chr}")] <- chr_pal[chr_pal$major_cell_type == ct, "color_major_cell_type_light2"]
+        }
+    }
+}
+
+all_ct_manhattan_alt_cols <- ggplot(data = plot_data, aes(x = BPcum, y = neg_log10_P)) +
+    # Show all points
+    geom_scattermore(
+        data = plot_data %>% dplyr::filter(P >= 5e-8),
+        aes(color = as.factor(ct_chr)), pointsize = ptsize, pixels = c(px, px * aspect_ratio),
+        show.legend = FALSE
+    ) +
+    # geom_point(aes(color = as.factor(CHROM)), size = 1) +
+    scale_color_manual(values = colorvec) +
+    new_scale_color() +
+    # highlight significant loci
+    geom_scattermore(
+        data = plot_data %>% dplyr::filter(P < 5e-8),
+        aes(color = celltype), pointsize = ptsize, pixels = c(px, px * aspect_ratio)
+    ) +
+    scale_colour_manual(values = setNames(unique(tenk_color_pal$color_major_cell_type), unique(tenk_color_pal$major_cell_type))) +
+    # custom X axis:
+    scale_x_continuous(label = axisdf$CHROM, breaks = axisdf$center, expand = expansion(mult = .02), guide = guide_axis(check.overlap = TRUE)) +
+    # scale_y_continuous(expand = expansion(mult = c(.1, .1))) + # remove space between plot area and x axis
+    geom_hline(yintercept = -log10(5e-8), linetype = 2) +
+    labs(
+        y = log10P,
+        x = "Chromosome"
+    ) +
+    guides(color = guide_legend("Major cell type", override.aes = list(size = 6, shape = 15)), fill = "none") +
+    # Custom the theme:
+    theme_classic() +
+    theme(
+        # legend.position = "none",
+        aspect.ratio = aspect_ratio,
+        # panel.border = element_blank(),
+        strip.background = element_rect(fill = NA, color = NA),
+        # strip.background = element_blank(),
+        # strip.text = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        element_blank()
+    ) +
+    facet_wrap(~celltype, ncol = 2)
+
+all_ct_manhattan_alt_cols %>% ggsave(
+    filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/{resolution}/combined_plots/split_combined_manhattan_alternative_colours.pdf"),
+    width = 10, height = 8,
 )

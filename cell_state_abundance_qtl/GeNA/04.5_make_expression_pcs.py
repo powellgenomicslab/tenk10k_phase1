@@ -127,5 +127,5 @@ print(madata.samplem)
 
 print(madata)
 
-# over-write output from previous step
+# save object with pseudobulk PCA
 madata.write(f"{outdir}/data/h5/{resolution}/{celltype}_scDataObject.dimreduc.pca.h5ad")

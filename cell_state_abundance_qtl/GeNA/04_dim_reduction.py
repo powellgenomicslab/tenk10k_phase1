@@ -21,11 +21,12 @@ outdir = (
 
 madata = cna.read(f"{outdir}/data/h5/{resolution}/{celltype}_scDataObject.h5ad")
 print("Running PCA...")
+# NOTE: might be able to tune this better by using fewer PC's in the NN graph. GeNA paper used 20 PCs, default is 50 PCs
 sc.pp.pca(madata)
 print("PCA finished!")
 
 print("Running Harmony...")
-# NOTE: Maybe try with harmony sigma parameter 0.2 to encourange softer clustering.
+# NOTE: Maybe try with harmony sigma parameter 0.2 to encourange softer clustering for the major cell types
 sce.pp.harmony_integrate(madata, "sequencing_library")
 madata.obsm["X_pca"] = madata.obsm["X_pca_harmony"]
 print("Harmony finished!")
@@ -38,9 +39,10 @@ print("Generating nearest-neighbour graph...")
 sc.pp.neighbors(madata)
 print("Neighbourhood graph generation finished!")
 
-print("Running UMAP ...")
-sc.tl.umap(madata)
-print("UMAP finished!")
+if celltype != "ALL":
+    print("Running UMAP ...")
+    sc.tl.umap(madata)
+    print("UMAP finished!")
 
 # ----
 # Define neighborhood abundance matrix (NAM) and NAM-PCs

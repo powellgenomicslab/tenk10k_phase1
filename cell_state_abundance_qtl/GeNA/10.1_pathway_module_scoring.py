@@ -1,0 +1,27 @@
+import sys
+import numpy as np
+import pandas as pd
+import cna
+import multianndata as mad
+
+# celltype = sys.argv[1]
+# resolution = sys.argv[2]
+# analysis_name = sys.argv[3]
+
+resolution = "major_cell_types"
+analysis_name = "no_expr_pc_covars"
+celltype = "NK"
+
+# read in the single cell data
+madata = cna.read(
+    f"/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/multianndata/{resolution}/{analysis_name}/{celltype}_scDataObject.dimreduc.pca.gena_pheno.h5ad"
+)
+
+# read in and parse the top enriched gene sets
+fgsea = pd.read_csv(
+    f"/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/fgsea/{celltype}_npheno_19:16331208:G:A_fgsea_sig.tsv",
+    sep="\t",
+)
+
+# Parse the fgsea results
+fgsea
