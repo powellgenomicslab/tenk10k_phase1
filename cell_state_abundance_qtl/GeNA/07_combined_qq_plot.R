@@ -1,8 +1,8 @@
 library(tidyverse)
-library(qqman)
 library(data.table)
 library(glue)
 library(scattermore)
+library(scales)
 source("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/plotting_notebooks/overview_figures/manuscript_figures/tenk_data_vis_utils.R")
 
 analysis_name <- "no_expr_pc_covars"
@@ -12,6 +12,7 @@ resolution <- "major_cell_types"
 
 # celltypes <- read_lines("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/unique_cell_types_wg2_scpred.txt")
 celltypes <- read_lines("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/major_cell_types.txt")
+celltypes <- celltypes[celltypes != "ALL"]
 
 # Get the minor allele frequencies
 read_afreq <- function(afreq_path) {
@@ -55,7 +56,7 @@ sumstats_all_ct[, celltype := factor(str_replace(celltype, pattern = "_", replac
 
 # remove SNPs with below 0.05 MAF
 sumstats_all_ct <- merge(sumstats_all_ct, afreq, by = "ID", all.x = TRUE) %>%
-    .[ALT_FREQS >= 0.05, ]
+    .[ALT_FREQS >= 0.05 & ALT_FREQS <= 0.95, ]
 
 setorder(sumstats_all_ct, P)
 
@@ -100,7 +101,7 @@ combined_qqplot %>%
 # Number of cells in cell type vs number of significant snps
 #-----------------------------------------------
 
-# NOTE: Making a newer version of this just showing lead (LD-pruned) SNPs. 
+# NOTE: Making a newer version of this just showing lead (LD-pruned) SNPs.
 
 # https://www.nature.com/articles/s41588-024-01909-1#:~:text=Therefore%2C%20we%20consider%20loci%20with%20GeNA%20P%E2%80%89%3C%E2%80%895%E2%80%89%C3%97%E2%80%8910%E2%88%928%20associations%20genome%2Dwide%20significant.
 # GeNA manuscript: "we consider loci with GeNA P < 5 × 10−8 associations genome-wide significant."
@@ -121,8 +122,8 @@ ncells_by_nsnps_plot <- ncells_nsnps_per_ct %>%
     ggplot(aes(y = `Number of significant csaQTLs`, x = `Number of cells in cell type`, colour = celltype)) +
     geom_point(size = 3) +
     theme_classic() +
-    scale_x_continuous(labels = label_comma())+
-    scale_y_continuous(labels = label_comma())+
+    scale_x_continuous(labels = label_comma()) +
+    scale_y_continuous(labels = label_comma()) +
     scale_colour_manual(values = setNames(unique(tenk_color_pal$color_major_cell_type), unique(tenk_color_pal$major_cell_type))) +
     theme(aspect.ratio = 1)
 

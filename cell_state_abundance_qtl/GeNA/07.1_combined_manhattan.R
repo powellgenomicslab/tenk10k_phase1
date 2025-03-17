@@ -53,7 +53,7 @@ sumstats_all_ct <- celltypes %>%
 # format for plotting
 sumstats_all_ct[, celltype := factor(str_replace(celltype, pattern = "_", replacement = " "), levels = unique(tenk_color_pal$major_cell_type)), ]
 sumstats_all_ct <- merge(sumstats_all_ct, afreq, by = "ID", all.x = TRUE) %>%
-    .[ALT_FREQS >= 0.05, ]
+    .[ALT_FREQS >= 0.05 & ALT_FREQS <= 0.95, ]
 
 setorder(sumstats_all_ct, P)
 sumstats_all_ct[

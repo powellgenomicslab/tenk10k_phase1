@@ -10,7 +10,7 @@ analysis_name <- "no_expr_pc_covars"
 resolution <- "major_cell_types"
 
 celltypes <- read_lines("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/major_cell_types.txt")
-celltypes <- celltypes[celltypes != "ALL"]
+celltypes <- celltypes[!celltypes %in% c("ALL", "Other")] # remove Other as there were no significant csaqtls
 
 # GeNA GWAS summary statistics
 read_summstats <- function(celltype, analysis_name, resolution) {
@@ -35,7 +35,8 @@ sumstats_all_ct_sig_summary <- sumstats_all_ct[P < 5e-8, .N, by = celltype]
 sumstats_all_ct %>% fwrite("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/combined/major_cell_types/summstats_all_lead_csaqtl.csv")
 
 # number of unique csaQTL loci (number of unique lead SNPs)
-sumstats_all_ct$ID %>% n_distinct()
+sumstats_all_ct$ID %>%
+    n_distinct()
 
 metadata <- get_latest_metadata()
 
@@ -45,7 +46,11 @@ ncells_nsnps_per_ct <- metadata %>%
     rename("celltype" = major_cell_type, "Number of cells in cell type" = `n`) %>%
     left_join(sumstats_all_ct_sig_summary, by = "celltype") %>%
     rename("Number of significant csaQTLs" = N) %>%
-    mutate(celltype = factor(celltype, levels = unique(tenk_color_pal$major_cell_type)))
+    mutate(celltype = factor(celltype, levels = unique(tenk_color_pal$major_cell_type))) %>%
+    mutate(
+        `Number of significant csaQTLs` = replace_na(`Number of significant csaQTLs`, replace = 0)
+    )
+
 
 ncells_by_nsnps_plot <- ncells_nsnps_per_ct %>%
     ggplot(aes(y = `Number of significant csaQTLs`, x = `Number of cells in cell type`, colour = celltype)) +
@@ -66,7 +71,7 @@ ncells_nsnps_per_ct %>%
     write_csv(glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/combined/{resolution}/ncells_n_lead_snps_per_ct_{analysis_name}.csv"))
 
 lead_csaqtl_bar <- ncells_nsnps_per_ct %>%
-    ggplot(aes(y = `Number of significant csaQTLs`, x = celltype, colour = celltype, fill = celltype)) +
+    ggplot(aes(x =  fct_reorder(celltype, `Number of significant csaQTLs`, .desc = TRUE, .na_rm = FALSE), y = `Number of significant csaQTLs`, colour = celltype, fill = celltype)) +
     geom_bar(stat = "identity") +
     theme_classic() +
     # scale_x_continuous(labels = label_comma()) +

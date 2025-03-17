@@ -1,6 +1,5 @@
 # micromamba activate r-python-dev
 library(tidyverse)
-library(qqman)
 library(data.table)
 library(glue)
 library(scattermore)
@@ -62,15 +61,15 @@ afreq <- read_afreq(afreq_path = afreq_path) %>%
 
 sumstats <- sumstats %>%
     left_join(afreq, by = "ID") %>%
-    filter(ALT_FREQS >= 0.05)
+    filter(ALT_FREQS >= 0.05 & ALT_FREQS <= 0.95)
 
 sumstats_permuted <- sumstats_permuted %>%
     left_join(afreq, by = "ID") %>%
-    filter(ALT_FREQS >= 0.05)
+    filter(ALT_FREQS >= 0.05 & ALT_FREQS <= 0.95)
 
 sumstats_combined <- sumstats_combined %>%
     left_join(afreq, by = "ID") %>%
-    filter(ALT_FREQS >= 0.05)
+    filter(ALT_FREQS >= 0.05 & ALT_FREQS <= 0.95)
 
 # min(sumstats$P[sumstats$P != 0])
 # sumstats %>% filter(P == min(sumstats$P))

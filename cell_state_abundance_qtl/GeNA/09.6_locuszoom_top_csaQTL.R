@@ -68,7 +68,7 @@ sumstats_gena_ct <- celltype %>%
     read_summstats(analysis_name = analysis_name, resolution = resolution)
 
 sumstats_gena_ct <- merge(sumstats_gena_ct, afreq, by = "ID", all.x = TRUE) %>%
-    .[ALT_FREQS >= 0.05, ] # filter out low MAF results
+    .[ALT_FREQS >= 0.05 & ALT_FREQS <= 0.95, ] # filter out low MAF results
 
 plot_csaqtl_locuszoom <- function(variant, sumstats_csaqtl, celltype, tenk_color_pal) {
     plot_out_path <- glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/{resolution}/locuszoomR/top_csaQTL/{celltype}_{analysis_name}")

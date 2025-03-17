@@ -8,7 +8,7 @@
 #$ -q short.q
 #$ -e /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/logs/prune_sig_snps.stderr
 #$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/logs/prune_sig_snps.stdout
-#$ -t 9-9
+#$ -t 1-8
 #$ -pe smp 10
 #$ -m ae
 #$ -M b.bowen@garvan.org.au
@@ -50,7 +50,7 @@ plink2 --pfile ${GENOTYPES} \
     --export-allele ${ALT_ALLELES} \
     --out ${OUT_PLINK}
 
-# 2. Run the python pruning script 
+# 2. Run the python script that keeps the top snps at each locus, using a clumping strategy
 
 python /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/cell_state_abundance_qtl/GeNA/08_prune_sig_snps.py ${CELLTYPE} ${RESOLUTION} ${ANALYSIS_NAME}
 
@@ -79,3 +79,5 @@ python /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/cell_state_abun
 
 # AT the moment, just using this one for downstream analysis. 
 # 4. Genotype file for all significant SNPS 
+
+

@@ -7,7 +7,8 @@ library(ggbeeswarm)
 library(patchwork)
 source("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/plotting_notebooks/overview_figures/manuscript_figures/tenk_data_vis_utils.R")
 
-celltype <- "Monocyte"
+celltype <- "NK"
+variant <- "17:35466189:C:T"
 
 # ⚙️ Functions ----
 
@@ -27,29 +28,25 @@ geno_to_letters <- function(ref, alt, geno) {
     return(out)
 }
 
-
 # 📚 Read in the data ----
 
 # UMAP data
-## ADD THIS BACK IN WHEN I've SAVED UMAP csvs
-# umap <- read_csv("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/h5/{resolution}/{celltype}_umap") %>%
-#     rename("barcode" = `...1`, "UMAP 1" = UMAP1, "UMAP 2" = UMAP2) %>%
-#     mutate(
-#         celltype = case_match(
-#             celltype,
-#             "NK1" ~ "NK_mature",
-#             "NK3" ~ "NK_adaptive",
-#             "NKint" ~ "NK_intermediate",
-#             .default = celltype
-#         )
-#     )
+umap <- read_csv("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/h5/NK_cellstate/NK_cellstate_umap_subtypes.csv") %>%
+    rename("barcode" = `...1`, "UMAP 1" = UMAP1, "UMAP 2" = UMAP2) %>%
+    mutate(
+        celltype = case_match(
+            celltype,
+            "NK1" ~ "NK_mature",
+            "NK3" ~ "NK_adaptive",
+            "NKint" ~ "NK_intermediate",
+            .default = celltype
+        )
+    )
 csaQTL_npheno <- read_csv(glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/multianndata/major_cell_types/no_expr_pc_covars/{celltype}_neighbourhood_pheno.csv")) %>%
     rename("barcode" = `...1`)
 
-# plot_data <- umap %>%
-#     left_join(csaQTL_npheno, by = "barcode")
-
-plot_data <- csaQTL_npheno
+plot_data <- umap %>%
+    left_join(csaQTL_npheno, by = "barcode")
 
 # boxplot data
 csaQTL_spheno <- read_csv(glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/multianndata/major_cell_types/no_expr_pc_covars/{celltype}_sample_pheno.csv"))
@@ -59,23 +56,22 @@ csaQTL_spheno <- read_csv(glue("/directflow/SCCGGroupShare/projects/blabow/tenk1
 # genotype boxplot for the locus - showing the sample-level phenotypes
 
 # calculate the percentage of all major celltype cells belonging to each scpred subtype, per individual
+# NOTE: FOR NK only - use cell subtypes in stead of wg2 scpred predictions 
 
 ct_percentages <- plot_data %>%
     group_by(id) %>%
     mutate(total_cell_count_indiv = n()) %>%
-    group_by(id, wg2_scpred_prediction) %>%
+    group_by(id, celltype) %>%
     mutate(
         ct_count_indiv = n(),
         pct_ct_indiv = ct_count_indiv / total_cell_count_indiv
     ) %>%
-    select(id, wg2_scpred_prediction, pct_ct_indiv) %>%
+    select(id, celltype, pct_ct_indiv) %>%
     distinct() %>%
-    pivot_wider(names_from = wg2_scpred_prediction, values_from = pct_ct_indiv, names_prefix = "pct_")
+    pivot_wider(names_from = celltype, values_from = pct_ct_indiv, names_prefix = "pct_")
 
 boxplot_data <- csaQTL_spheno %>%
     left_join(ct_percentages, by = "id")
-
-variant <- "15:39687137:C:T"
 
 ref <- str_split(variant, pattern = ":")[[1]][3]
 alt <- str_split(variant, pattern = ":")[[1]][4]
@@ -104,15 +100,31 @@ ct_col <- tenk_color_pal %>%
     distinct() %>%
     pull()
 
-vlnplot_spheno <- ggplot(sample_pheno, aes(x = Genotype, y = !!sym(glue("spheno_{variant}")))) +
+# vlnplot_spheno <- ggplot(sample_pheno, aes(x = Genotype, y = !!sym(glue("spheno_{variant}")))) +
+#     geom_violin(color = NA, fill = ct_col, alpha = 0.7) +
+#     geom_boxplot(fill = NA, col = ct_col, width = 0.1, outlier.shape = NA, alpha = 1) +
+#     theme_classic() +
+#     theme(
+#         aspect.ratio = 1,
+#         text = element_text(size = 20),
+#         title = element_text(hjust = 0.5),
+#     ) +
+#     labs(y = "Sample-level phenotype", title = variant)
+
+vlnplot_spheno <- ggplot(sample_pheno, aes(x = !!sym(variant), y = !!sym(glue("spheno_{variant}")), group = !!sym(variant))) +
     geom_violin(color = NA, fill = ct_col, alpha = 0.7) +
     geom_boxplot(fill = NA, col = ct_col, width = 0.1, outlier.shape = NA, alpha = 1) +
+    # geom_beeswarm() +
+    geom_smooth(method = "lm", col = ct_col, aes(group = 1), se = FALSE) +
     theme_classic() +
+    # geom_smooth(method = "lm", se = TRUE) +
     theme(
         aspect.ratio = 1,
         text = element_text(size = 20),
-        title = element_text(hjust = 0.5),
+        title = element_text(hjust = 0.5)
     ) +
+    # scale_y_continuous(limits = c(axis_limits$lower, axis_limits$upper)) +
+    scale_x_continuous(breaks = c(0, 1, 2), labels = levels(sample_pheno$Genotype)) +
     labs(y = "Sample-level phenotype", title = variant)
 
 vlnplot_spheno %>%
@@ -192,8 +204,10 @@ boxplot_list <- list()
 
 boxplot_list[["vlnplot_spheno"]] <- vlnplot_spheno
 
+cell_subtypes <- pct_boxplot_data_resids$`Cell subtype` %>% unique()
+
 # Add in the celltypes here to plot - use the ones with the greatest shifts in abundance
-for (cell_type_plot in c("CD14_Mono_resid", "CD16_Mono_resid")) {
+for (cell_type_plot in cell_subtypes[cell_subtypes %>% str_detect("_resid")]) {
     # filter data
     ct_pct_boxplot_data_resids <- pct_boxplot_data_resids %>%
         filter(`Cell subtype` == cell_type_plot)
@@ -202,11 +216,11 @@ for (cell_type_plot in c("CD14_Mono_resid", "CD16_Mono_resid")) {
         str_remove("_resid") %>%
         str_replace_all("_", " ")
 
-    minor_ct_col <- tenk_color_pal %>%
-        filter(cell_type == minor_ct) %>%
-        select(color) %>%
-        distinct() %>%
-        pull()
+    # minor_ct_col <- tenk_color_pal %>%
+    #     filter(cell_type == minor_ct) %>%
+    #     select(color) %>%
+    #     distinct() %>%
+    #     pull()
 
     # calculate boxplot stats manually to set axis limits
     axis_limits <- ct_pct_boxplot_data_resids %>%
@@ -224,13 +238,13 @@ for (cell_type_plot in c("CD14_Mono_resid", "CD16_Mono_resid")) {
     # coefs <- coef(lm(`Fraction of cells` ~ `15:39687137:C:T`, data = ct_pct_boxplot_data_resids))
 
     # don't plot the outliers as these skew the plot scales
-    boxplot_cell_percentages_resids <- ggplot(ct_pct_boxplot_data_resids, aes(x = `15:39687137:C:T`, y = `Fraction of cells`, group = `15:39687137:C:T`)) +
-        geom_violin(color = NA, fill = minor_ct_col, alpha = 0.7) +
-        geom_boxplot(fill = NA, col = minor_ct_col, width = 0.1, outlier.shape = NA, alpha = 1) +
+    boxplot_cell_percentages_resids <- ggplot(ct_pct_boxplot_data_resids, aes(x = !!sym(variant), y = `Fraction of cells`, group = !!sym(variant))) +
+        geom_violin(color = NA, fill = ct_col, alpha = 0.7) +
+        geom_boxplot(fill = NA, col = ct_col, width = 0.1, outlier.shape = NA, alpha = 1) +
         # geom_beeswarm() +
-        geom_smooth(method = "lm", col = minor_ct_col, aes(group = 1), se = FALSE) +
+        geom_smooth(method = "lm", col = ct_col, aes(group = 1), se = FALSE) +
         theme_classic() +
-        geom_smooth(method = "lm", se = TRUE) +
+        # geom_smooth(method = "lm", se = TRUE) +
         theme(
             aspect.ratio = 1,
             text = element_text(size = 20),
@@ -249,7 +263,7 @@ pct_boxplots %>%
     ggsave(
         filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/umap/{celltype}_caseexample_cell_percentages_vln_residuals_combined.pdf"),
         width = 12,
-        height = 5
+        height = 10
     )
 
 
@@ -356,3 +370,4 @@ pct_boxplots %>%
 #         width = 14,
 #         height = 14
 #     )
+

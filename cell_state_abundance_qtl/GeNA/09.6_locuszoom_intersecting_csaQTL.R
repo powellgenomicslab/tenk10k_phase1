@@ -69,7 +69,7 @@ sumstats_gena_ct <- celltype %>%
     read_summstats(analysis_name = analysis_name, resolution = resolution)
 
 sumstats_gena_ct <- merge(sumstats_gena_ct, afreq, by = "ID", all.x = TRUE) %>%
-    .[ALT_FREQS >= 0.05, ] # filter out low MAF results
+    .[ALT_FREQS >= 0.05 & ALT_FREQS <= 0.95, ] # filter out low MAF results
 
 # get minor celltypes corresponding to the specified major cell type we are plotting
 major_minor_ct_map <- tenk_color_pal %>%

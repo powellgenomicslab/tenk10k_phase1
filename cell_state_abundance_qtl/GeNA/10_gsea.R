@@ -18,7 +18,7 @@ msigdbr_df_immune %>%
     unique()
 # fixing format to work with fgsea
 pathways_hallmark <- split(x = msigdbr_df_hallmark$ensembl_gene, f = msigdbr_df_hallmark$gs_name)
-pathways_immune <- split(x = msigdbr_df_immune$ensembl_gene, f = msigdbr_df_immune$gs_name)
+# pathways_immune <- split(x = msigdbr_df_immune$ensembl_gene, f = msigdbr_df_immune$gs_name)
 
 # read in the gene correlations for csaQTLs
 
@@ -34,48 +34,41 @@ for (col in var_gene_correlations %>%
     csaQTL_npheno_corr_gene_ranks[[col]] <- rank_vec
 }
 
-# run fgsea enrichment
-fgsea_hallmark <- fgsea(pathways = pathways_hallmark, csaQTL_npheno_corr_gene_ranks[["npheno_19:16331208:G:A"]]) %>%
-    filter(padj <= 0.05) %>%
-    arrange(padj)
-# fgsea_immune <- fgsea(pathways = pathways_immune, csaQTL_npheno_corr_gene_ranks[["npheno_19:16331208:G:A"]]) %>%
-#     filter(padj <= 0.05) %>%
-#     arrange(padj)
+# monocyte case examples
+variant_list <- c("12:69350234:C:A", "12:9953308:T:TG")
 
-fgsea_hallmark %>%
-    mutate(leadingEdge = as.character(leadingEdge)) %>%
-    write_tsv(glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/fgsea/{celltype}_npheno_19:16331208:G:A_fgsea_sig.tsv"))
+for (variant in variant_list) {
+    fgsea_hallmark <- fgsea(pathways = pathways_hallmark, csaQTL_npheno_corr_gene_ranks[[glue("npheno_{variant}")]]) %>%
+        filter(padj <= 0.05) %>%
+        arrange(padj)
 
-HALLMARK_TNFA_SIGNALING_VIA_NFKB_enrichplot <- plotEnrichment(
-    pathways_hallmark[["HALLMARK_TNFA_SIGNALING_VIA_NFKB"]],
-    csaQTL_npheno_corr_gene_ranks[["npheno_19:16331208:G:A"]]
-) +
-    labs(title = "HALLMARK_TNFA_SIGNALING_VIA_NFKB")
+    # save the results
+    fgsea_hallmark %>%
+        as_tibble() %>%
+        mutate(leadingEdge = unlist(map(leadingEdge, ~ str_c(.x, collapse = ",")))) %>%
+        write_tsv(glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/fgsea/{celltype}_npheno_{variant}_fgsea_sig.tsv"))
 
-HALLMARK_INFLAMMATORY_RESPONSE_enrichplot <- plotEnrichment(
-    pathways_hallmark[["HALLMARK_INFLAMMATORY_RESPONSE"]],
-    csaQTL_npheno_corr_gene_ranks[["npheno_19:16331208:G:A"]]
-) +
-    labs(title = "HALLMARK_INFLAMMATORY_RESPONSE")
+    plot_list <- list()
 
-HALLMARK_IL2_STAT5_SIGNALING_enrichplot <- plotEnrichment(
-    pathways_hallmark[["HALLMARK_IL2_STAT5_SIGNALING"]],
-    csaQTL_npheno_corr_gene_ranks[["npheno_19:16331208:G:A"]]
-) +
-    labs(title = "HALLMARK_IL2_STAT5_SIGNALING")
+    for (pathway in fgsea_hallmark$pathway) {
+        plot_list[[pathway]] <- plotEnrichment(
+            pathways_hallmark[[pathway]],
+            csaQTL_npheno_corr_gene_ranks[[glue("npheno_{variant}")]]
+        ) +
+            labs(title = pathway)
+    }
 
-gsea_plots <- HALLMARK_TNFA_SIGNALING_VIA_NFKB_enrichplot +
-    HALLMARK_INFLAMMATORY_RESPONSE_enrichplot +
-    HALLMARK_IL2_STAT5_SIGNALING_enrichplot + plot_layout(ncol = 1)
+    gsea_plots <- plot_list %>%
+        wrap_plots(ncol = 3)
 
-gsea_plots %>% ggsave(
-    filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/{resolution}/gsea/{celltype}_KLF2_enrichplots.pdf"),
-    width = 5, height = 6
-)
+    gsea_plots %>% ggsave(
+        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/{resolution}/gsea/{celltype}_{variant}_enrichplots.pdf"),
+        width = 15, height = length(gsea_plots)
+    )
 
-
-# fgsea_immune <- fgsea(pathways = pathways_immune, csaQTL_npheno_corr_gene_ranks[["npheno_19:16331208:G:A"]]) %>%
-#     filter(padj <= 0.05) %>%
-#     arrange(padj)
-
-# fgsea_immune
+    # save the genes contained in each gene set
+    sig_gene_set_genes <- msigdbr_df_hallmark %>%
+        filter(gs_name %in% fgsea_hallmark$pathway)
+    sig_gene_set_genes %>%
+        write_csv(glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/fgsea/{celltype}_npheno_{variant}_fgsea_genes.tsv"))
+}

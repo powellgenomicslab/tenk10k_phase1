@@ -47,8 +47,6 @@ seqlevelsStyle(gena_sumstats_sig_onek1k) <- "UCSC"
 gena_sumstats_sig_onek1k <- liftOver(gena_sumstats_sig_onek1k, chain) %>%
     unlist()
 
-
-
 gena_sumstats_sig_onek1k$CHR_POS_hg38 <- paste0(str_remove(seqnames(gena_sumstats_sig_onek1k)@values, "chr"), ":", ranges(gena_sumstats_sig_onek1k))
 
 overlapping <- join_overlap_inner(sumstats_gr, gena_sumstats_sig_onek1k, suffix = c("_tenk10k", "_onek1k"))
@@ -87,12 +85,40 @@ seqlevelsStyle(summstats_lead_snps_gr) <- "UCSC"
 # # no direct overlap with lead SNPs
 # overlapping_lead_snps <- join_overlap_inner(summstats_lead_snps_gr, gena_sumstats_sig_onek1k, suffix = c("_tenk10k", "_onek1k"))
 
-
-# these are the lead SNPs that I plot in the supplementary figure: 
+# these are the lead SNPs that I plot in the supplementary figure:
 overlapping_lead_snps <- join_overlap_inner(summstats_lead_snps_gr, gena_sumstats_sig_onek1k, maxgap = 100000, suffix = c("_tenk10k", "_onek1k"))
 
-overlapping_lead_snps %>% as.data.frame() %>%
+overlapping_lead_snps %>%
+    as.data.frame() %>%
     # janitor::clean_names() %>%
     group_by(celltype, `Cell.Type`, rsID) %>%
     slice_min(P_tenk10k) %>%
-    select(rsID,CHR_POS_hg38,ID_tenk10k, P_tenk10k, celltype, `Cell.Type`, ID_onek1k)
+    select(rsID, CHR_POS_hg38, ID_tenk10k, P_tenk10k, celltype, `Cell.Type`, ID_onek1k)
+
+
+# overlapping_gap %>%
+#     as_tibble() %>%
+#     filter(rsID == "rs13025330") %>%
+#     arrange(celltype, ID_tenk10k) %>%
+#     select(celltype, `Cell.Type`, ID_tenk10k, P_tenk10k, CHR_POS_hg38) %>%
+#     print(n = 100)
+
+
+##############################################################################################################
+# LD calculations for manuscript // replication supp tables
+
+# # calculate LD between the onek1k csaQTL and corresponding lead variants from tenk10k analysis:
+# plink2 --pfile /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/plink/merged_common_variants_standard_chr_geno_0.15 --ld 11:128200640:A:G 11:128246346:T:TA
+# # result : r^2=0.942694
+
+# plink2 --pfile /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/plink/merged_common_variants_standard_chr_geno_0.15 --ld 15:79970875:C:T 15:79972101:G:A
+# # result: r^2=0.991216
+
+# plink2 --pfile /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/plink/merged_common_variants_standard_chr_geno_0.15 --ld 19:16331162:G:A 19:16331208:G:A
+# # result: r^2=0.995559
+
+# # calculate LD for the replicated (non-intersecting) onek1k csaQTL and closest lead variant from my analysis:
+# plink2 --pfile /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/plink/merged_common_variants_standard_chr_geno_0.15 --ld 2:111093635:C:T 2:111050100:G:A
+# # result" 0.455808
+
+###################################################################################################################

@@ -7,7 +7,8 @@ library(ggbeeswarm)
 library(patchwork)
 source("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/plotting_notebooks/overview_figures/manuscript_figures/tenk_data_vis_utils.R")
 
-celltype <- "Monocyte"
+celltype <- "Dendritic"
+variant <- "7:119907178:ATG:A"
 
 # ⚙️ Functions ----
 
@@ -75,7 +76,6 @@ ct_percentages <- plot_data %>%
 boxplot_data <- csaQTL_spheno %>%
     left_join(ct_percentages, by = "id")
 
-variant <- "15:39687137:C:T"
 
 ref <- str_split(variant, pattern = ":")[[1]][3]
 alt <- str_split(variant, pattern = ":")[[1]][4]
@@ -193,7 +193,7 @@ boxplot_list <- list()
 boxplot_list[["vlnplot_spheno"]] <- vlnplot_spheno
 
 # Add in the celltypes here to plot - use the ones with the greatest shifts in abundance
-for (cell_type_plot in c("CD14_Mono_resid", "CD16_Mono_resid")) {
+for (cell_type_plot in c("cDC1_resid", "cDC2_resid", "pDC_resid", "ASDC_resid")) {
     # filter data
     ct_pct_boxplot_data_resids <- pct_boxplot_data_resids %>%
         filter(`Cell subtype` == cell_type_plot)
@@ -224,7 +224,7 @@ for (cell_type_plot in c("CD14_Mono_resid", "CD16_Mono_resid")) {
     # coefs <- coef(lm(`Fraction of cells` ~ `15:39687137:C:T`, data = ct_pct_boxplot_data_resids))
 
     # don't plot the outliers as these skew the plot scales
-    boxplot_cell_percentages_resids <- ggplot(ct_pct_boxplot_data_resids, aes(x = `15:39687137:C:T`, y = `Fraction of cells`, group = `15:39687137:C:T`)) +
+    boxplot_cell_percentages_resids <- ggplot(ct_pct_boxplot_data_resids, aes(x = !!sym(variant), y = `Fraction of cells`, group = !!sym(variant))) +
         geom_violin(color = NA, fill = minor_ct_col, alpha = 0.7) +
         geom_boxplot(fill = NA, col = minor_ct_col, width = 0.1, outlier.shape = NA, alpha = 1) +
         # geom_beeswarm() +
@@ -249,7 +249,7 @@ pct_boxplots %>%
     ggsave(
         filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/umap/{celltype}_caseexample_cell_percentages_vln_residuals_combined.pdf"),
         width = 12,
-        height = 5
+        height = 10
     )
 
 

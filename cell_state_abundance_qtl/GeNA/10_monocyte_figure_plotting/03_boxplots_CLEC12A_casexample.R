@@ -8,7 +8,8 @@ library(patchwork)
 source("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/plotting_notebooks/overview_figures/manuscript_figures/tenk_data_vis_utils.R")
 
 celltype <- "Monocyte"
-
+variant <- "12:9953308:T:TG"
+name <- "CLEC12A"
 
 # ⚙️ Functions ----
 
@@ -76,7 +77,6 @@ ct_percentages <- plot_data %>%
 boxplot_data <- csaQTL_spheno %>%
     left_join(ct_percentages, by = "id")
 
-variant <- "12:9953308:T:TG"
 
 ref <- str_split(variant, pattern = ":")[[1]][3]
 alt <- str_split(variant, pattern = ":")[[1]][4]
@@ -118,7 +118,7 @@ vlnplot_spheno <- ggplot(sample_pheno, aes(x = Genotype, y = !!sym(glue("spheno_
 
 vlnplot_spheno %>%
     ggsave(
-        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/umap/{celltype}_CLEC12A_spheno_boxplot.pdf"),
+        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/umap/{celltype}_{name}_spheno_boxplot.pdf"),
         width = 5,
         height = 5
     )
@@ -141,7 +141,7 @@ vlnplot_cell_percentages <- ggplot(pct_boxplot_data, aes(x = Genotype, y = `Frac
 
 vlnplot_cell_percentages %>%
     ggsave(
-        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/umap/{celltype}_CLEC12A_cell_percentages_boxplot.pdf"),
+        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/umap/{celltype}_{name}_cell_percentages_boxplot.pdf"),
         width = 7.5,
         height = 7.5
     )
@@ -152,7 +152,7 @@ ct_pct_resid_list <- list()
 for (ct in sample_pheno %>%
     select(starts_with("pct_")) %>%
     colnames()) {
-    fit <- lm(as.formula(paste0(ct, "~ sex + age + geno_PC1 + geno_PC2 + geno_PC3 + geno_PC4 + geno_PC5 + BioHEART")), data = sample_pheno)
+    fit <- lm(as.formula(paste0(ct, "~ sex + age + geno_PC1 + geno_PC2 + geno_PC3 + geno_PC4 + geno_PC5 + geno_PC6 + geno_PC7 + BioHEART")), data = sample_pheno)
     ct_pct_resid_list[[paste0(ct, "_resid")]] <- residuals(fit) %>%
         as.data.frame()
 }
@@ -170,6 +170,7 @@ pct_boxplot_data_resids <- sample_pheno_resids %>%
 vlnplot_cell_percentages_resids <- ggplot(pct_boxplot_data_resids, aes(x = Genotype, y = `Fraction of cells`)) +
     geom_violin(color = NA, fill = ct_col, alpha = 0.7) +
     geom_boxplot(fill = NA, col = ct_col, width = 0.1, outlier.shape = NA, alpha = 1) +
+    geom_quasirandom() +
     facet_wrap(~`Cell subtype`, ncol = 2, scales = "free_y") +
     theme_classic() +
     theme(
@@ -181,7 +182,7 @@ vlnplot_cell_percentages_resids <- ggplot(pct_boxplot_data_resids, aes(x = Genot
 
 vlnplot_cell_percentages_resids %>%
     ggsave(
-        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/umap/{celltype}_CLEC12A_cell_percentages_vln_residuals.pdf"),
+        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/umap/{celltype}_{name}_cell_percentages_vln_residuals.pdf"),
         width = 14,
         height = 14
     )
@@ -192,11 +193,23 @@ boxplot_list <- list()
 
 boxplot_list[["vlnplot_spheno"]] <- vlnplot_spheno
 
+cell_subtypes <- pct_boxplot_data_resids$`Cell subtype` %>% unique()
+
 # Add in the celltypes here to plot - use the ones with the greatest shifts in abundance
-for (cell_type_plot in c("CD14_Mono", "CD16_Mono")) {
+for (cell_type_plot in cell_subtypes[cell_subtypes %>% str_detect("_resid")]) {
     # filter data
     ct_pct_boxplot_data_resids <- pct_boxplot_data_resids %>%
         filter(`Cell subtype` == cell_type_plot)
+
+    minor_ct <- cell_type_plot %>%
+        str_remove("_resid") %>%
+        str_replace_all("_", " ")
+
+    minor_ct_col <- tenk_color_pal %>%
+        filter(cell_type == minor_ct) %>%
+        select(color) %>%
+        distinct() %>%
+        pull()
 
     # calculate boxplot stats manually to set axis limits
     axis_limits <- ct_pct_boxplot_data_resids %>%
@@ -211,14 +224,14 @@ for (cell_type_plot in c("CD14_Mono", "CD16_Mono")) {
             upper = max(upper)
         )
 
-    # coefs <- coef(lm(`Fraction of cells` ~ `12:9953308:T:TG`, data = ct_pct_boxplot_data_resids))
+    # coefs <- coef(lm(`Fraction of cells` ~ `15:39687137:C:T`, data = ct_pct_boxplot_data_resids))
 
     # don't plot the outliers as these skew the plot scales
-    boxplot_cell_percentages_resids <- ggplot(ct_pct_boxplot_data_resids, aes(x = `12:9953308:T:TG`, y = `Fraction of cells`, group = `12:9953308:T:TG`)) +
-        # geom_violin(color = NA, fill = ct_col, alpha = 0.7) +
-        geom_boxplot(fill = NA, col = ct_col, width = 0.1, outlier.shape = NA, alpha = 1) +
-        geom_smooth(method = "lm", col = ct_col, aes(group = 1), se = FALSE) +
-        # facet_wrap(~`Cell subtype`, ncol = 2, scales = "free_y") +
+    boxplot_cell_percentages_resids <- ggplot(ct_pct_boxplot_data_resids, aes(x = !!sym(variant), y = `Fraction of cells`, group = !!sym(variant))) +
+        geom_violin(color = NA, fill = minor_ct_col, alpha = 0.7) +
+        geom_boxplot(fill = NA, col = minor_ct_col, width = 0.1, outlier.shape = NA, alpha = 1) +
+        # geom_beeswarm() +
+        geom_smooth(method = "lm", col = minor_ct_col, aes(group = 1), se = FALSE) +
         theme_classic() +
         geom_smooth(method = "lm", se = TRUE) +
         theme(
@@ -226,9 +239,9 @@ for (cell_type_plot in c("CD14_Mono", "CD16_Mono")) {
             text = element_text(size = 20),
             title = element_text(hjust = 0.5)
         ) +
-        scale_y_continuous(limits = c(axis_limits$lower, axis_limits$upper)) +
+        # scale_y_continuous(limits = c(axis_limits$lower, axis_limits$upper)) +
         scale_x_continuous(breaks = c(0, 1, 2), labels = levels(ct_pct_boxplot_data_resids$Genotype)) +
-        labs(y = "Residualised fraction of cells", title = cell_type_plot %>% str_remove("_resid"))
+        labs(y = "Residualised fraction of cells", title = minor_ct)
 
     boxplot_list[[cell_type_plot]] <- boxplot_cell_percentages_resids
 }
@@ -237,32 +250,9 @@ pct_boxplots <- patchwork::wrap_plots(boxplot_list, ncol = 3)
 
 pct_boxplots %>%
     ggsave(
-        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/umap/{celltype}_CLEC12A_cell_percentages_vln_residuals_combined.pdf"),
+        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/umap/{celltype}_{name}_cell_percentages_vln_residuals_combined.pdf"),
         width = 12,
-        height = 5
+        height = 10
     )
 
 
-# # don't plot the outliers as these skew the plot scales
-# boxplot_cell_percentages_resids <- ggplot(ct_pct_boxplot_data_resids, aes(x = `12:9953308:T:TG`, y = `Fraction of cells`)) +
-#     # geom_violin(color = NA, fill = ct_col, alpha = 0.7) +
-#     geom_boxplot(fill = NA, col = ct_col, width = 0.1, outlier.shape = NA, alpha = 1) +
-#     # geom_abline(intercept = coefs[1], slope = coefs[2]) +
-#     # facet_wrap(~`Cell subtype`, ncol = 2, scales = "free_y") +
-#     theme_classic() +
-#     # geom_smooth(col = ct_col, method = "lm", se = TRUE, formula = `Fraction of cells`~ `12:9953308:T:TG`) +
-#     # stat_summary(geom = "line", fun = mean, group = 1) +
-#     theme(
-#         aspect.ratio = 1,
-#         text = element_text(size = 20),
-#         title = element_text(hjust = 0.5)
-#     ) +
-#     scale_y_continuous(limits = c(axis_limits$lower, axis_limits$upper)) +
-#     labs(y = "Residualised Fraction of cells")
-
-# boxplot_cell_percentages_resids %>%
-#     ggsave(
-#         filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/umap/{celltype}_CLEC12A_cell_percentages_box_residuals.pdf"),,
-#         width = 14,
-#         height = 14
-#     )
