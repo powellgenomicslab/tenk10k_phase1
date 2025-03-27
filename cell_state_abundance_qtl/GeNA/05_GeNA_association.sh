@@ -3,7 +3,7 @@
 #$ -cwd
 #$ -V
 #$ -r yes
-#$ -l mem_requested=200G
+#$ -l mem_requested=400G
 #$ -l tmp_requested=40G
 #$ -N GeNA
 #$ -q long.q
@@ -11,55 +11,81 @@
 #$ -o /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/logs/GeNA.stdout
 #$ -m ae
 #$ -M b.bowen@garvan.org.au
-#$ -t 4-4
+#$ -t 9-9
 
 # job array across cell types 
 i=${SGE_TASK_ID};
+CELLTYPE=$(sed "${i}q;d" /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/major_cell_types.txt)
+RESOLUTION="major_cell_types"
 
-CELLTYPE=$(sed "${i}q;d" /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/unique_cell_types_wg2_scpred.txt)
-LOG=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/logs/${CELLTYPE}_${SGE_TASK_ID}_GeNA_association.log
+LOG=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/logs/${RESOLUTION}_${CELLTYPE}_${SGE_TASK_ID}_GeNA_association.log
 
 # parameters 
-OUTDIR=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/GeNA/
-SCDATA=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/h5/${CELLTYPE}_scDataObject.dimreduc.h5ad
-GENOTYPES=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/plink/merged_common_variants_standard_chr_snps
+OUTDIR=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/GeNA/${RESOLUTION}
+# SCDATA=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/h5/${RESOLUTION}/${CELLTYPE}_scDataObject.dimreduc.pca.h5ad # THESE HAVE PSEUDOBULK PCA DIMs
+SCDATA=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/h5/${RESOLUTION}/${CELLTYPE}_scDataObject.dimreduc.h5ad # WITHOUT PSEUDOBULK PCs, which I decided not to use anyway
 
+GENOTYPES=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/plink/merged_common_variants_standard_chr_geno_0.15
+PERMUTED_GTYPES=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/plink/permuted/merged_common_variants_standard_chr_geno_0.15_singlecell_cohort_perm1
 # conda environment 
 . /home/${USER}/micromamba/etc/profile.d/micromamba.sh
 micromamba activate gena-env
 
-# make outdir 
+# make outdirs
 mkdir -p ${OUTDIR}/${CELLTYPE}/no_expr_pc_covars/ 
 mkdir -p ${OUTDIR}/${CELLTYPE}/with_expr_pc_covars/ 
+mkdir -p ${OUTDIR}/${CELLTYPE}/no_expr_pc_covars_perm/
+mkdir -p ${OUTDIR}/${CELLTYPE}/with_expr_pc_covars_perm/
+
 # go to GeNA repo
 cd /directflow/SCCGGroupShare/projects/blabow/software/GeNA
 
 (
-    echo "Running GeNA for ${CELLTYPE}"
+    echo "Running GeNA for ${CELLTYPE} - NO expression PC covars"
+    echo ""
 
     # GeNA association: NO expression PC covariates
 
-    # ./GeNA.sh -s ${SCDATA} \
-    #     -b 'False' \
-    #     -g ${GENOTYPES} \
-    #     -o ${OUTDIR}/${CELLTYPE}/no_expr_pc_covars/ \
-    #     -c 'sex,age,geno_PC1,geno_PC2,geno_PC3,geno_PC4,geno_PC5,geno_PC6,geno_PC7,BioHEART' # covariates 
-
-    # GeNA association: WITH expression PC covariates 
-
+    run association 
     ./GeNA.sh -s ${SCDATA} \
         -b 'False' \
         -g ${GENOTYPES} \
-        -o ${OUTDIR}/${CELLTYPE}/with_expr_pc_covars/ \
-        -c 'sex,age,geno_PC1,geno_PC2,geno_PC3,geno_PC4,geno_PC5,geno_PC6,geno_PC7,mean_expr_PC1,mean_expr_PC2,mean_expr_PC3,mean_expr_PC4,mean_expr_PC5,BioHEART' # covariates 
+        -o ${OUTDIR}/${CELLTYPE}/no_expr_pc_covars/ \
+        -c 'sex,age,geno_PC1,geno_PC2,geno_PC3,geno_PC4,geno_PC5,geno_PC6,geno_PC7,BioHEART' # covariates 
 
-) &>> ${LOG}
+    # run association with random genotypes
+    ./GeNA.sh -s ${SCDATA} \
+        -b 'False' \
+        -g ${PERMUTED_GTYPES} \
+        -o ${OUTDIR}/${CELLTYPE}/no_expr_pc_covars_perm/ \
+        -c 'sex,age,geno_PC1,geno_PC2,geno_PC3,geno_PC4,geno_PC5,geno_PC6,geno_PC7,BioHEART' # covariates 
+
+    # GeNA association: WITH expression PC covariates
+
+    # echo "Running GeNA for ${CELLTYPE} - WITH expression PC covars"
+    # echo ""
+
+    # # run association 
+    # ./GeNA.sh -s ${SCDATA} \
+    #     -b 'False' \
+    #     -g ${GENOTYPES} \
+    #     -o ${OUTDIR}/${CELLTYPE}/with_expr_pc_covars/ \
+    #     -c 'sex,age,geno_PC1,geno_PC2,geno_PC3,geno_PC4,geno_PC5,geno_PC6,geno_PC7,PC1,PC2,PC3,PC4,PC5' # covariates 
+
+    # # run association with random genotypes
+    # ./GeNA.sh -s ${SCDATA} \
+    #     -b 'False' \
+    #     -g ${PERMUTED_GTYPES} \
+    #     -o ${OUTDIR}/${CELLTYPE}/with_expr_pc_covars_perm/ \
+    #     -c 'sex,age,geno_PC1,geno_PC2,geno_PC3,geno_PC4,geno_PC5,geno_PC6,geno_PC7,PC1,PC2,PC3,PC4,PC5'
+
+) &> ${LOG}
 
 
 
 # TODO:
-# [] Add BioHeart/TOB as covariate
-# [] add mean total_counts,pct_counts_mt as covariate??? I dont think this is required 
+# [x] Add BioHeart/TOB as covariate
+# [] add total_counts,pct_counts_mt as covariate??? I dont think this is required UPDATE: not using these, instead I regress them out of the counts before creating the NN-graph
 # [x] get sample-level PC's (either take avg of harmony PC's per-sample OR do PCA on the pseudobulk expression matrix...) 
 
 # NOTE: removed sex as covariate for testing if the NA value is what's causing the error, it ran OK when I removed sex

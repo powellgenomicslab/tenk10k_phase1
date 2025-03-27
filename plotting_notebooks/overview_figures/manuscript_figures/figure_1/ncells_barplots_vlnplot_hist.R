@@ -1,3 +1,5 @@
+# mm activate r-python-dev
+
 library(tidyverse)
 library(glue)
 library(ggsci)
@@ -70,10 +72,13 @@ barplot_ncells_per_celltype_log10 %>%
 # NOTE:
 # currently this plot does not have data points for individuals if zero cells were detected for that cell type
 # Do we still want to plot if the cell types in the individual was zero?
+
 # For onek1k, this plot has the percentage of total cells for each individual on the y axis
 vln_plot_ncells_per_individual_per_celltype <- plot_data %>%
     group_by(cell_type, individual) %>%
     count() %>%
+    ungroup() %>%
+    complete(cell_type, individual, fill = list("n" = 0)) %>%
     ggplot(aes(x = fct_relevel(cell_type, cell_type_order), y = n, fill = cell_type, colour = cell_type)) +
     geom_quasirandom(stroke = NA, size = 0.5) +
     # geom_boxplot(colour = "black", fill = "white") +
@@ -83,12 +88,36 @@ vln_plot_ncells_per_individual_per_celltype <- plot_data %>%
     scale_y_continuous(expand = expansion(mult = c(0, 0.05)), labels = label_comma()) +
     theme_tenk10k() +
     theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), legend.position = "none")
-
 vln_plot_ncells_per_individual_per_celltype %>%
     ggsave(
         filename = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/plotting_notebooks/overview_figures/manuscript_figures/figure_1/figures/vln_plot_ncells_per_individual_per_celltype.png",
         width = width, height = height, dpi = dpi
     )
+
+# vln_plot_ncells_per_individual_per_celltype_pct <- plot_data %>%
+#     group_by(individual) %>%
+#     mutate(total_cells_individual = n()) %>%
+#     group_by(cell_type, individual) %>%
+#     mutate(total_cells_cell_type_individual = n()) %>%
+#     reframe(percentage = total_cells_cell_type_individual / total_cells_individual) %>%
+#     distinct() %>%
+#     complete(cell_type, individual, fill = list(percentage = 0)) %>%
+#     ggplot(aes(x = fct_relevel(cell_type, cell_type_order), y = percentage, fill = cell_type, colour = cell_type)) +
+#     geom_quasirandom(stroke = NA, size = 0.5) +
+#     # geom_violin(width=1.5) +
+#     # geom_boxplot(colour = "black", fill = "white") +
+#     labs(x = "Cell type", y = "Cells (%)")  +
+#     scale_fill_manual(values = setNames(tenk_color_pal$color, tenk_color_pal$cell_type)) +
+#     scale_colour_manual(values = setNames(tenk_color_pal$color, tenk_color_pal$cell_type)) +
+#     scale_y_continuous(expand = expansion(mult = c(0, 0.05)), labels = label_percent(accuracy = 1)) +
+#     theme_tenk10k() +
+#     theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), legend.position = "none")
+
+# vln_plot_ncells_per_individual_per_celltype_pct %>%
+#     ggsave(
+#         filename = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/plotting_notebooks/overview_figures/manuscript_figures/figure_1/figures/vln_plot_ncells_per_individual_per_celltype_pct.png",
+#         width = width, height = height, dpi = dpi
+#     )
 
 ncells_per_individual_total_hist <- plot_data %>%
     group_by(individual) %>%

@@ -19,9 +19,14 @@ pcs_out_file = f"{output_dir}/{celltype}_expression_pcs_no_harmony_with_regressi
 # if os.path.exists(pcs_out_file):
 #   sys.exit("File already exists!")
 
-# Load integrated AnnData object
+# Load combined AnnData object
 input_dir = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries"
-input_file = f"{input_dir}/300_libraries_concatenated_filtered.h5ad"
+
+# NOTE: actually run with:
+# input_file = f"{input_dir}/300_libraries_concatenated_filtered.h5ad"
+# This is a copy of: 298_libraries_cell_metadata_filtered_min1000genes.csv (updated file name)
+# confirmed same number of cells
+input_file = f"{input_dir}298_libraries_cell_metadata_filtered_min1000genes.csv"
 adata = sc.read(input_file)
 
 # Extract cell type specific expression
