@@ -1,6 +1,8 @@
-# TenK10K phase1 analyses
+# Impact of rare and common genetic variation on cell type-specific gene expression
 
-Repo for analyses of the pilot phase of TenK10K.
+This repository contains scripts for data processing, analysis and figure generation using data from phase 1 of the TenK10K project for our paper:
+
+Cuomo et al., [Impact of rare and common genetic variation on cell type-specific gene expression](https://www.medrxiv.org/content/10.1101/2025.03.20.25324352v1), medRxiv, 2025.
 
 This includes:
 
