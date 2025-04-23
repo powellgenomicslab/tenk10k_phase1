@@ -5,7 +5,7 @@ Repo for analyses of the pilot phase of TenK10K.
 This includes:
 
 * scRNA-seq processing 
-* downstream analysis of eQTLs identified via SAIGE-QTL
+* [cell-state abundance QTLs](cell_state_abundance_qtl)
 * [manuscript main and suppl figures](plotting_notebooks)
 
 ## scRNA-seq processing pipeline
