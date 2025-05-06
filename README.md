@@ -48,7 +48,8 @@ This includes:
 
 ## Processing pipeline data flow diagram
 
-![singlecell pipeline data flow (for sharing) (1)](https://github.com/user-attachments/assets/899818e7-5bd2-44a3-90ae-52248385516e)
+![singlecell pipeline data flow (for sharing) (2)](https://github.com/user-attachments/assets/cba4e9f4-8785-4c5d-9d5b-47830facb4b1)
+
 
 
 
