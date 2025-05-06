@@ -1,4 +1,4 @@
-# Impact of rare and common genetic variation on cell type-specific gene expression
+![singlecell pipeline data flow (for sharing)](https://github.com/user-attachments/assets/298491c4-273e-49e6-baab-5ce0e61c4c92)# Impact of rare and common genetic variation on cell type-specific gene expression
 
 This repository contains scripts for data processing, analysis and figure generation using data from phase 1 of the TenK10K project for our paper:
 
@@ -48,6 +48,7 @@ This includes:
 
 ## Processing pipeline data flow diagram
 
-![singlecell pipeline data flow](https://github.com/user-attachments/assets/ce9ca4cd-ae02-41e3-a597-056181a7d4c2)
+![singlecell pipeline data flow (for sharing)](https://github.com/user-attachments/assets/5c415a2c-2931-4ec6-8750-3eda7293ddb7)
+
 
 
