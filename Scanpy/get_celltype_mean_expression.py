@@ -22,5 +22,6 @@ for celltype in celltypes:
     # save as pandas data frame
     expr_df = pd.DataFrame(data=means_by_ct.layers['mean'], index=[f'mean_{celltype}'], columns = means_by_ct.var.index)
     # write to file
+    print('Writing to file: {celltype}, {chrom}')
     out_file = f'{out_dir}{celltype}_chr{chrom}.csv'
     expr_df.to_csv(out_file)
