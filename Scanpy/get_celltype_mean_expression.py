@@ -13,7 +13,7 @@ celltypes = ct_df.celltype.unique()
 
 # loop over cell types and chromosomes to open each AnnData object
 for celltype in celltypes:
-  for chrom in 1:22:
+  for chrom in range(22):
     # open file
     adata_file = f'{anndata_dir}{celltype}_chr{chrom}.h5ad'
     adata = sc.read(adata_file)
