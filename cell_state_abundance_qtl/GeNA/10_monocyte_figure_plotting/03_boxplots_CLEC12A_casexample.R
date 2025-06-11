@@ -105,15 +105,20 @@ ct_col <- tenk_color_pal %>%
     distinct() %>%
     pull()
 
-vlnplot_spheno <- ggplot(sample_pheno, aes(x = Genotype, y = !!sym(glue("spheno_{variant}")))) +
+vlnplot_spheno <- ggplot(sample_pheno, aes(x = !!sym(variant), y = !!sym(glue("spheno_{variant}")), group = !!sym(variant))) +
     geom_violin(color = NA, fill = ct_col, alpha = 0.7) +
     geom_boxplot(fill = NA, col = ct_col, width = 0.1, outlier.shape = NA, alpha = 1) +
+    # geom_beeswarm() +
+    geom_smooth(method = "lm", col = ct_col, aes(group = 1), se = FALSE) +
     theme_classic() +
+    # geom_smooth(method = "lm", se = TRUE) +
     theme(
         aspect.ratio = 1,
         text = element_text(size = 20),
-        title = element_text(hjust = 0.5),
+        title = element_text(hjust = 0.5)
     ) +
+    # scale_y_continuous(limits = c(axis_limits$lower, axis_limits$upper)) +
+    scale_x_continuous(breaks = c(0, 1, 2), labels = levels(sample_pheno$Genotype)) +
     labs(y = "Sample-level phenotype", title = variant)
 
 vlnplot_spheno %>%
@@ -254,5 +259,7 @@ pct_boxplots %>%
         width = 12,
         height = 10
     )
+
+
 
 
