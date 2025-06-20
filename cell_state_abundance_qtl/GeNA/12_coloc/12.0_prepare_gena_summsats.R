@@ -40,9 +40,6 @@ for (celltype in celltypes[!celltypes %in% c("Other", "ALL")]) {
         dir.create(out_dir, showWarnings = FALSE)
         output_file_tsv <- glue("{out_dir}/GeNA_sumstats_{chr}_{pos}_cis_snps.tsv")
         output_file_snps <- glue("{out_dir}/GeNA_sumstats_{chr}_{pos}_cis_snps.snps")
-        # file.remove(glue("{out_dir}/GeNA_sumstats_{lead_snp}_cis_snps.tsv"))
-        # file.remove(glue("{out_dir}/GeNA_sumstats_{lead_snp}_cis_snps.snps"))
-        system(glue("mkdir -p {out_dir}"))
         fwrite(cis_snps, output_file_tsv, sep = "\t")
         fwrite(cis_snps[, .(ID)], output_file_snps, sep = "\t", col.names = FALSE) # create list of snps to filter
         return(glue("{chr}_{pos}"))
@@ -94,3 +91,8 @@ for (celltype in celltypes[!celltypes %in% c("Other", "ALL")]) {
 # TODO:
 # create a genotype file for the cis-snps
 # see:  https://github.com/immunogenomics/GeNA-applied/blob/main/run_gwas/05.munge_geno_cissnps.sh
+
+
+# check is A1 allele always the alternative allele? (NO it's the minor allele!)
+
+# compare allele frequencies with alt_freqs file

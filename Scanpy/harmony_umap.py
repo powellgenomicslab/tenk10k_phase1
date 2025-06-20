@@ -33,8 +33,19 @@ def analysis_harmony(filename):
     sc.pp.regress_out(adata, ["total_counts", "pct_counts_mt"])
     sc.pp.scale(adata, max_value=10)
 
-    # PCA
+    # PCA + UMAP (NO harmony)
     sc.tl.pca(adata, svd_solver="arpack", n_comps=30)
+    adata.obsm["X_pca_no_harmony"] = adata.obsm["X_pca"]
+    sc.tl.umap(adata)
+    adata.obsm["X_umap_no_harmony"] = adata.obsm["X_umap"]
+
+    # PCA plotting (Not Harmony Batch-corrected)
+    sc.pl.pca(adata, color="wg2_scpred_prediction", save="pca_cell_types2_noharmony.png")
+    sc.pl.pca(adata, color=["cohort"], save="pca_cohort2_filtered_noharmony.png")
+
+    # UMAP plotting Harmony batch-corrected
+    sc.pl.umap(adata, color="wg2_scpred_prediction", save="umap_celltypes2_noharmony.png")
+    sc.pl.umap(adata, color="cohort", save="umap_cohort2_filtered_noharmony.png")
 
     # perform Harmony integration to remove technical batch effects between pools
     sce.pp.harmony_integrate(adata, "sequencing_library")
@@ -53,14 +64,14 @@ def analysis_harmony(filename):
     sc.pl.umap(adata, color="cohort", save="umap_cohort2_filtered.png")
 
     adata.write(
-        "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/300_libraries_concatenated_harmony_filtered_min1000genes.h5ad"
+        "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/300_libraries_concatenated_harmony_filtered_min1000genes_20250620.h5ad"
     )
 
     # save the UMAP coords for plotting in R
     pd.DataFrame(
         adata.obsm["X_umap"], columns=["UMAP1", "UMAP2"], index=adata.obs.index
     ).to_csv(
-        "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/300_libraries_harmony_umap_coords_filtered_min1000genes.csv"
+        "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/300_libraries_harmony_umap_coords_filtered_min1000genes_20250620.csv"
     )
 
 
