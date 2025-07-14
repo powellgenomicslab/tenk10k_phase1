@@ -27,15 +27,27 @@ export -f run_coloc
 
 # RUN COLOC FOR UKBB BLOOD TRAITS ----
 
-GWAS_DIR_UKBB=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/gwas/gymrek-ukbb-snp-str-gwas-catalogs/chr-specific/
+# GWAS_DIR_UKBB=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/gwas/gymrek-ukbb-snp-str-gwas-catalogs/chr-specific/ old version - SNPs and STRs 
+GWAS_DIR_UKBB=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/gwas/gymrek-ukbb-snp-gwas-catalogs_v6 # updated version - SNPs only, better liftover
 
-OUTDIR=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/coloc/coloc_results/${CELLTYPE}/blood_traits/
+OUTDIR=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/coloc/coloc_results/${CELLTYPE}/blood_traits
+
+# clean up after previous run 
+if [ -z "${CELLTYPE}" ]; then
+    echo "Error: CELLTYPE variable is not set"
+    exit 1
+fi
+if [ -d ${OUTDIR}]; then
+    rm -rf ${OUTDIR}
+fi
+
 mkdir -p ${OUTDIR}
 
 for GWAS_FILE_PATH in ${GWAS_DIR_UKBB}/*; do
 
     gwas=$(basename "${GWAS_FILE_PATH}")
-    GWAS_PHENO_NAME=$(echo $gwas | sed 's/_snp_str_gwas_results_hg38_chr[0-9]\+\.tab\.gz$//') # parse phenotype name from the file name 
+    # GWAS_PHENO_NAME=$(echo $gwas | sed 's/_snp_str_gwas_results_hg38_chr[0-9]\+\.tab\.gz$//') # parse phenotype name from the file name (old version split by chr)
+    GWAS_PHENO_NAME=$(echo $gwas | sed 's/_snp_gwas_results_hg38\.tab\.gz$//') # parse phenotype from the file name (new version)
 
     parallel -j 12 --verbose run_coloc ${GWAS_FILE_PATH} ${GWAS_PHENO_NAME} {} ${CELLTYPE} ${OUTDIR} ::: $(ls /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/coloc/plink_fixed_pheno/${CELLTYPE}/*.glm.linear)
 

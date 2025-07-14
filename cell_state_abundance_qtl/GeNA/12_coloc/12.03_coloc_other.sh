@@ -35,7 +35,7 @@ pheno_names=(
 )
 
 pheno_files=(
-    "${GWAS_DIR}/mon_P.ma"
+    "${GWAS_DIR}/mono_p.ma"
     "${GWAS_DIR}/mono.ma"
 )
 
@@ -46,11 +46,7 @@ i=0
 for GWAS_FILE_PATH in "${pheno_files[@]}"; do
     gwas=$(basename "${GWAS_FILE_PATH}")
     GWAS_PHENO_NAME="${pheno_names[$i]}"
-    # echo $i
-    # echo $GWAS_PHENO_NAME
-    # echo $GWAS_FILE_PATH
     cmd="parallel -j 12 --verbose run_coloc ${GWAS_FILE_PATH} ${GWAS_PHENO_NAME} {} ${CELLTYPE} ${OUTDIR} ::: $(ls /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/coloc/plink_fixed_pheno/${CELLTYPE}/*.glm.linear)"
-    # echo $cmd
     eval $cmd
     ((i+=1))
 done

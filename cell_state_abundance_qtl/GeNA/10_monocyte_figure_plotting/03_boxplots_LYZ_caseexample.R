@@ -105,46 +105,52 @@ ct_col <- tenk_color_pal %>%
     distinct() %>%
     pull()
 
-vlnplot_spheno <- ggplot(sample_pheno, aes(x = Genotype, y = !!sym(glue("spheno_{variant}")))) +
+vlnplot_spheno <- ggplot(sample_pheno, aes(x = !!sym(variant), y = !!sym(glue("spheno_{variant}")), group = !!sym(variant))) +
     geom_violin(color = NA, fill = ct_col, alpha = 0.7) +
     geom_boxplot(fill = NA, col = ct_col, width = 0.1, outlier.shape = NA, alpha = 1) +
+    # geom_beeswarm() +
+    geom_smooth(method = "lm", col = ct_col, aes(group = 1), se = FALSE) +
     theme_classic() +
-    theme(
-        aspect.ratio = 1,
-        text = element_text(size = 20),
-        title = element_text(hjust = 0.5),
-    ) +
-    labs(y = "Sample-level phenotype", title = variant)
-
-vlnplot_spheno %>%
-    ggsave(
-        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/umap/{celltype}_{name}_spheno_boxplot.pdf"),
-        width = 5,
-        height = 5
-    )
-
-# plot the raw percentages ----
-
-pct_boxplot_data <- sample_pheno %>%
-    pivot_longer(starts_with("pct_"), names_to = "Cell subtype", values_to = "Fraction of cells", names_prefix = "pct_")
-
-vlnplot_cell_percentages <- ggplot(pct_boxplot_data, aes(x = Genotype, y = `Fraction of cells`)) +
-    geom_violin(color = NA, fill = ct_col, alpha = 0.7) +
-    geom_boxplot(fill = NA, col = ct_col, width = 0.1, outlier.shape = NA, alpha = 1) +
-    facet_wrap(~`Cell subtype`, ncol = 2, scales = "free_y") +
-    theme_classic() +
+    # geom_smooth(method = "lm", se = TRUE) +
     theme(
         aspect.ratio = 1,
         text = element_text(size = 20),
         title = element_text(hjust = 0.5)
+    ) +
+    # scale_y_continuous(limits = c(axis_limits$lower, axis_limits$upper)) +
+    scale_x_continuous(breaks = c(0, 1, 2), labels = levels(sample_pheno$Genotype)) +
+    labs(y = "Sample-level phenotype", title = variant)
+
+vlnplot_spheno %>%
+    ggsave(
+        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/boxplots/csaqtl_vignettes{celltype}_{name}_spheno_boxplot.pdf"),
+        width = 5,
+        height = 5
     )
 
-vlnplot_cell_percentages %>%
-    ggsave(
-        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/umap/{celltype}_{name}_cell_percentages_boxplot.pdf"),
-        width = 7.5,
-        height = 7.5
-    )
+
+# plot the raw percentages ----
+
+# pct_boxplot_data <- sample_pheno %>%
+#     pivot_longer(starts_with("pct_"), names_to = "Cell subtype", values_to = "Fraction of cells", names_prefix = "pct_")
+
+# vlnplot_cell_percentages <- ggplot(pct_boxplot_data, aes(x = Genotype, y = `Fraction of cells`)) +
+#     geom_violin(color = NA, fill = ct_col, alpha = 0.7) +
+#     geom_boxplot(fill = NA, col = ct_col, width = 0.1, outlier.shape = NA, alpha = 1) +
+#     facet_wrap(~`Cell subtype`, ncol = 2, scales = "free_y") +
+#     theme_classic() +
+#     theme(
+#         aspect.ratio = 1,
+#         text = element_text(size = 20),
+#         title = element_text(hjust = 0.5)
+#     )
+
+# vlnplot_cell_percentages %>%
+#     ggsave(
+#         filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/boxplots/csaqtl_vignettes/{celltype}_{name}_cell_percentages_boxplot.pdf"),
+#         width = 7.5,
+#         height = 7.5
+#     )
 
 # plot residualised percentages, corrected for covariates ----
 
@@ -182,7 +188,7 @@ vlnplot_cell_percentages_resids <- ggplot(pct_boxplot_data_resids, aes(x = Genot
 
 vlnplot_cell_percentages_resids %>%
     ggsave(
-        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/umap/{celltype}_{name}_cell_percentages_vln_residuals.pdf"),
+        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/boxplots/csaqtl_vignettes{celltype}_{name}_cell_percentages_vln_residuals.pdf"),
         width = 14,
         height = 14
     )
@@ -250,7 +256,7 @@ pct_boxplots <- patchwork::wrap_plots(boxplot_list, ncol = 3)
 
 pct_boxplots %>%
     ggsave(
-        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/umap/{celltype}_{name}_cell_percentages_vln_residuals_combined.pdf"),
+        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/boxplots/csaqtl_vignettes{celltype}_{name}_cell_percentages_vln_residuals_combined.pdf"),
         width = 12,
         height = 10
     )

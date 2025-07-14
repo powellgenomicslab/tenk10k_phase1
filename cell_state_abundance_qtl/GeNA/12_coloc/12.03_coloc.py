@@ -162,9 +162,9 @@ def main(
     elif gwas['p_value'].min() > gwas_significance_threshold:
         logging.warning(f'No significant SNP GWAS data in the cis-window around chr{chr} {pos}: skipping....')
     elif gwas.empty: 
-        logging.warning(f'No SNPs present in cis window {cis_window}B around chr{chr} {pos}: skipping....')
+        logging.warning(f'No SNPs present in cis window {cis_window} around lead SNP at chr{chr} {pos}: skipping....')
     else:
-        logging.info(f'Running coloc for lead snp at chr{chr} {pos} and gwas: {gwas_file_path}')
+        logging.info(f'Running coloc for lead SNP at chr{chr} {pos} and gwas: {gwas_file_path}')
 
         # run coloc 
         coloc_runner(gwas=gwas, gwas_pheno_name=gwas_pheno_name, 
