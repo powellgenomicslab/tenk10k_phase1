@@ -29,4 +29,7 @@ CELLTYPE=$(sed "${i}q;d" /directflow/SCCGGroupShare/projects/blabow/tenk10k_phas
 . /home/${USER}/micromamba/etc/profile.d/micromamba.sh
 micromamba activate r-python-dev
 
+# run plotting and save results for the calibrated MAF>0.05 results
 Rscript /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/cell_state_abundance_qtl/GeNA/06_GeNA_plotting.R ${RESOLUTION} ${CELLTYPE} ${ANALYSIS_NAME}
+# run plotting for the non-calibrated MAF>0.01 results 
+Rscript /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/cell_state_abundance_qtl/GeNA/06_GeNA_plotting_MAF_0.01.R ${RESOLUTION} ${CELLTYPE} ${ANALYSIS_NAME}
