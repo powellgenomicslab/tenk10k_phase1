@@ -1,9 +1,13 @@
 library(tidyverse)
 library(data.table)
 library(ggplot2)
+library(rtracklayer)
 # coloc_results_dir <- "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/coloc/coloc_results/"
 
 # results_file_list <- list.files(, full.names=TRUE)
+# ----
+# summarise coloc results with GWAS
+# ----
 
 coloc_all_blood <- Sys.glob("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/coloc/coloc_results/*/blood_traits/*.tsv") %>%
     map(\(f)    {
@@ -49,8 +53,13 @@ coloc_all <- coloc_all_blood %>%
     bind_rows(coloc_all_disease) %>%
     bind_rows(coloc_all_vukovic)
 
-coloc_all %>% filter(PP.H4.abf > 0.8)
+coloc_sig_table <- coloc_all %>%
+    filter(PP.H4.abf > 0.8)
+# %>%
+# pull(lead_snp) %>%
+# unique()
 
+# coloc_all$lead_snp %>% unique() %>% length()
 # Exploratory Plots
 
 plot_data <- coloc_all %>%
@@ -99,8 +108,46 @@ per_pheno_summary <- plot_data %>%
 per_pheno_summary %>%
     ggsave(filename = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/coloc/coloc_bar_by_pheno.png", width = 14, height = 10)
 
+# ----
+# summarise coloc results with eQTLs
+# ----
+
+coloc_all_eqtl <- Sys.glob("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/coloc/coloc_results/*/eqtl/*.tsv") %>%
+    map(\(f) {
+        ensg <- f %>%
+            str_remove(".*_") %>%
+            str_remove(".tsv")
+
+        coloc_res <- fread(f) %>%
+            mutate(ensg = ensg) %>%
+            return()
+    }) %>%
+    rbindlist(use.names = TRUE)
+
+coloc_sig_eqtl <- coloc_all_eqtl %>%
+    filter(PP.H4.abf > 0.8)
+
+# get the gene names
+gencode_path <- "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/reference_data/gencode.v44.basic.annotation.gtf.gz"
+gencode <- rtracklayer::import(gencode_path)
+gencode_genes <- gencode[gencode$type == "gene", c("gene_id", "gene_name")] # filter down to just genes
+gencode_genes$gene_id_noversion <- gencode_genes$gene_id %>% str_remove("\\.[0-9]+") # remove version numbers to match eqtl results
+# intersect(gencode_genes$gene_id_noversion, all_eqtl_fdr_sig_gr$gene)
+gene_name_map <- gencode_genes %>%
+    as.data.frame() %>%
+    select(gene_id_noversion, gene_name)
+
+coloc_sig_eqtl <- coloc_sig_eqtl %>%
+    left_join(gene_name_map, by = c("ensg" = "gene_id_noversion"))
+
+coloc_sig_eqtl %>%
+    fwrite("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/coloc/colo_sig_eqtl_results.tsv", sep = "\t")
+
+# coloc_sig_eqtl$lead_snp %>% unique() %>% length()
+# coloc_sig_eqtl$celltype_csaqtl %>% table()
 
 
+# coloc_sig_eqtl
 
 # GWAS is trait 1
 # csaQTL is trait 2

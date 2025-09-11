@@ -25,18 +25,66 @@ CELLTYPE=$(sed "${SGE_TASK_ID}q;d" /directflow/SCCGGroupShare/projects/blabow/te
 source /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/cell_state_abundance_qtl/GeNA/12_coloc/coloc_function.sh
 export -f run_coloc
 
-# RUN COLOC FOR DISEASE TRAITS ----
+# RUN COLOC for Vukovic et al UKBB GWAS ----
 
 GWAS_DIR=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/gwas/from_smr/reformatted_for_coloc
 
 pheno_names=(
-    "mono_p"
-    "mono"
+    Basophil_count
+    eosinophil_count
+    hematocrit
+    hemoglobin_concentration
+    hlr_reticulocyte_count
+    hlr_reticulocyte_percentage_of_red_cells
+    immature_fraction_of_reticulocytes
+    lymphocyte_count
+    mean_corpuscular_hemoglobin_concentration
+    mean_corpuscular_hemoglobin
+    mean_corpuscular_volume
+    monocyte_count
+    monocyte_percentage_of_white_cells
+    mean_platelet_volume
+    mean_reticulocyte_volume
+    mean_sphered_corpuscular_volume
+    neutrophil_count
+    neutrophil_percentage_of_white_cells
+    plateletcrit
+    platelet_distribution_width
+    platelet_count
+    red_blood_cell_count
+    red_cell_distribution_width
+    reticulocyte_count
+    reticulocyte_fraction_of_red_cells
+    white_blood_cell_count
 )
 
 pheno_files=(
-    "${GWAS_DIR}/mono_p.ma"
+    "${GWAS_DIR}/baso.ma"
+    "${GWAS_DIR}/eo.ma"
+    "${GWAS_DIR}/hct.ma"
+    "${GWAS_DIR}/hgb.ma"
+    "${GWAS_DIR}/hlr.ma"
+    "${GWAS_DIR}/hlr_p.ma"
+    "${GWAS_DIR}/irf.ma"
+    "${GWAS_DIR}/lymph.ma"
+    "${GWAS_DIR}/mchc.ma"
+    "${GWAS_DIR}/mch.ma"
+    "${GWAS_DIR}/mcv.ma"
     "${GWAS_DIR}/mono.ma"
+    "${GWAS_DIR}/mono_p.ma"
+    "${GWAS_DIR}/mpv.ma"
+    "${GWAS_DIR}/mrv.ma"
+    "${GWAS_DIR}/mscv.ma"
+    "${GWAS_DIR}/neut.ma"
+    "${GWAS_DIR}/neut_p.ma"
+    "${GWAS_DIR}/pct.ma"
+    "${GWAS_DIR}/pdw.ma"
+    "${GWAS_DIR}/plt.ma"
+    "${GWAS_DIR}/rbc.ma"
+    "${GWAS_DIR}/rdw_cv.ma"
+    "${GWAS_DIR}/ret.ma"
+    "${GWAS_DIR}/ret_p.ma"
+    "${GWAS_DIR}/wbc.ma"
 )
 
 OUTDIR=/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/coloc/coloc_results/${CELLTYPE}/extra_traits/

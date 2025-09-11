@@ -32,14 +32,17 @@ reformat_gwas <- function(pheno_name, filepath, outdir) {
     fwrite(gwas_formatted_for_coloc, glue("{outdir}/{pheno_name}.ma"), sep = "\t", na = "NA", quote = FALSE)
 }
 
-
 # run the function to save re-formatted summary statistics which can be used in coloc analysis
-files <- list.files("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/gwas/from_smr", full.names = TRUE)
-pheno_names <- c("mono_p", "mono")
+files <- Sys.glob("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/gwas/from_smr/*.ma")
 
-reformat_gwas(pheno_names[1], files[1], "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/gwas/from_smr/reformatted_for_coloc")
-reformat_gwas(pheno_names[2], files[2], "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/gwas/from_smr/reformatted_for_coloc")
+pheno_names <- files %>%
+    basename() %>%
+    str_remove(".ma")
 
+
+for (i in seq_along(files)) {
+    reformat_gwas(pheno_names[i], files[i], "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/gwas/from_smr/reformatted_for_coloc")
+}
 
 # NOTES;
 
@@ -48,4 +51,4 @@ reformat_gwas(pheno_names[2], files[2], "/directflow/SCCGGroupShare/projects/bla
 #     min()
 
 # here is an example of how the formatting is for the other GWAS used downstream (preprocessed by Hope)
-gwas_formatted <- fread("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/gwas/gymrek-ukbb-snp-str-gwas-catalogs/chr-specific/white_british_alanine_aminotransferase_snp_str_gwas_results_hg38_chr1.tab.gz")
+# gwas_formatted <- fread("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/gwas/gymrek-ukbb-snp-str-gwas-catalogs/chr-specific/white_british_alanine_aminotransferase_snp_str_gwas_results_hg38_chr1.tab.gz")
