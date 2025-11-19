@@ -73,7 +73,18 @@ module_score_INFLAMMATORY <- ggFeaturePlot(plot_data, feature = "HALLMARK_INFLAM
 module_score_IL2 <- ggFeaturePlot(plot_data, feature = "HALLMARK_IL2_STAT5_SIGNALING") #+ labs(title = "HALLMARK_IL2_STAT5_SIGNALING")
 module_score_IL6 <- ggFeaturePlot(plot_data, feature = "HALLMARK_IL6_JAK_STAT3_SIGNALING") #+ labs(title = "HALLMARK_IL6_JAK_STAT3_SIGNALING")
 
-combined_with_gsea <- umap_celltypes + npheno_clec12a + module_score_TNFA + module_score_INFLAMMATORY + module_score_IL2 + module_score_IL6 + plot_layout(ncol = 3)
 
-combined_with_gsea %>%
+# CLEC12A combined plot
+combined_with_gsea_clec12a <- umap_celltypes + npheno_clec12a + module_score_TNFA + module_score_INFLAMMATORY + module_score_IL2 + module_score_IL6 + plot_layout(ncol = 3)
+combined_with_gsea_clec12a %>%
     ggsave(filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/umap/{celltype}_combined_umaps_clec12a_modulescores.pdf"), width = 12, height = 8)
+
+# LYZ combined plot
+combined_with_gsea_lyz <- umap_celltypes + npheno_lyz + module_score_TNFA + module_score_INFLAMMATORY + plot_layout(ncol = 3)
+combined_with_gsea_lyz %>%
+    ggsave(filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/umap/{celltype}_combined_umaps_lyz_modulescores.pdf"), width = 12, height = 8)
+
+# All module score plots together
+combined_module_score_umaps <- module_score_TNFA + module_score_INFLAMMATORY + module_score_IL2 + module_score_IL6 + plot_layout(ncol = 2)
+combined_module_score_umaps %>%
+    ggsave(filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/umap/{celltype}_combined_umaps_all_modulescores.pdf"), width = 6, height = 6)

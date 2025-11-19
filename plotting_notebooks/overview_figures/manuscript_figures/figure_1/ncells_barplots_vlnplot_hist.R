@@ -26,7 +26,7 @@ width <- 5
 height <- 3
 dpi <- 400
 
-# plotting functions go here
+# Plotting functions go here
 
 # 📊 make the plots ----
 

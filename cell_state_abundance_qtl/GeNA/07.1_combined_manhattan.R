@@ -51,7 +51,7 @@ sumstats_all_ct <- celltypes %>%
     rbindlist(fill = TRUE)
 
 # format for plotting
-sumstats_all_ct[, celltype := factor(str_replace(celltype, pattern = "_", replacement = " "), levels = unique(tenk_color_pal$major_cell_type)), ]
+sumstats_all_ct[, celltype := factor(str_replace(str_replace(celltype, pattern = "Other", replacement = "HSPC"), pattern = "_", replacement = " "), levels = unique(tenk_color_pal$major_cell_type)), ]
 sumstats_all_ct <- merge(sumstats_all_ct, afreq, by = "ID", all.x = TRUE) %>%
     .[ALT_FREQS >= 0.05 & ALT_FREQS <= 0.95, ]
 
@@ -224,10 +224,13 @@ all_ct_manhattan_alt_cols <- ggplot(data = plot_data, aes(x = BPcum, y = neg_log
         # panel.border = element_blank(),
         strip.background = element_rect(fill = NA, color = NA),
         # strip.background = element_blank(),
-        # strip.text = element_blank(),
+        strip.text = element_text(size = rel(2)),
+        axis.text = element_text(size = rel(1.8)),
+        axis.title.x = element_text(size = rel(2)),
+        axis.title.y = element_text(size = rel(2)),
         panel.grid.major.x = element_blank(),
         panel.grid.minor.x = element_blank(),
-        element_blank()
+        legend.position = "none"
     ) +
     facet_wrap(~celltype, ncol = 2)
 

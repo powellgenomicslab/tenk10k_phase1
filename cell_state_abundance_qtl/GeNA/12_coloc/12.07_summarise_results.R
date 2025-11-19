@@ -2,9 +2,12 @@ library(tidyverse)
 library(data.table)
 library(ggplot2)
 library(rtracklayer)
+source("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/plotting_notebooks/overview_figures/manuscript_figures/tenk_data_vis_utils.R")
+
 # coloc_results_dir <- "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/coloc/coloc_results/"
 
 # results_file_list <- list.files(, full.names=TRUE)
+
 # ----
 # summarise coloc results with GWAS
 # ----
@@ -54,7 +57,12 @@ coloc_all <- coloc_all_blood %>%
     bind_rows(coloc_all_vukovic)
 
 coloc_sig_table <- coloc_all %>%
-    filter(PP.H4.abf > 0.8)
+    filter(PP.H4.abf > 0.8) %>%
+    arrange(celltype, PP.H4.abf)
+
+coloc_sig_table %>%
+    fwrite("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/coloc/coloc_sig_gwas_results.tsv", sep = "\t")
+
 # %>%
 # pull(lead_snp) %>%
 # unique()
@@ -106,10 +114,24 @@ per_pheno_summary <- plot_data %>%
     theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 
 per_pheno_summary %>%
-    ggsave(filename = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/coloc/coloc_bar_by_pheno.png", width = 14, height = 10)
+    ggsave(filename = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/coloc/coloc_bar_by_pheno_sig.png", width = 14, height = 10)
+
+eqtl_coloc_summary_bar <- coloc_sig_gwas %>%
+    ggplot(aes(x = celltype_csaqtl, fill = celltype_eqtl)) +
+    # stacked bar plot
+    geom_bar(stat = "count") +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
+    labs(y = "N loci (PP.H4 > 0.8)", title = "Coloc results between csaQTL and eQTL") +
+    scale_fill_manual(values = setNames(tenk_color_pal$color, tenk_color_pal$wg2_scpred_prediction))
+
+
+ggsave("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/coloc/coloc_sig_eqtl_bar.png", width = 8, height = 5)
+
+
 
 # ----
-# summarise coloc results with eQTLs
+# Summarise coloc results with eQTLs
 # ----
 
 coloc_all_eqtl <- Sys.glob("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/coloc/coloc_results/*/eqtl/*.tsv") %>%
@@ -126,6 +148,11 @@ coloc_all_eqtl <- Sys.glob("/directflow/SCCGGroupShare/projects/blabow/tenk10k_p
 
 coloc_sig_eqtl <- coloc_all_eqtl %>%
     filter(PP.H4.abf > 0.8)
+coloc_all_eqtl %>%
+    filter(PP.H4.abf > 0.8) %>%
+    pull(lead_snp) %>%
+    unique() %>%
+    length()
 
 # get the gene names
 gencode_path <- "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/reference_data/gencode.v44.basic.annotation.gtf.gz"
@@ -143,9 +170,37 @@ coloc_sig_eqtl <- coloc_sig_eqtl %>%
 coloc_sig_eqtl %>%
     fwrite("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/coloc/colo_sig_eqtl_results.tsv", sep = "\t")
 
+
+eqtl_coloc_summary_bar <- coloc_sig_eqtl %>%
+    ggplot(aes(x = celltype_csaqtl, fill = celltype_eqtl)) +
+    # stacked bar plot
+    geom_bar(stat = "count") +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
+    labs(y = "N loci (PP.H4 > 0.8)", title = "Coloc results between csaQTL and eQTL") +
+    scale_fill_manual(values = setNames(tenk_color_pal$color, tenk_color_pal$wg2_scpred_prediction))
+
+
+ggsave("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/coloc/coloc_sig_eqtl_bar.png", width = 8, height = 5)
+
+
+
+plot_data_eqtl <- coloc_all_eqtl %>%
+    pivot_longer(PP.H0.abf:PP.H4.abf, names_to = "Hypothesis", values_to = "Posterior probability")
+
+barplot_summary_eqtl <- plot_data_eqtl %>%
+    ggplot(aes(x = `Posterior probability`)) +
+    facet_wrap(~Hypothesis, ncol = 5) +
+    geom_bar(stat = "bin", bins = 10) +
+    theme_bw()
+
+barplot_summary_eqtl %>%
+    ggsave(filename = "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/major_cell_types/coloc/coloc_eqtl_summary_bar.png", width = 10, height = 2.5)
+
+
+
 # coloc_sig_eqtl$lead_snp %>% unique() %>% length()
 # coloc_sig_eqtl$celltype_csaqtl %>% table()
-
 
 # coloc_sig_eqtl
 
