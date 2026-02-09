@@ -51,7 +51,6 @@ plink2 --pfile ${GENOTYPES} \
     --out ${OUT_PLINK}
 
 # 2. Run the python script that keeps the top snps at each locus, using a clumping strategy
-
 python /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/cell_state_abundance_qtl/GeNA/08_prune_sig_snps.py ${CELLTYPE} ${RESOLUTION} ${ANALYSIS_NAME}
 
 
