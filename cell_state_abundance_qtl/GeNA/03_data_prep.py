@@ -10,11 +10,8 @@ import os
 np.random.seed(0)
 
 # get cell type from cmdline arg 1
-# celltype = sys.argv[1]
-# resolution = sys.argv[2]
-
-celltype = "Dendritic"
-resolution = "major_cell_types"
+celltype = sys.argv[1]
+resolution = sys.argv[2]
 
 # constants
 outdir = (
