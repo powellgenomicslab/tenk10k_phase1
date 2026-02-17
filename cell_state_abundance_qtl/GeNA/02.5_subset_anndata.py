@@ -1,10 +1,8 @@
 import sys
 import numpy as np
 import pandas as pd
-import multianndata as mad
-import cna
 import scanpy as sc
-import matplotlib.pyplot as plt
+import os
 
 np.random.seed(0)
 
@@ -23,7 +21,7 @@ outdir = (
 
 # read in the latest tenk cohort
 adata = sc.read(
-    "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/298_libraries_concatenated_filtered.h5ad",
+    "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/300_libraries/300_libraries_concatenated_filtered.h5ad",
     cache=True,
 )
 
@@ -73,5 +71,6 @@ elif resolution == "minor_cell_types":
     adata = adata[adata.obs["wg2_scpred_prediction"] == celltype]
 
 # save counts
+os.makedirs(f"{outdir}/data/h5/{resolution}/", exist_ok=True)
 adata.layers["counts"] = adata.X.copy()
 adata.write(f"{outdir}/data/h5/{resolution}/{celltype}_scanpy.h5ad")

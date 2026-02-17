@@ -40,7 +40,8 @@ read_summstats <- function(celltype, analysis_name, resolution) {
     sumstats <- fread(file_path, select = 1:10) # read in results without the beta's
     sumstats[, `:=`(
         P = fifelse(as.numeric(P) == 0, .Machine$double.xmin * .Machine$double.eps, as.numeric(P)),
-        celltype = celltype
+        celltype = celltype,
+        permuted = "Real genotypes"
     )]
     return(sumstats)
 }
@@ -49,22 +50,17 @@ read_summstats <- function(celltype, analysis_name, resolution) {
 sumstats_all_ct <- celltypes %>%
     map(\(celltype) read_summstats(celltype = celltype, analysis_name = analysis_name, resolution = resolution)) %>%
     rbindlist(fill = TRUE)
+
 # format for plotting
-sumstats_all_ct[, celltype := factor(str_replace(celltype, pattern = "_", replacement = " "), levels = unique(tenk_color_pal$major_cell_type)), ]
-
-# min(sumstats_all_ct$P)
-
+sumstats_all_ct[, celltype := factor(str_replace(str_replace(celltype, pattern = "Other", replacement = "HSPC"), pattern = "_", replacement = " "), levels = unique(tenk_color_pal$major_cell_type)), ]
 # remove SNPs with below 0.05 MAF
 sumstats_all_ct <- merge(sumstats_all_ct, afreq, by = "ID", all.x = TRUE) %>%
     .[ALT_FREQS >= 0.05 & ALT_FREQS <= 0.95, ]
-
 setorder(sumstats_all_ct, P)
-
 sumstats_all_ct[
     ,
     observed := -log10(P),
 ]
-
 # calculate -log10 expected p value for each cell type
 sumstats_all_ct[
     ,
@@ -74,6 +70,10 @@ sumstats_all_ct[
 
 log10Pe <- expression(paste("Expected -log"[10], plain(P)))
 log10Po <- expression(paste("Observed -log"[10], plain(P)))
+
+#-----------------------------------------------
+# QQ plot with permuted data faceted by cell type
+#-----------------------------------------------
 
 combined_qqplot <- sumstats_all_ct %>%
     ggplot(aes(x = expected, y = observed, colour = celltype)) +
@@ -88,12 +88,84 @@ combined_qqplot <- sumstats_all_ct %>%
     scale_colour_manual(values = setNames(unique(tenk_color_pal$color_major_cell_type), unique(tenk_color_pal$major_cell_type))) +
     theme(aspect.ratio = 1)
 
-# add colour palette
-
 combined_qqplot %>%
     ggsave(
         filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/{resolution}/combined_plots/combined_qq_{analysis_name}_MAF_0.05.png"),
         width = 6, height = 5
+    )
+
+#-----------------------------------------------
+# QQ plot with permuted data faceted by cell type
+#-----------------------------------------------
+
+# Permuted GeNA results
+read_summstats_perm <- function(celltype, analysis_name, resolution) {
+    file_path <- glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/GeNA/{resolution}/{celltype}/{analysis_name}_perm/GeNA_sumstats.txt")
+    sumstats <- fread(file_path, select = 1:10) # read in results without the beta's
+    sumstats[, `:=`(
+        P = fifelse(as.numeric(P) == 0, .Machine$double.xmin * .Machine$double.eps, as.numeric(P)),
+        celltype = celltype,
+        permuted = "Permuted genotypes"
+    )]
+    return(sumstats)
+}
+
+sumstats_all_perm <- celltypes %>%
+    map(\(celltype) read_summstats_perm(celltype = celltype, analysis_name = analysis_name, resolution = resolution)) %>%
+    rbindlist(fill = TRUE)
+
+# format for plotting
+sumstats_all_perm[, celltype := factor(str_replace(str_replace(celltype, pattern = "Other", replacement = "HSPC"), pattern = "_", replacement = " "), levels = unique(tenk_color_pal$major_cell_type)), ]
+
+# remove SNPs with below 0.05 MAF
+sumstats_all_perm <- merge(sumstats_all_perm, afreq, by = "ID", all.x = TRUE) %>%
+    .[ALT_FREQS >= 0.05 & ALT_FREQS <= 0.95, ]
+setorder(sumstats_all_perm, P)
+sumstats_all_perm[
+    ,
+    observed := -log10(P),
+]
+# calculate -log10 expected p value for each cell type
+sumstats_all_perm[
+    ,
+    expected := -log10(ppoints(.N)),
+    by = celltype
+]
+
+# create combined df with permuted and non-permuted data
+sumstats_all <- rbindlist(list(sumstats_all_ct, sumstats_all_perm))
+
+sumstats_all <- sumstats_all %>% .[
+    ,
+    permuted := factor(permuted, levels = c("Real genotypes", "Permuted genotypes")),
+]
+
+# faceted qqplot
+combined_qqplot_facet <- sumstats_all %>%
+    ggplot(aes(x = expected, y = observed, colour = permuted)) +
+    facet_wrap(~celltype, ncol = 3) +
+    labs(
+        x = log10Pe,
+        y = log10Po
+    ) +
+    geom_scattermore(pointsize = 11.3, pixels = c(1024, 1024)) +
+    geom_abline(intercept = 0, slope = 1, alpha = 0.5, linetype = 2, colour = "red") +
+    theme_classic() +
+    # scale_colour_manual(values = setNames(unique(tenk_color_pal$color_major_cell_type), unique(tenk_color_pal$major_cell_type))) +
+    theme(
+        aspect.ratio = 1,
+        strip.background = element_blank(),
+        strip.text = element_text(size = rel(0.8)),
+        legend.title = element_blank(),
+        legend.text = element_text(size = rel(0.8)),
+        axis.text = element_text(size = rel(0.8)),
+        axis.title = element_text(size = rel(1.2))
+    )
+
+combined_qqplot_facet %>%
+    ggsave(
+        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/{resolution}/combined_plots/combined_qqplot_facet_{analysis_name}_MAF_0.05.pdf"),
+        width = 8, height = 6
     )
 
 
@@ -146,3 +218,111 @@ sumstats_all_ct_sig <- sumstats_all_ct[P < 5e-8, ] %>%
     select(-observed, -expected)
 sumstats_all_ct_sig %>%
     write_csv(glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/combined/{resolution}/sumstats_all_ct_sig_{analysis_name}.csv"))
+
+# -------------------------------
+#  Copy of the above qq plot but with MAF 0.01 to demonstrate poor calibration at this MAF
+# -------------------------------
+
+# combine summary statistics for all cell types
+MAF_0.01_sumstats_all_ct <- celltypes %>%
+    map(\(celltype) read_summstats(celltype = celltype, analysis_name = analysis_name, resolution = resolution)) %>%
+    rbindlist(fill = TRUE)
+
+# format for plotting
+MAF_0.01_sumstats_all_ct[, celltype := factor(str_replace(str_replace(celltype, pattern = "Other", replacement = "HSPC"), pattern = "_", replacement = " "), levels = unique(tenk_color_pal$major_cell_type)), ]
+# remove SNPs with below 0.05 MAF
+MAF_0.01_sumstats_all_ct <- merge(MAF_0.01_sumstats_all_ct, afreq, by = "ID", all.x = TRUE)
+setorder(MAF_0.01_sumstats_all_ct, P)
+MAF_0.01_sumstats_all_ct[
+    ,
+    observed := -log10(P),
+]
+# calculate -log10 expected p value for each cell type
+MAF_0.01_sumstats_all_ct[
+    ,
+    expected := -log10(ppoints(.N)),
+    by = celltype
+]
+
+# Permuted GeNA results
+# combine summary statistics for all cell types
+MAF_0.01_sumstats_all_ct <- celltypes %>%
+    map(\(celltype) read_summstats(celltype = celltype, analysis_name = analysis_name, resolution = resolution)) %>%
+    rbindlist(fill = TRUE)
+
+# format for plotting
+MAF_0.01_sumstats_all_ct[, celltype := factor(str_replace(str_replace(celltype, pattern = "Other", replacement = "HSPC"), pattern = "_", replacement = " "), levels = unique(tenk_color_pal$major_cell_type)), ]
+# remove SNPs with below 0.05 MAF
+MAF_0.01_sumstats_all_ct <- merge(MAF_0.01_sumstats_all_ct, afreq, by = "ID", all.x = TRUE)
+
+setorder(MAF_0.01_sumstats_all_ct, P)
+
+MAF_0.01_sumstats_all_ct[
+    ,
+    observed := -log10(P),
+]
+# calculate -log10 expected p value for each cell type
+MAF_0.01_sumstats_all_ct[
+    ,
+    expected := -log10(ppoints(.N)),
+    by = celltype
+]
+MAF_0.01_sumstats_all_perm <- celltypes %>%
+    map(\(celltype) read_summstats_perm(celltype = celltype, analysis_name = analysis_name, resolution = resolution)) %>%
+    rbindlist(fill = TRUE)
+
+# format for plotting
+MAF_0.01_sumstats_all_perm[, celltype := factor(str_replace(str_replace(celltype, pattern = "Other", replacement = "HSPC"), pattern = "_", replacement = " "), levels = unique(tenk_color_pal$major_cell_type)), ]
+
+# remove SNPs with below 0.05 MAF
+MAF_0.01_sumstats_all_perm <- merge(MAF_0.01_sumstats_all_perm, afreq, by = "ID", all.x = TRUE)
+setorder(MAF_0.01_sumstats_all_perm, P)
+MAF_0.01_sumstats_all_perm[
+    ,
+    observed := -log10(P),
+]
+# calculate -log10 expected p value for each cell type
+MAF_0.01_sumstats_all_perm[
+    ,
+    expected := -log10(ppoints(.N)),
+    by = celltype
+]
+
+# create combined df with permuted and non-permuted data
+MAF_0.01_sumstats_all <- rbindlist(list(MAF_0.01_sumstats_all_ct, MAF_0.01_sumstats_all_perm))
+
+MAF_0.01_sumstats_all <- MAF_0.01_sumstats_all %>% .[
+    ,
+    permuted := factor(permuted, levels = c("Real genotypes", "Permuted genotypes")),
+]
+
+log10Pe <- expression(paste("Expected -log"[10], plain(P)))
+log10Po <- expression(paste("Observed -log"[10], plain(P)))
+
+# faceted qqplot
+combined_qqplot_facet <- MAF_0.01_sumstats_all %>%
+    ggplot(aes(x = expected, y = observed, colour = permuted)) +
+    facet_wrap(~celltype, ncol = 3) +
+    labs(
+        x = log10Pe,
+        y = log10Po
+    ) +
+    geom_scattermore(pointsize = 11.3, pixels = c(1024, 1024)) +
+    geom_abline(intercept = 0, slope = 1, alpha = 0.5, linetype = 2, colour = "red") +
+    theme_classic() +
+    # scale_colour_manual(values = setNames(unique(tenk_color_pal$color_major_cell_type), unique(tenk_color_pal$major_cell_type))) +
+    theme(
+        aspect.ratio = 1,
+        strip.background = element_blank(),
+        strip.text = element_text(size = rel(1.2)),
+        legend.title = element_blank(),
+        legend.text = element_text(size = rel(1.2)),
+        axis.text = element_text(size = rel(1.2)),
+        axis.title = element_text(size = rel(1.4))
+    )
+
+combined_qqplot_facet %>%
+    ggsave(
+        filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/{resolution}/combined_plots/combined_qqplot_facet_{analysis_name}_MAF_0.01.pdf"),
+        width = 8, height = 6
+    )

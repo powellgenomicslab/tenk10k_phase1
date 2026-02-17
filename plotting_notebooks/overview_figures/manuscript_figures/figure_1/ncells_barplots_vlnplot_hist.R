@@ -26,7 +26,7 @@ width <- 5
 height <- 3
 dpi <- 400
 
-# plotting functions go here
+# Plotting functions go here
 
 # 📊 make the plots ----
 
@@ -80,12 +80,13 @@ vln_plot_ncells_per_individual_per_celltype <- plot_data %>%
     ungroup() %>%
     complete(cell_type, individual, fill = list("n" = 0)) %>%
     ggplot(aes(x = fct_relevel(cell_type, cell_type_order), y = n, fill = cell_type, colour = cell_type)) +
-    geom_quasirandom(stroke = NA, size = 0.5) +
+    # geom_quasirandom(stroke = NA, size = 0.5) +
+    geom_violin(scale = "width", adjust = 2) +
     # geom_boxplot(colour = "black", fill = "white") +
     labs(x = "Cell type", y = "Cells") +
     scale_fill_manual(values = setNames(tenk_color_pal$color, tenk_color_pal$cell_type)) +
     scale_colour_manual(values = setNames(tenk_color_pal$color, tenk_color_pal$cell_type)) +
-    scale_y_continuous(expand = expansion(mult = c(0, 0.05)), labels = label_comma()) +
+    scale_y_continuous(trans = log10_trans(), expand = expansion(mult = c(0, 0.05)), labels = label_comma()) +
     theme_tenk10k() +
     theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5), legend.position = "none")
 vln_plot_ncells_per_individual_per_celltype %>%

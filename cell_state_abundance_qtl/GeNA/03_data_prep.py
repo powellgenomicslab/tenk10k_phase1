@@ -5,15 +5,13 @@ import multianndata as mad
 import cna
 import scanpy as sc
 import matplotlib.pyplot as plt
+import os
 
 np.random.seed(0)
 
 # get cell type from cmdline arg 1
 celltype = sys.argv[1]
 resolution = sys.argv[2]
-
-# celltype = "Other"
-# resolution = "major_cell_types"
 
 # constants
 outdir = (
@@ -28,6 +26,7 @@ adata = sc.read(
     f"{outdir}/data/h5/{resolution}/{celltype}_scanpy.h5ad",
     cache=True,
 )
+
 
 if celltype == "ALL":
     major_cell_type_mapping = {
@@ -68,7 +67,7 @@ if celltype == "ALL":
     ]
 
 
-# adata.X = adata.layers["counts"].copy()  # so that it doesn't error on a re-run
+adata.X = adata.layers["counts"].copy()  # so that it doesn't error on a re-run
 sc.pp.normalize_total(adata, target_sum=1e4)
 sc.pp.log1p(adata)
 sc.pp.highly_variable_genes(adata, min_mean=0.0125, max_mean=3, min_disp=0.5)
@@ -114,8 +113,11 @@ sample_meta = pd.read_csv(
     "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/saige-qtl_tenk10k-genome-2-3-eur_input_files_241210_covariates_sex_age_geno_pcs_shuffled_ids_tob_bioheart.csv"
 )
 sample_meta = sample_meta[sample_meta["sample_id"].isin(adata.obs["cpg_id"])]
-
 sample_meta = sample_meta.set_index("sample_id", drop=True)
+
+# add cohort to sample metadata
+cohort = adata.obs[["cpg_id", "bioheart"]].drop_duplicates().set_index("cpg_id")
+sample_meta = sample_meta.join(cohort, how="left")
 
 print("Sample metadata:")
 print(sample_meta.head(3))

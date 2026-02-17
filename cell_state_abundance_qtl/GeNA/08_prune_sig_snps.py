@@ -41,7 +41,7 @@ genotypes_sig.index = [
 # sort genotypes df in order of significance
 genotypes_sig = genotypes_sig.reindex(gena_sumstats_sig["ID"])
 
-# use pruning logic from GeNA paper
+# use clumping logic from GeNA paper to identify the lead snps
 # Reference: https://github.com/immunogenomics/GeNA-applied/blob/main/run_gwas/define_loci.py
 
 res = gena_sumstats_sig

@@ -1,10 +1,9 @@
 # mm activate mastectomy-env
 
-
 # Generate permuted / shuffled cpg ids
-# making sure the permuted sample ids are 
+# making sure the permuted sample ids are
 library(tidyverse)
-
+library(glue)
 # sample_meta <- read_csv("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/saige-qtl_tenk10k-genome-2-3-eur_input_files_241210_covariates_sex_age_geno_pcs_shuffled_ids_tob_bioheart.csv")
 
 # get sample id's present in the vcf file
@@ -18,7 +17,7 @@ sample_ids_vcf <- read_csv("/directflow/SCCGGroupShare/projects/blabow/tenk10k_p
 #     distinct()
 
 set.seed(123)
-
+# used perm1 for the actual analysis // calibration
 permutation_mapping <- sample_ids_vcf %>%
     select(sample_id) %>%
     mutate(
@@ -30,9 +29,21 @@ permutation_mapping <- sample_ids_vcf %>%
 write_csv(permutation_mapping, "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/sample_ids_vcf_with_perm_ids.txt")
 
 
-
 # table(duplicated(permutation_mapping$sample_id_perm2))
 
+
+##################################
+# generate 1000 permuted id's
+##################################
+
+perm_mapping_1000 <- sample_ids_vcf %>%
+    select(sample_id)
+
+for (i in 1:1000) {
+    perm_mapping_1000[[glue("sample_id_perm{i}")]] <- sample(perm_mapping_1000$sample_id)
+}
+
+write_csv(perm_mapping_1000, "/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/sample_ids_vcf_with_perm_ids_1000.txt")
 
 
 
@@ -43,10 +54,10 @@ write_csv(permutation_mapping, "/directflow/SCCGGroupShare/projects/blabow/tenk1
 # # 1 ID in VCF but not in sample_meta
 # setdiff(sample_ids_vcf, sample_meta$sample_id)
 
-# # all single cell samples in sample_ids_vcf 
+# # all single cell samples in sample_ids_vcf
 # setdiff(sample_ids_single_cell$cpg_id, sample_ids_vcf)
 
-# # get the permutation mappings that correspond to the single cell real ids 
+# # get the permutation mappings that correspond to the single cell real ids
 # sample_meta_in_cs <- sample_meta %>%
 #     filter(sample_id %in% sample_ids_single_cell$cpg_id)
 
@@ -55,6 +66,6 @@ write_csv(permutation_mapping, "/directflow/SCCGGroupShare/projects/blabow/tenk1
 #     length()
 
 # NOTE:
-# need to redo the permutation so that *all* permuted ID's are actually in the genotype VCF 
+# need to redo the permutation so that *all* permuted ID's are actually in the genotype VCF
 # currently these might not be getting used in the permuted analysis
-# possible that issues with permutation are due to ~300ish samples with no genotype info 
+# possible that issues with permutation are due to ~300ish samples with no genotype info

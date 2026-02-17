@@ -71,7 +71,7 @@ ncells_nsnps_per_ct %>%
     write_csv(glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/combined/{resolution}/ncells_n_lead_snps_per_ct_{analysis_name}.csv"))
 
 lead_csaqtl_bar <- ncells_nsnps_per_ct %>%
-    ggplot(aes(x =  fct_reorder(celltype, `Number of significant csaQTLs`, .desc = TRUE, .na_rm = FALSE), y = `Number of significant csaQTLs`, colour = celltype, fill = celltype)) +
+    ggplot(aes(x = fct_reorder(celltype, `Number of significant csaQTLs`, .desc = TRUE, .na_rm = FALSE), y = `Number of significant csaQTLs`, colour = celltype, fill = celltype)) +
     geom_bar(stat = "identity") +
     theme_classic() +
     # scale_x_continuous(labels = label_comma()) +
@@ -82,5 +82,8 @@ lead_csaqtl_bar <- ncells_nsnps_per_ct %>%
     labs(x = "Cell type") +
     theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5))
 
+# lead_csaqtl_bar %>%
+#     ggsave(filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/{resolution}/combined_plots/n_lead_snps_per_ct_bar_{analysis_name}.png"), width = 8, height = 4)
+
 lead_csaqtl_bar %>%
-    ggsave(filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/{resolution}/combined_plots/n_lead_snps_per_ct_bar_{analysis_name}.png"), width = 8, height = 4)
+    ggsave(filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/{resolution}/combined_plots/n_lead_snps_per_ct_bar_{analysis_name}.pdf"), width = 8, height = 4)
