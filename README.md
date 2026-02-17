@@ -1,11 +1,13 @@
-# TenK10K phase1 analyses
+# Impact of rare and common genetic variation on cell type-specific gene expression
 
-Repo for analyses of the pilot phase of TenK10K.
+This repository contains scripts for data processing, analysis and figure generation using data from phase 1 of the TenK10K project for our paper:
+
+Cuomo et al., [Impact of rare and common genetic variation on cell type-specific gene expression](https://www.medrxiv.org/content/10.1101/2025.03.20.25324352v1), medRxiv, 2025.
 
 This includes:
 
-* scRNA-seq processing (TO DO put everything in one folder and refer to it here)
-* downstream analysis of eQTLs identified via SAIGE-QTL
+* scRNA-seq processing 
+* [cell-state abundance QTLs](cell_state_abundance_qtl)
 * [manuscript main and suppl figures](plotting_notebooks)
 
 ## scRNA-seq processing pipeline
@@ -46,29 +48,9 @@ This includes:
 
 ## Processing pipeline data flow diagram
 
-![singlecell pipeline data flow](https://github.com/user-attachments/assets/ce9ca4cd-ae02-41e3-a597-056181a7d4c2)
+![singlecell pipeline data flow (for sharing) (2)](https://github.com/user-attachments/assets/cba4e9f4-8785-4c5d-9d5b-47830facb4b1)
 
-## Results on Brenner
 
-[Recap results locations on Brenner](results_locations.md). 
 
-## Keeping track of samples generated (scRNA-seq)
 
-* 1st batch: Oct 13th, 2023 (aka ```231013```): 64 sequencing libraries (TOB only), 578 unique individuals
-* 2nd batch: Dec 13th, 2023 (```231213```): 24 sequencing libraries (TOB only), 222 unique individuals
-* 3rd batch: Dec 14th, 2023 (```231214```): 41 sequencing libraries (24 TOB, 17 BioHEART), 343 unique individuals (210 TOB, 133 BioHEART).
-* 4th batch: Jan 8th, 2024 (```240108```): 18 sequencing libraries (BioHEART only), 140 unique individuals.
-* 5th batch: Jan 12th, 2024 (```240112```): 18 sequencing libraries (BioHEART only), 139 unique individuals.
-* 6th batch: Jan 15th, 2024 (```240115```): 25 sequencing libraries (8 TOB, 17 BioHEART), 173 unique individuals (112 TOB, 61 BioHEART).
-* 7th batch: Jan 16th, 2024 (```240116```): 17 sequencing libraries (BioHEART only), 132 unique individuals.
-* 8th batch: Jan 19th, 2024 (```240119```): 17 sequencing libraries (BioHEART only), 107 unique individuals.
-* 9th batch: Feb 14th, 2024 (```240214```): 16 sequencing libraries (BioHEART only), 42 unique individuals.
-
-Total (scRNA-seq + WGS): 240
-
-Batches with scRNA-seq but awaiting WGS:
-
-* 10th batch: Feb 23rd, 2024 (```240223```): 17 sequencing libraries (BioHEART only), 128 unique individuals.
-* 11th batch: May 1st, 2024 (```240501```): 16 sequencing libraries (2 TOB, 14 BioHEART), 154 unique individuals. (+2 Multiome libraries)
-* 12th batch: May 24th, 2024 (```240524```): 27 sequencing libraries (), 213 unique individuals
 
