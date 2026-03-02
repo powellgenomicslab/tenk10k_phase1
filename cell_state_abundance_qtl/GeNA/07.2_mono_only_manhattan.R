@@ -14,11 +14,6 @@ snps_label <- c("12:69350234:C:A")
 
 # 📚 read in the data ----
 
-# celltypes <- read_lines("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/scanpy/output/integrated_objects/unique_cell_types_wg2_scpred.txt")
-# celltypes <- read_lines("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/data/major_cell_types.txt")
-# celltypes <- celltypes[celltypes != "ALL"]
-# celltype <- "Monocytes"
-
 # Get the minor allele frequencies
 read_afreq <- function(afreq_path) {
     read_tsv(
@@ -67,8 +62,6 @@ sumstats_all_ct[
 ]
 
 # downsample the non-significant points for faster plotting
-# table(sumstats_all_ct$P < 0.0001)
-
 sumstats_all_ct_sig <- sumstats_all_ct %>%
     dplyr::filter(P < 0.001)
 

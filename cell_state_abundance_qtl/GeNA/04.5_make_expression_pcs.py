@@ -54,15 +54,6 @@ sc.pp.normalize_total(adata_pb, target_sum=1e6)
 sc.pp.log1p(adata_pb)
 sc.pp.highly_variable_genes(adata_pb, min_mean=0.0125, max_mean=3, min_disp=0.5)
 adata_pb = adata_pb[:, adata_pb.var.highly_variable]
-
-# NOTE Leave out the step regressing out total_counts and pct_counts_mt
-# I'm not including them as covars in the GeNA model, so hopefully they are captured
-
-# UPDATE: actually I might want to include them in the model instead of the expression PCs
-# im concerned expression PCs might also potentially capture cell type abundance shifts due to pseudobulking
-# in which case, I would prefer not to include them as covariates, as these abundance shifts are what i'm trying
-# to find
-
 sc.pp.scale(adata_pb, max_value=10)
 sc.tl.pca(adata_pb, svd_solver="arpack")
 
@@ -106,10 +97,6 @@ donor_pca.columns = [f"PC{i+1}" for i in donor_pca.columns]
 donor_covariates = pd.DataFrame(
     adata_pb.obs[["BioHEART", "total_counts", "pct_counts_mt"]]
 )
-
-
-# donor_covariates["total_counts"].corr(donor_covariates["pct_counts_mt"])
-
 
 # ----
 # add donor-PCA to the madata sample matrix

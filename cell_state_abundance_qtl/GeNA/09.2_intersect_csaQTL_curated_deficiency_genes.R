@@ -66,36 +66,3 @@ all_intersecting_summary <- deficiency_gene_intersecting_csaqtl %>%
 
 all_intersecting_summary %>%
     write_csv(glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/intersections/{resolution}_{analysis_name}_csaQTL_intersecting_curated_deficiency_genes.csv"))
-
-# Note: some of the provided gene names may be different to the gencode annotation
-## Check how many of the provided symbols are not in the annotation
-
-# library(rtracklayer)
-# library(GenomicRanges)
-
-# get gene where names are different
-# gencode_path <- "/directflow/SCCGGroupShare/projects/anncuo/reference_data/gencode.v44.basic.annotation.gtf"
-# gencode <- rtracklayer::import(gencode_path)
-# gencode_genes <- gencode[gencode$type == "gene", ]
-# setdiff(unique(deficiency_genes$Symbol), gencode$gene_name)
-# setdiff(unique(deficiency_genes$gene_name), gencode$gene_name)
-
-# setdiff(unique(name_conversion$gene_name), gencode_genes$gene_name)
-
-#  [1] "CD3Z"
-#  [2] "SLP76"
-#  [3] "RECQL3"
-#  [4] "NBS1"
-#  [5] "POLE1"
-#  [6] "11q23del"
-#  [7] "Del10p13-p14"
-#  [8] "Large (3Mb) deletion of 22q11.2"
-#  [9] "Unknown / environment"
-# [10] "ERBB21P"
-# [11] "SKIV2L"
-# [12] "TTC37"
-# [13] " Unknown"
-# [14] "CD20"
-# [15] "CD21"
-# [16] "  Unknown"
-# [17] "Mutation or chromosomal deletion at 14q32"

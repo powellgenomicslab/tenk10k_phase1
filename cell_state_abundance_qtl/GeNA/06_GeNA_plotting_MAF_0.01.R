@@ -67,11 +67,6 @@ sumstats_permuted <- sumstats_permuted %>%
 sumstats_combined <- sumstats_combined %>%
     left_join(afreq, by = "ID")
 
-# min(sumstats$P[sumstats$P != 0])
-# sumstats %>% filter(P == min(sumstats$P))
-# sumstats_permuted %>% filter(P == min(sumstats_permuted$P))
-
-
 # Pvalue histogram
 pval_hist <- sumstats %>%
     ggplot() +
@@ -115,23 +110,9 @@ qqplot <- sumstats_combined %>%
     geom_abline(intercept = 0, slope = 1, alpha = 0.5, linetype = 2, colour = "red") +
     theme_classic() +
     theme(aspect.ratio = 1)
-# scale_colour_manual(values = setNames(tenk_color_pal$color, tenk_color_pal$wg2_scpred_prediction))
 
 qqplot %>%
     ggsave(
         filename = glue("{plot_out_path}_qqplot_MAF_0.01.png"),
         width = 5, height = 5
     )
-
-
-# check correllation between permuted and real
-# table(sumstats$ID == sumstats_permuted$ID)
-# cor(sumstats$P, sumstats_permuted$P, method = "spearman")
-# permuted and real are not correllated?
-
-# calculate p-value lambda inflation factor
-# chisq <- qchisq(1 - sumstats$P, 1)
-# lambda <- median(chisq) / qchisq(0.5, 1)
-# lambda
-# sumstats_combined_sig <- sumstats_combined[P < 5e-8, , ][order(P)]
-# table(sumstats_combined_sig$permuted)
