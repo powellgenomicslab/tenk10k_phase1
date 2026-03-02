@@ -92,30 +92,6 @@ pval_hist %>%
         width = 5, height = 5
     )
 
-# min(sumstats[,P])
-
-# manhattan plot
-# TODO: make a manhattan plot some other way, this sometimes errors when run in batch job but always works interactive mode
-# png(
-#     filename = glue("{plot_out_path}_manhattan.png"),
-#     width = 2800, height = 2000, res = 600
-# )
-# manhattan(sumstats,
-#     chr = "#CHROM", bp = "POS", snp = "ID", p = "P",
-#     main = glue("{celltype} csaQTL"), cex = 0.05, cex.axis = 0.4
-# )
-# dev.off()
-
-# QQ plot
-# png(
-#     filename = glue("{plot_out_path}_qq.png"),
-#     width = 2000, height = 2000, res = 600
-# )
-# qq(sumstats$P,
-#     main = glue("{celltype} csaQTL"), cex = 0.3, cex.axis = 0.6
-# )
-# dev.off()
-
 # calculate observed and expected -log10P
 
 setorder(sumstats_combined, P)
@@ -195,15 +171,3 @@ sumstats_permuted_sig %>%
         )
     )
 
-
-# check correllation between permuted and real
-# table(sumstats$ID == sumstats_permuted$ID)
-# cor(sumstats$P, sumstats_permuted$P, method = "spearman")
-# permuted and real are not correllated?
-
-# calculate p-value lambda inflation factor
-# chisq <- qchisq(1 - sumstats$P, 1)
-# lambda <- median(chisq) / qchisq(0.5, 1)
-# lambda
-# sumstats_combined_sig <- sumstats_combined[P < 5e-8, , ][order(P)]
-# table(sumstats_combined_sig$permuted)

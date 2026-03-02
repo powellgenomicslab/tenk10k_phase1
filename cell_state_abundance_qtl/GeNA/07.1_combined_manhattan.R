@@ -62,8 +62,6 @@ sumstats_all_ct[
 ]
 
 # downsample the non-significant points for faster plotting
-# table(sumstats_all_ct$P < 0.0001)
-
 sumstats_all_ct_sig <- sumstats_all_ct %>%
     dplyr::filter(P < 0.001)
 
@@ -97,15 +95,7 @@ log10P <- expression(paste("-log"[10], plain(P)))
 
 # test <- plot_data %>% slice_head(n=10000)
 
-# for single combined plot
-# width <- 8
-# height <- 3
-# px <- 350
-# ptsize <- 9.2
-
-# for split plot
-# width <- 12
-# height <- 14
+# plot parameters
 px <- 1250
 ptsize <- 7.7
 aspect_ratio <- 0.25
@@ -148,18 +138,6 @@ all_ct_manhattan <- ggplot(data = plot_data, aes(x = BPcum, y = neg_log10_P)) +
         panel.grid.minor.x = element_blank(),
         element_blank()
     )
-
-
-# all_ct_manhattan %>% ggsave(
-#     filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/{resolution}/combined_plots/combined_manhattan.png"),
-#     width = 8, height = 3
-# )
-
-# all_ct_manhattan %>% ggsave(
-#     filename = glue("/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/figures/{resolution}/combined_plots/combined_manhattan.pdf"),
-#     width = 8, height = 3
-# )
-
 
 ct_split_manhattan <- all_ct_manhattan +
     facet_wrap(~celltype, ncol = 2)

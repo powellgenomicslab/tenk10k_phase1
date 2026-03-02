@@ -58,18 +58,5 @@ for lead_snp in "${lead_snps[@]}"; do
         --pheno-name spheno_${lead_snp} \
         --out ${OUTPUT_FIXED_PHENOTPE}
 
-    # NOTE: Running it without covariates because that's what was done for the GeNA paper
-    #       I think covars already regressed out of the sample-level phenotypes, so no need to include 
-    # NOTE this runs an association for all phenotypes, only one of these is relevant to each lead SNP, although the spheno column names are the snp id's rather than the chr-pos
-    # TODO:
-    # Investigate why some spheno values are NA. Is this due to missing genotype? / Missing NAM-PCS?
-
 done
-
-
-
-
-# command="plink --bfile ${gtypes} --pheno ${trait_file} --assoc --prune --allow-no-sex --out ${outfile}"
-# echo $command    
-# eval $comman
 

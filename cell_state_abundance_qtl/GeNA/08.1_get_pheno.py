@@ -12,11 +12,6 @@ resolution = sys.argv[2]
 analysis_name = sys.argv[3]
 covs = sys.argv[4]
 
-# resolution = "major_cell_types"
-# analysis_name = "no_expr_pc_covars"
-# celltype = "NK"
-# covs = "sex,age,geno_PC1,geno_PC2,geno_PC3,geno_PC4,geno_PC5,geno_PC6,geno_PC7,BioHEART"
-
 # input files
 GeNA_dir = f"/directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/data_processing/csa_qtl/output/GeNA/{resolution}/{celltype}/{analysis_name}/"
 gena_sumstats_lead_snps_file = f"{GeNA_dir}/GeNA_sumstats_lead_snps_MAF_0.05.tsv"
@@ -62,10 +57,6 @@ uns = madata.uns.copy()
 # iterate through each lead SNP, calculate the sample-level and neighbourhood-level phenotype, corrected for covariates
 for variant in gena_sumstats_lead_snps["ID"].tolist():
     # read in the value for k's (number of NAM-PC's used by GeNA)
-    # NOTE: in actual GeNA model, k can be different for each SNP
-    # Change this to read in the sumstats and use the actual correct k value in the future
-    # variant = gena_sumstats_lead_snps["ID"][0]
-
     k = gena_sumstats_lead_snps.loc[
         gena_sumstats_lead_snps["ID"] == variant, "k"
     ].values[0]

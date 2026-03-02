@@ -53,30 +53,3 @@ plink2 --pfile ${GENOTYPES} \
 # 2. Run the python script that keeps the top snps at each locus, using a clumping strategy
 python /directflow/SCCGGroupShare/projects/blabow/tenk10k_phase1/cell_state_abundance_qtl/GeNA/08_prune_sig_snps.py ${CELLTYPE} ${RESOLUTION} ${ANALYSIS_NAME}
 
-
-############ Graveyard 🪦 ##############
-
-# permformed by 06_GeNA_plotting.R
-# p_thresh=5e-08
-
-# # 2. Generate a plink file containing only the significant SNPs
-
-# plink2 --pfile ${GENOTYPES} \
-#     --extract ${SNP_LIST} \
-#     --threads 10 \
-#     --make-pgen \
-#     --out ${OUT_PLINK}
-
-# # 3. generate a VCF file containing only the significant SNPs 
-
-# plink2 --pfile ${GENOTYPES} \
-#     --extract ${SNP_LIST} \
-#     --threads 10 \
-#     --export vcf bgz \
-#     --out ${OUT_PLINK}
-
-
-# AT the moment, just using this one for downstream analysis. 
-# 4. Genotype file for all significant SNPS 
-
-
